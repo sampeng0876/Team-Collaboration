@@ -19,7 +19,7 @@ from datetime import datetime
 ctnrno = 'MEDU4918194' #要刷的柜号
 j = 3 #刷柜次数
 
-# 假设要选择 2023 年 4 月 13 日
+# 假设要选择 2023 年 X 月 X 日
 date = datetime(2023, 4, 17)
 
 # 将 0 < x < 25 作为变量，放在前面便于每次更改 i = 0
@@ -49,28 +49,10 @@ sleep(1)
 driver.find_element(By.XPATH,'//*[@id="containerName"]').send_keys(ctnrno) #Empty Container#
 driver.find_element(By.XPATH,'//*[@id="formcontent"]/form/div[2]/div[2]/button').click() #Submit
 sleep(1)
-# driver.find_element(By.XPATH,'//*[@id="calendar0"]').send_keys('04/20/2022') #Timeslot input
 
 # 等待日期选择器元素加载完成
 date_picker = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, '//*[@id="ipgrid_0"]/div[3]/div[2]/div/div/div')))
-date_picker.click() #Calendar
-
-sleep(1)
-
-driver.find_element(By.XPATH,'//*[@id="ipgrid_0"]/div[3]/div[2]/div/div[2]/div/div[2]/div[3]/div[5]/span').click() #4/13
-
-# driver.find_element(By.XPATH,'//*[@id="ipgrid_0"]/div[3]/div[2]/div/div/div').click() #Calendar
-sleep(1)
-
-
-# 生成对应的 XPath
-# xpath = '//*[@id="ipgrid_0"]/div[3]/div[2]/div/div[2]/div/div[2]/div[2]/div[{day}]/span'
-# day = date.day + 1  # 注意 XPath 中索引从  开始
-# xpath = xpath.format(day=day)
-
-# # 点击日期
-# driver.find_element(By.XPATH, xpath).click()
-
+# date_picker.click() #Calendar
 
 sleep(1)
 # Own Chassis Select No
@@ -81,7 +63,7 @@ i = 0
 # j = 3 #刷柜次数
 while i < j:
     
-    driver.find_element(By.XPATH,'//*[@id="calendar0"]').click() #Calendar
+    # driver.find_element(By.XPATH,'//*[@id="calendar0"]').click() #Calendar
     sleep(1)
 
     # 生成对应的 XPath
@@ -92,18 +74,21 @@ while i < j:
     # # 点击日期
     # driver.find_element(By.XPATH, xpath).click()
     
-    # driver.find_element(By.XPATH,'//*[@id="MDTYPE2GRID_0"]/div[4]/div[2]/div/div[2]/div/div[2]/div[3]/div[5]/span').click() #4/13
-    driver.find_element(By.XPATH,'//*[@id="ipgrid_0"]/div[3]/div[2]/div/div[2]/div/div[2]/div[3]/div[5]/span').click() #4/13
-
+    # 找到 input 元素
+    input_element = driver.find_element(By.ID, "calendar0")
+    
+    driver.execute_script("arguments[0].removeAttribute('readonly')", input_element)
+    input_element.clear()
+    input_element.send_keys(date.strftime('%m/%d/%Y'))
 
     sleep(1)
 
     slot_xpath = '//*[@id="ipgrid_0_slot"]'
 
-    driver.find_element(By.XPATH,'//*[@id="ipgrid_0_slot"]').click() #slot
-    slot_list = driver.find_elements(By.XPATH,'//*[@id="ipgrid_0_slot"]/div[2]')[0].text.splitlines()
-    # slot_list = driver.find_elements(By.XPATH,'//*[@id="MDTYPE2GRID_0_slot"]')[0].text.splitlines()
-
+    driver.find_element(By.XPATH,'//*[@id="ipgrid_0_slot"]').click() #Click Timeslot
+    slot_list = driver.find_elements(By.XPATH,'//*[@id="ipgrid_0_slot"]/div[2]')[0].text.splitlines() #Read Timeslot
+    
+    print('所选日期：' + date.strftime('%Y-%m-%d'))
     print(slot_list)
     
     # 筛选符合条件的时间段
