@@ -33,8 +33,8 @@ sleep(1)
 # WebDriverWait(driver, 5).until( # Wait ID
 #     EC.presence_of_all_elements_located((By.XPATH, '//*[@id="Login_form"]/div[1]/div/div/input'))
 # )
-driver.find_element(By.XPATH, '//*[@id="Login_form"]/div[1]/div/div/input').send_keys('P1logistics')
-driver.find_element(By.XPATH, '//*[@id="Login_form"]/div[2]/div/div/input').send_keys('P1log5418')
+driver.find_element(By.XPATH, '//*[@id="Login_form"]/div[1]/div/div/input').send_keys('twenty')
+driver.find_element(By.XPATH, '//*[@id="Login_form"]/div[2]/div/div/input').send_keys('20Trans!')
 driver.find_element(By.XPATH,'//*[@id="Login_form"]/div[3]/div/button').click() #login
 # sleep(1)
 WebDriverWait(driver, 15).until( # Wait schedule
