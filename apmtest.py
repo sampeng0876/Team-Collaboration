@@ -14,7 +14,7 @@ wait = WebDriverWait(driver, 10)
 #要刷的柜号
 ctnrno = 'MEDU4918194'
 #Calendar Input
-appt_date = '3'
+appt_date = '5'
 
 driver.get("https://termpoint.apmterminals.com")
 
@@ -88,14 +88,15 @@ date_picker.click()
 
 dates = driver.find_element(By.XPATH,'//*[@id="ipgrid_0"]/div[3]/div[2]/div/div[2]/div/div[2]/div[1]')
 
-#print(dates.text) 
+# print(dates.text) 
 
 for date in dates.text:
     print(date)
     if date == appt_date:
         print("found it")   
-        print(type(date))
-        # print("clicked")      
+        # print(type(date))
+        dates.click()
+        print("clicked")      
         sleep(3)
         break
 
