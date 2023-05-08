@@ -49,7 +49,7 @@ root.mainloop()
 chrome_options = Options()
 # #chrome_options.add_argument("--disable-extensions")
 # #chrome_options.add_argument("--disable-gpu")
-# chrome_options.add_argument("--headless")
+chrome_options.add_argument("--headless")
 
 # Set the options to run the browser in headless mode
 # chrome_options.headless = True
@@ -67,8 +67,6 @@ apptdate = str(int(date_picker[-2:]))
 # print(apptdate)
 # print(type(apptdate))
 appt_date = apptdate
-
-
 
 driver.find_element(By.XPATH, '//*[@id="Login_form"]/div[1]/div/div/input').send_keys("twenty")
 
@@ -135,7 +133,7 @@ for date in dates:
         # print("Found it")
         date.click()        
         print("Clicked "+ date_text)
-        sleep(5)
+        # sleep(5)
         break
 
 # Click Time Slots
@@ -161,13 +159,13 @@ for time in time_slots_container:
 print(available_time_slots)
 #available_time_slots = ['02','03','04','05','06','07','08']
 
-for i in available_time_slots:
+for time_slot in available_time_slots:
     # print([i], end=' ')
     # print(i, end=' ')
     # print(time_picker)   
-    if i == time_picker:
-        print(i)
-        print("Successfully Booked " + str(date_picker) + ' at ' + i  + ":00")
+    if time_slot == time_picker:
+        print(time_slot)
+        print("Successfully Booked " + str(date_picker) + ' at ' + time_slot  + ":00")
         break        
 else: print(time_picker + ":00" + " is Not Available")
 
