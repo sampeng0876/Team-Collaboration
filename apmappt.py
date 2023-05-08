@@ -10,17 +10,17 @@ from selenium.webdriver.chrome.options import Options
 from datetime import datetime
 
 
-# chrome_options = Options()
+chrome_options = Options()
 # #chrome_options.add_argument("--disable-extensions")
 # #chrome_options.add_argument("--disable-gpu")
-# chrome_options.add_argument("--headless")
+chrome_options.add_argument("--headless")
 # driver = webdriver.Chrome(options=chrome_options)
 
 ctnrno = 'MEDU4918194' #要刷的柜号
 j = 3 #刷柜次数
 
 # 假设要选择 2023 年 X 月 X 日
-date = datetime(2023, 4, 18)
+date = datetime(2023, 5, 8)
 
 # 将 0 < x < 25 作为变量，放在前面便于每次更改 i = 0
 available_range = range(6, 23)
@@ -96,8 +96,10 @@ while i < j:
     for slot in slot_list:
         try:
             start_hour = int(slot[:2])
+            
             if start_hour in available_range:
                 valid_slots.append(slot)
+                
         except ValueError:
             continue
         
