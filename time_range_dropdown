@@ -9,7 +9,7 @@ def on_submit():
     # Check if the selected time range is available
     start_time = start_time_1
     end_time = end_time_2
-    available_times = [time for time in available_time if start_time <= time <= end_time]
+    available_times = [time for time in available_time_slots if start_time <= time <= end_time]
     
     # Check if there are any available times
     if available_times:
@@ -17,7 +17,7 @@ def on_submit():
         chosen_time = available_times[0]
         
         # Print available times
-        print(available_time)
+        print(available_time_slots)
         # Print a success message
 
         print(f"The Earliest is : {chosen_time}")
@@ -32,7 +32,7 @@ hours = [f'{i:02}:00' for i in range(24)]
 hours2 = [f'{i:02}:00' for i in range(24)]
 
 # Create a list of available times
-available_time = ['00:30','02:00', '03:00', '04:00', '08:00', '10:00']
+available_time_slots = ['00:30','02:00', '03:00', '04:00', '08:00', '10:00']
 
 # Create a root using Tkinter
 root = tk.Tk()
