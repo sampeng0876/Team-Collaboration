@@ -57,10 +57,16 @@ root.mainloop()
 # # #chrome_options.add_argument("--disable-gpu")
 # chrome_options.add_argument("--headless")
 
-# Set the options to run the browser in headless mode
+# # Set the options to run the browser in headless mode
 # chrome_options.headless = True
 
-driver = webdriver.Chrome()
+# driver = webdriver.Chrome(options=chrome_options)
+chrome_options = webdriver.ChromeOptions()
+# chrome_options.add_argument('--headless')
+
+
+driver = webdriver.Chrome(options=chrome_options)
+
 driver.maximize_window()
 wait = WebDriverWait(driver, 10)
 driver.get("https://termpoint.apmterminals.com")
@@ -118,27 +124,28 @@ calendar_picker = wait.until(EC.presence_of_element_located((By.XPATH,'//*[@id="
 # Click the date picker element to open the date picker
 calendar_picker.click()
 # print("Clicked Calendar")
-# sleep(1)
+sleep(1)
 
 # Locate the dates of this month
-dates = driver.find_elements(by="xpath", value='//div[@class="react-flex-view align-content-center justify-content-center react-datepicker-picker day current"]')
+picker_day_current = driver.find_elements(by="xpath", value='//div[@class="react-flex-view align-content-center justify-content-center react-datepicker-picker day current"]')
+picker_day_current_selected = driver.find_elements(by="xpath", value='//div[@class="react-flex-view align-content-center justify-content-center react-datepicker-picker day current selected"]')
 
 # Create a for loop to find the Appointment Date
 
-for date in dates:
+for date in picker_day_current + picker_day_current_selected:
     date_text = date.find_element(by="xpath", value='./span').text
     #print(date_text)
     if date_text == appt_date:
-        # print("Found it")
         date.click()        
         # print("Clicked Date")
         sleep(1)
         break
+    
 print(f"Selected Appt Date: {date_picker}")
 
 # Click Time Slots
-time_clicker = wait.until(EC.presence_of_element_located((By.XPATH,'//*[@id="ipgrid_0_slot"]/i')))
-time_clicker.click()
+time_slots = wait.until(EC.presence_of_element_located((By.XPATH,'//*[@id="ipgrid_0_slot"]/i')))
+time_slots.click()
 # sleep(1)
 # print("Clicked Time Slots")
 # Locate the Appointment Time Slots
@@ -175,15 +182,16 @@ print("Available Time Slots:")
 for time in time_slots_container:
     try:
         time_slots_text = time.find_element(by="xpath", value='./span').text # Read time slot text        
-        if time_slots_text.strip(): # strip is without whitespace
-            # print(time_slots_text)                
+        if time_slots_text.strip(): # strip is without whitespace                           
             available_time_slots.append(time_slots_text)
+            # print("Appending time slot")
+            print(time_slots_text) 
     except:
-        print(f"No Time Slots Available From: {start_time} to {end_time}")
+        print("No Time Slots Appended")
 
 available_times = [time for time in available_time_slots if start_time <= time <= end_time]
 
-
+error_count = 0
 for click_time in time_slots_container:
     try:
         click_time_slots_text = click_time.find_element(by="xpath", value='./span').text # Read time slot text        
@@ -195,17 +203,21 @@ for click_time in time_slots_container:
         if click_time_slots_text == earliest_time:               
             click_time.click()            
             # Print available time slots
-            print(available_times)
+            # print(available_times)
             # Print Appointment Date and Time
             print(f"Selected Appt Times From: {start_time} to {end_time}")
             # Print a success message
             print(f"Successfully Booked The Earliest time: {earliest_time}") 
-            sleep(2)        
+            # sleep(2)
+                   
     except:
-        print("Try Again")
+        if error_count == 0:
+            # print(available_time_slots)
+            print(f"No Time Slots Available From: {start_time} to {end_time}")
+        error_count += 1
 
 
-# print("Done")
+print("Done")
 
 
 # Close the browser
