@@ -10,7 +10,7 @@ from tkcalendar import DateEntry
 from selenium.webdriver.chrome.options import Options
 from tkinter import *
 from tkcalendar import *
-import datetime
+import datetime as dt
 
 # Create a function to get the selected value and close the window
 def on_submit():
@@ -19,8 +19,8 @@ def on_submit():
     date_string = cal.get_date()  # Assuming cal.get_date() returns the date string '5/9/23'
     date_object = datetime.strptime(date_string, '%m/%d/%y')
     date_picker = date_object.strftime('%Y-%m-%d')
-    print(type(date_picker))
-    print(date_picker)
+    # print(type(date_picker))
+    # print(date_picker)
     # Get the selected values from the dropdowns
     start_time_1 = start_time_var.get()
     end_time_2 = end_time_var.get()
@@ -85,7 +85,7 @@ driver.get("https://termpoint.apmterminals.com")
 # Container Number
 ctnrno = 'MEDU4918194'
 
-print(date_picker)
+# print(date_picker)
 appt_date = str(int(date_picker[-2:]))
 # print(apptdate)
 # print(type(apptdate))
@@ -144,7 +144,6 @@ picker_day_current = driver.find_elements(by="xpath", value='//div[@class="react
 picker_day_current_selected = driver.find_elements(by="xpath", value='//div[@class="react-flex-view align-content-center justify-content-center react-datepicker-picker day current selected"]')
 
 # Create a for loop to find the Appointment Date
-
 for date in picker_day_current + picker_day_current_selected:
     date_text = date.find_element(by="xpath", value='./span').text
     #print(date_text)
@@ -164,50 +163,36 @@ time_slots.click()
 # Locate the Appointment Time Slots
 time_slots_container = driver.find_elements(by="xpath", value='//*[@class="visible menu transition"]/div') # //*[@id="ipgrid_0_slot"]/div[2]/div[1] SAME AS //div[@class="visible menu transition"]/div
 
-
-
 available_time_slots=[]
 
-# Version 1
-# for time in time_slots_container:
-#     try:
-#         time_slots_text = time.find_element(by="xpath", value='./span').text # Read time slot text        
-#         if time_slots_text.strip():# strip is without whitespace       
-#             print(time_slots_text)
-#             available_time_slots.append(time_slots_text[:2])
-#     except:
-#         print("No Time Slots Available")
-        
-# print(available_time_slots)
-
-# for time_slot in available_time_slots:
-#     # print([i], end=' ')
-#     # print(i, end=' ')
-#     # print(time_picker)   
-#     if time_slot == start_time[:2]:
-#         print(time_slot)
-#         print(f"Successfully Booked {date_picker} at {time_slot}")
-#         break        
-# else: print(f"No Time Slots Available from {start_time} to {end_time}")
-
-# Version 2
+# Print available time slots
 print("Available Time Slots:")
+
+# Check available time slots
 for time in time_slots_container:
     try:
-        time_slots_text = time.find_element(by="xpath", value='./span').text # Read time slot text        
-        if time_slots_text.strip(): # strip is without whitespace                           
-            available_time_slots.append(time_slots_text)
-            # print("Appending time slot")
+        # Read time slot text
+        time_slots_text = time.find_element(by="xpath", value='./span').text  
+        # strip is without whitespace       
+        if time_slots_text.strip():   
+            # Appending time slot                         
+            available_time_slots.append(time_slots_text)            
             print(time_slots_text) 
     except:
         print("No Time Slots Appended")
+# print(f"This is available_time_slots: {available_time_slots}")
 
+# Check available times in selected range from start time to end time
 available_times = [time for time in available_time_slots if start_time <= time <= end_time]
+# print(f"This is available_time: {available_times}")
 
+# error counter
 error_count = 0
+
 for click_time in time_slots_container:
     try:
-        click_time_slots_text = click_time.find_element(by="xpath", value='./span').text # Read time slot text        
+        # Read time slot text
+        click_time_slots_text = click_time.find_element(by="xpath", value='./span').text         
         # Choose the earliest available time
         earliest_time = available_times[0]
             
