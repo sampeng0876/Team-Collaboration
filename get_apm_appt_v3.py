@@ -8,15 +8,22 @@ from time import sleep
 import tkinter as tk
 from tkcalendar import DateEntry
 from selenium.webdriver.chrome.options import Options
+from tkinter import *
+from tkcalendar import *
+import datetime
 
 # Create a function to get the selected value and close the window
 def on_submit():
     global date_picker, start_time, end_time
-    date_picker = cal.get_date().strftime('%Y-%m-%d')
-    
+    # date_picker = cal.get_date().strftime('%Y-%m-%d')
+    date_string = cal.get_date()  # Assuming cal.get_date() returns the date string '5/9/23'
+    date_object = datetime.strptime(date_string, '%m/%d/%y')
+    date_picker = date_object.strftime('%Y-%m-%d')
+    print(type(date_picker))
+    print(date_picker)
     # Get the selected values from the dropdowns
-    start_time_1 = dropdown_var1.get()
-    end_time_2 = dropdown_var2.get()
+    start_time_1 = start_time_var.get()
+    end_time_2 = end_time_var.get()
     
     # Check if the selected time range is available
     start_time = start_time_1
@@ -25,28 +32,33 @@ def on_submit():
     
     root.destroy()
 
-# Create two lists with values from '00:00' to '23:00'
-hours = [f'{i:02}:00' for i in range(24)]
-hours2 = [f'{i:02}:00' for i in range(24)]
+root = Tk()
+root.title("Appointment Scheduler")
+root.geometry("500x500")
 
-# Create the window
-root = tk.Tk()
+# create a list of available times
+# available_time = ['00:00','01:00','02:00','03:00','04:00','05:00','06:00','07:00','08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00','22:00','23:00']
+choose_time = [f'{i:02}:00' for i in range(24)]
+# create a calendar picker
+cal = Calendar(root, selectmode="day", year=2023, month=5, day=9)
+cal.grid(column=1, row=0, padx=10, pady=5)
 
-# Create a calendar widget
-cal = DateEntry(root)
-cal.pack()
+# create labels and dropdowns for start and end times
+Label(root, text="Start Time: ").grid(column=0, row=1, padx=10, pady=5)
+start_time_var = StringVar(root)
+start_time_var.set("Select Start Time")
+start_time_dropdown = OptionMenu(root, start_time_var, *choose_time)
+start_time_dropdown.grid(column=1, row=1, padx=10, pady=5)
 
-# Create two dropdowns and add the values from the lists to them
-dropdown_var1 = tk.StringVar(value='00:00')
-dropdown1 = tk.OptionMenu(root, dropdown_var1, *hours)
-dropdown1.pack()
-dropdown_var2 = tk.StringVar(value='00:00')
-dropdown2 = tk.OptionMenu(root, dropdown_var2, *hours2)
-dropdown2.pack()
+Label(root, text="End Time: ").grid(column=0, row=2, padx=10, pady=5)
+end_time_var = StringVar(root)
+end_time_var.set("Select End Time")
+end_time_dropdown = OptionMenu(root, end_time_var, *choose_time)
+end_time_dropdown.grid(column=1, row=2, padx=10, pady=5)
 
-# Create a submit button
-submit_button = tk.Button(root, text="Submit", command=on_submit)
-submit_button.pack()
+# create submit button
+submit_button = Button(root, text="Submit", command=on_submit)
+submit_button.grid(column=1, row=3, padx=10, pady=5)
 
 # Start the mainloop to display the window
 root.mainloop()
@@ -73,6 +85,7 @@ driver.get("https://termpoint.apmterminals.com")
 # Container Number
 ctnrno = 'MEDU4918194'
 
+print(date_picker)
 appt_date = str(int(date_picker[-2:]))
 # print(apptdate)
 # print(type(apptdate))
