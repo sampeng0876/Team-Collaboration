@@ -15,6 +15,10 @@ from multi_date_checker import multi_date_checker
 import sv_ttk
 import tkinter
 from tkinter import ttk
+
+# Container Number
+# ctnrno = 'TGHU6723051','MEDU4918194'
+
 # Create a function to get the selected value and close the window
 def on_submit():
     global date_picker, start_time, end_time, check_days, appt_dates, appt_type, container
@@ -58,7 +62,7 @@ sv_ttk.use_light_theme()
 # root.title("Appointment Scheduler")
 # root.geometry("500x500")
 
-root.title("Container Information")
+root.title("Appointment Scheduler")
 
 # Get the screen width and height
 screen_width = root.winfo_screenwidth()
@@ -100,12 +104,12 @@ container_input.grid(column=1, row=1, padx=10, pady=5)
 
 
 # Create labels and dropdowns for APPOINTMENT TYPE
-Label(root, text="APPOINTMENT TYPE:").grid(column=0, row=2, padx=10, pady=8)
+Label(root, text="Appointment Type:").grid(column=0, row=2, padx=10, pady=8)
 appt_type_var = StringVar(root)
-appt_type_var.set("IMPORT PICKUP")
+# appt_type_var.set("Appt Type")
 appt_type_dropdown = ttk.OptionMenu(root, appt_type_var, *appt_types)
 appt_type_dropdown.grid(column=1, row=2, padx=10, pady=8)
-appt_type_var = ttk.Widget
+
 
 # Create labels and dropdowns for start and end times
 Label(root, text="Start Time: ").grid(column=0, row=3, padx=10, pady=8)
@@ -134,7 +138,7 @@ check_day_dropdown = ttk.OptionMenu(root, check_day_var, *check_day)
 check_day_dropdown.grid(column=1, row=5, padx=10, pady=5)
 
 # Create submit button
-submit_button = ttk.Button(root, text="Submit", command=on_submit)
+submit_button = ttk.Button(root, text="OK", command=on_submit)
 submit_button.grid(column=1, row=6, padx=10, pady=5)
 
 # Start the mainloop to display the window
@@ -151,7 +155,7 @@ root.mainloop()
 
 # driver = webdriver.Chrome(options=chrome_options)
 chrome_options = webdriver.ChromeOptions()
-# chrome_options.add_argument('--headless')
+chrome_options.add_argument('--headless')
 
 
 driver = webdriver.Chrome(options=chrome_options)
@@ -159,8 +163,7 @@ driver = webdriver.Chrome(options=chrome_options)
 driver.maximize_window()
 wait = WebDriverWait(driver, 10)
 driver.get("https://termpoint.apmterminals.com")
-# Container Number
-# ctnrno = 'TGHU6723051'
+
 
 # print(date_picker)
 # print(type(date_picker))
@@ -181,6 +184,8 @@ driver.find_element(By.XPATH, '//*[@id="Login_form"]/div[2]/div/div/input').send
 # driver.find_element(By.XPATH, '//*[@id="Login_form"]/div[2]/div/div/input').send_keys("Magnolia321!")
 
 driver.find_element(By.XPATH, '//*[@id="Login_form"]/div[3]/div/button').click()
+
+
 
 # Wait schedule
 WebDriverWait(driver, 15).until( 

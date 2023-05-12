@@ -92,6 +92,7 @@ def multi_date_checker(appt_dates, wait, start_time, end_time, driver, check_day
                     if click_time_slots_text == earliest_time:
                         click_time.click()
                         #print(f"Selected Appt Times From: {start_time} to {end_time}")
+                        # driver.find_element(By.XPATH,'//*[@id="action-section"]/button[1]').click()
                         print(f"Successfully Booked The Earliest time: {earliest_time}")
                         break
                 except:
