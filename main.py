@@ -17,7 +17,7 @@ import tkinter
 from tkinter import ttk
 # Create a function to get the selected value and close the window
 def on_submit():
-    global date_picker, start_time, end_time, check_days, appt_dates, appt_type, container_entry
+    global date_picker, start_time, end_time, check_days, appt_dates, appt_type, container
     # date_picker = cal.get_date().strftime('%Y-%m-%d')
     # date_picker = cal.get_date()  # Assuming cal.get_date() returns the date string '5/9/23'
     # date_string = cal.get_date()  # Assuming cal.get_date() returns the date string '5/9/23'
@@ -41,20 +41,12 @@ def on_submit():
     # Get the values of appointment type
     appt_type = appt_type_var.get()
 
-    # # Get the values of container
-    # container = container_var.get()
+    # Get the values of container
+    container = container_var.get()
 
     # Check if the selected time range is available
     start_time = start_time_1
     end_time = end_time_2
-    
-    # Get container entries
-    data = container_entry.get("1.0", "end-1c")
-    lines = data.split("\n")
-    container_list.extend(lines)
-    container_entry.delete("1.0", "end")
-    print("Container List:")
-    print(container_list)
     
     root.destroy()
 
@@ -88,8 +80,8 @@ check_day = [str(i) for i in range(1, 11)]
 # Create a list of appointment type options
 appt_types = ['Appt Type','IMPORT PICKUP', 'EMPTY DROPOFF']
 
-# List to store container entries
-container_list = []
+# Create a list of containers
+container_input = []
 
 # # Create a list of date check method
 # choose_method = ['Check Single Date', 'Check Multi Dates']
@@ -98,24 +90,18 @@ container_list = []
 cal = Calendar(root, selectmode="day")
 cal.grid(column=1, row=0, padx=10, pady=5)
 
-# # Create a label for containers
-# Label(root, text="Container Number:").grid(column=0, row=1, padx=10, pady=5)
-# container_var = StringVar(root)
-# # container_var.set("Enter Container Number")
-# container_input = ttk.Entry(root,textvariable=container_var)
-# container_input.grid(column=1, row=1, padx=10, pady=5)
-
-# Create a Text widget for data entry
-# Create a label for data entry
-Label(root, text="Enter Data:").grid(column=0, row=1, padx=10, pady=5)
-container_entry = Text(root, height=10, width=40)
-container_entry.grid(column=1, row=1, padx=10, pady=5)
+# Create a label for containers
+Label(root, text="Container Number:").grid(column=0, row=1, padx=10, pady=5)
+container_var = StringVar(root)
+# container_var.set("Enter Container Number")
+container_input = ttk.Entry(root,textvariable=container_var)
+container_input.grid(column=1, row=1, padx=10, pady=5)
 
 
 # Create labels and dropdowns for APPOINTMENT TYPE
-Label(root, text="Appointment Type:").grid(column=0, row=2, padx=10, pady=5)
+Label(root, text="APPOINTMENT TYPE:").grid(column=0, row=2, padx=10, pady=5)
 appt_type_var = StringVar(root)
-# appt_type_var.set("IMPORT PICKUP")
+appt_type_var.set("IMPORT PICKUP")
 appt_type_dropdown = ttk.OptionMenu(root, appt_type_var, *appt_types)
 appt_type_dropdown.grid(column=1, row=2, padx=10, pady=5)
 
@@ -183,7 +169,6 @@ driver.get("https://termpoint.apmterminals.com")
 # appt_date = date.today()
 # print(appt_date)
 # print(type(appt_date))
-
 driver.find_element(By.XPATH, '//*[@id="Login_form"]/div[1]/div/div/input').send_keys("twenty")
 
 driver.find_element(By.XPATH, '//*[@id="Login_form"]/div[2]/div/div/input').send_keys("20Trans!")
@@ -195,63 +180,52 @@ driver.find_element(By.XPATH, '//*[@id="Login_form"]/div[2]/div/div/input').send
 
 driver.find_element(By.XPATH, '//*[@id="Login_form"]/div[3]/div/button').click()
 
-####################################################################################################################
-check_container = 0
-while True:
-    
-    if check_container < len(container_list) :
-    # Wait for the page to load Wait schedule
-        WebDriverWait(driver, 15).until( 
-            EC.presence_of_all_elements_located((By.XPATH, '//*[@id="menu-sec"]/a[3]'))
-        )
-        # Schedule a new appointment
-        driver.find_element(By.XPATH,'//*[@id="menu-sec"]/a[3]').click() 
-        # driver.find_element(By.XPATH,'//*[@id="main-container"]/div/div/div/div/div[1]/div[1]/div[1]/button').click() 
-        sleep(1)
-
-        #Appt Type
-        driver.find_element(By.XPATH,'//*[@id="ApptTypeDdDv"]').click() 
-        sleep(1)
+# Wait schedule
+WebDriverWait(driver, 15).until( 
+    EC.presence_of_all_elements_located((By.XPATH, '//*[@id="main-container"]/div/div/div/div/div[1]/div[1]/div[1]/button'))
+)
+#Schedule a new appointment
+driver.find_element(By.XPATH,'//*[@id="main-container"]/div/div/div/div/div[1]/div[1]/div[1]/button').click() 
+sleep(1)
+#APPT
+driver.find_element(By.XPATH,'//*[@id="ApptTypeDdDv"]').click() 
+sleep(1)
 
 
-        if appt_type == 'IMPORT PICKUP':
-            # IMPORT PICKUP
-            driver.find_element(By.XPATH,'//*[@id="ApptTypeDdDv"]/div/div[2]/div[1]').click() 
+if appt_type == 'IMPORT PICKUP':
+    # IMPORT PICKUP
+    driver.find_element(By.XPATH,'//*[@id="ApptTypeDdDv"]/div/div[2]/div[1]').click() 
 
-        elif appt_type =='EMPTY DROPOFF':
-            # EMPTY DROPOFF
-            driver.find_element(By.XPATH,'//*[@id="ApptTypeDdDv"]/div/div[2]/div[4]').click()
-        sleep(1)
-        
-        # Empty Container#
-        driver.find_element(By.XPATH,'//*[@id="containerName"]').send_keys(container_list[check_container]) 
+elif appt_type =='EMPTY DROPOFF':
+    # EMPTY DROPOFF
+    driver.find_element(By.XPATH,'//*[@id="ApptTypeDdDv"]/div/div[2]/div[4]').click()
 
-        # Submit
-        driver.find_element(By.XPATH,'//*[@id="formcontent"]/form/div[2]/div[2]/button').click() 
-        sleep(2)
+sleep(1)
 
-        #OWN CHASSIS?
-        driver.find_element(By.XPATH,'//*[@id="ipgrid_0_own_chassis?"]/i').click()
-        sleep(1)
+# Empty Container#
+driver.find_element(By.XPATH,'//*[@id="containerName"]').send_keys(container) 
 
-        #NO
-        driver.find_element(By.XPATH,'//*[@id="ipgrid_0_own_chassis?"]/div[2]/div[2]/span').click()
-        sleep(1)
+# Submit
+driver.find_element(By.XPATH,'//*[@id="formcontent"]/form/div[2]/div[2]/button').click() 
+sleep(2)
 
-        # Call out multi_date_checker
-        multi_date_checker (appt_dates, wait, start_time, end_time, driver, check_days)
+#OWN CHASSIS?
+driver.find_element(By.XPATH,'//*[@id="ipgrid_0_own_chassis?"]/i').click()
+sleep(1)
 
-        # if date_check_method == 'Check Single Date':
-        #     # Sinle Date Checker
-        #     single_date_checker(appt_dates, wait, start_time, end_time, driver, date_picker)
-        # elif date_check_method == 'Check Multi Dates':
-        #     # Multiple Dates Checker
-        #     multi_date_checker (appt_dates, wait, start_time, end_time, driver)        
-        #print(check_container)          
-    if check_container == len(container_list):
-        break
-    else: check_container+=1
-        
+#NO
+driver.find_element(By.XPATH,'//*[@id="ipgrid_0_own_chassis?"]/div[2]/div[2]/span').click()
+sleep(1)
+
+# Call out multi_date_checker
+multi_date_checker (appt_dates, wait, start_time, end_time, driver, check_days)
+
+# if date_check_method == 'Check Single Date':
+#     # Sinle Date Checker
+#     single_date_checker(appt_dates, wait, start_time, end_time, driver, date_picker)
+# elif date_check_method == 'Check Multi Dates':
+#     # Multiple Dates Checker
+#     multi_date_checker (appt_dates, wait, start_time, end_time, driver)
 
 print("Done")
 
