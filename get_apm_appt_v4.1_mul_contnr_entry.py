@@ -86,7 +86,7 @@ choose_time = [f'{i:02}:00' for i in range(24)]
 check_day = [str(i) for i in range(1, 11)]
 
 # Create a list of appointment type options
-appt_types = ['Appt Type','IMPORT PICKUP', 'EMPTY DROPOFF']
+appt_types = ['IMPORT PICKUP', 'EMPTY DROPOFF']
 
 # List to store container entries
 container_list = []
@@ -108,7 +108,7 @@ cal.grid(column=1, row=0, padx=10, pady=5)
 # Create a Text widget for data entry
 # Create a label for data entry
 Label(root, text="Enter Data:").grid(column=0, row=1, padx=10, pady=5)
-container_entry = Text(root, height=10, width=40)
+container_entry = Text(root,height=10, width=40)
 container_entry.grid(column=1, row=1, padx=10, pady=5)
 
 
@@ -116,20 +116,20 @@ container_entry.grid(column=1, row=1, padx=10, pady=5)
 Label(root, text="Appointment Type:").grid(column=0, row=2, padx=10, pady=5)
 appt_type_var = StringVar(root)
 # appt_type_var.set("IMPORT PICKUP")
-appt_type_dropdown = ttk.OptionMenu(root, appt_type_var, *appt_types)
+appt_type_dropdown = ttk.OptionMenu(root, appt_type_var, 'Appt Type', *appt_types)
 appt_type_dropdown.grid(column=1, row=2, padx=10, pady=5)
 
 # Create labels and dropdowns for start and end times
 Label(root, text="Start Time: ").grid(column=0, row=3, padx=10, pady=5)
 start_time_var = StringVar(root)
-start_time_var.set("From")
-start_time_dropdown = ttk.OptionMenu(root, start_time_var, *choose_time)
+# start_time_var.set("From")
+start_time_dropdown = ttk.OptionMenu(root, start_time_var, 'From', *choose_time)
 start_time_dropdown.grid(column=1, row=3, padx=10, pady=5)
 
 Label(root, text="End Time: ").grid(column=0, row=4, padx=10, pady=5)
 end_time_var = StringVar(root)
-end_time_var.set("To")
-end_time_dropdown = ttk.OptionMenu(root, end_time_var, *choose_time)
+# end_time_var.set("To")
+end_time_dropdown = ttk.OptionMenu(root, end_time_var, 'To', *choose_time)
 end_time_dropdown.grid(column=1, row=4, padx=10, pady=5)
 
 
@@ -141,8 +141,8 @@ end_time_dropdown.grid(column=1, row=4, padx=10, pady=5)
 
 Label(root, text="Check How Many Days: ").grid(column=0, row=5, padx=10, pady=5)
 check_day_var = StringVar(root)
-check_day_var.set("1")
-check_day_dropdown = ttk.OptionMenu(root, check_day_var, *check_day)
+# check_day_var.set("1")
+check_day_dropdown = ttk.OptionMenu(root, check_day_var, '1', *check_day)
 check_day_dropdown.grid(column=1, row=5, padx=10, pady=5)
 
 # Create submit button
