@@ -65,7 +65,7 @@ sv_ttk.use_light_theme()
 # root.title("Appointment Scheduler")
 # root.geometry("500x500")
 
-root.title("Appointment Scheduler")
+root.title("Container Information")
 
 # Get the screen width and height
 screen_width = root.winfo_screenwidth()
@@ -73,10 +73,10 @@ screen_height = root.winfo_screenheight()
 
 # Calculate the x and y coordinates for the window to be centered
 x = (screen_width - 500) // 2
-y = (screen_height - 600) // 2
+y = (screen_height - 500) // 2
 
 # Set the position of the window
-root.geometry(f"500x600+{x}+{y}")
+root.geometry(f"500x500+{x}+{y}")
 
 
 # Create a list of a times options
@@ -95,7 +95,6 @@ container_list = []
 # choose_method = ['Check Single Date', 'Check Multi Dates']
 
 # Create labels and dropdowns for a calendar picker
-# Label(root, text="Select The Appt Date:").grid(column=0, row=0, padx=10, pady=5)
 cal = Calendar(root, selectmode="day")
 cal.grid(column=1, row=0, padx=10, pady=5)
 
@@ -108,7 +107,7 @@ cal.grid(column=1, row=0, padx=10, pady=5)
 
 # Create a Text widget for data entry
 # Create a label for data entry
-Label(root, text="Enter Container Number:").grid(column=0, row=1, padx=10, pady=5)
+Label(root, text="Enter Data:").grid(column=0, row=1, padx=10, pady=5)
 container_entry = Text(root,height=10, width=40)
 container_entry.grid(column=1, row=1, padx=10, pady=5)
 
@@ -118,7 +117,6 @@ Label(root, text="Appointment Type:").grid(column=0, row=2, padx=10, pady=5)
 appt_type_var = StringVar(root)
 # appt_type_var.set("IMPORT PICKUP")
 appt_type_dropdown = ttk.OptionMenu(root, appt_type_var, 'Appt Type', *appt_types)
-#appt_type_dropdown.config(width=5)
 appt_type_dropdown.grid(column=1, row=2, padx=10, pady=5)
 
 # Create labels and dropdowns for start and end times
@@ -126,14 +124,12 @@ Label(root, text="Start Time: ").grid(column=0, row=3, padx=10, pady=5)
 start_time_var = StringVar(root)
 # start_time_var.set("From")
 start_time_dropdown = ttk.OptionMenu(root, start_time_var, 'From', *choose_time)
-start_time_dropdown.config(width=5)
 start_time_dropdown.grid(column=1, row=3, padx=10, pady=5)
 
 Label(root, text="End Time: ").grid(column=0, row=4, padx=10, pady=5)
 end_time_var = StringVar(root)
 # end_time_var.set("To")
 end_time_dropdown = ttk.OptionMenu(root, end_time_var, 'To', *choose_time)
-end_time_dropdown.config(width=5)
 end_time_dropdown.grid(column=1, row=4, padx=10, pady=5)
 
 
@@ -147,11 +143,10 @@ Label(root, text="Check How Many Days: ").grid(column=0, row=5, padx=10, pady=5)
 check_day_var = StringVar(root)
 # check_day_var.set("1")
 check_day_dropdown = ttk.OptionMenu(root, check_day_var, '1', *check_day)
-check_day_dropdown.config(width=5)
 check_day_dropdown.grid(column=1, row=5, padx=10, pady=5)
 
 # Create submit button
-submit_button = ttk.Button(root, width=5, text="OK", command=on_submit)
+submit_button = ttk.Button(root, text="Submit", command=on_submit)
 submit_button.grid(column=1, row=6, padx=10, pady=5)
 
 # Start the mainloop to display the window
@@ -189,20 +184,14 @@ driver.get("https://termpoint.apmterminals.com")
 # print(appt_date)
 # print(type(appt_date))
 
-# P1
-driver.find_element(By.XPATH, '//*[@id="Login_form"]/div[1]/div/div/input').send_keys("P1logistics")
+driver.find_element(By.XPATH, '//*[@id="Login_form"]/div[1]/div/div/input').send_keys("twenty")
 
-driver.find_element(By.XPATH, '//*[@id="Login_form"]/div[2]/div/div/input').send_keys("P1log5418")
+driver.find_element(By.XPATH, '//*[@id="Login_form"]/div[2]/div/div/input').send_keys("20Trans!")
 
-# # 20
-# driver.find_element(By.XPATH, '//*[@id="Login_form"]/div[1]/div/div/input').send_keys("twenty")
-
-# driver.find_element(By.XPATH, '//*[@id="Login_form"]/div[2]/div/div/input').send_keys("20Trans!")
-
-# Yuna 
+# Yuna
 # driver.find_element(By.XPATH, '//*[@id="Login_form"]/div[1]/div/div/input').send_keys("wcofreightinc@gmail.com")
 
-# driver.find_element(By.XPATH, '//*[@id="Login_form"]/div[2]/div/div/input').send_keys("Seawolf321!")
+# driver.find_element(By.XPATH, '//*[@id="Login_form"]/div[2]/div/div/input').send_keys("Magnolia321!")
 
 driver.find_element(By.XPATH, '//*[@id="Login_form"]/div[3]/div/button').click()
 
@@ -236,7 +225,6 @@ while True:
         
         # Empty Container#
         driver.find_element(By.XPATH,'//*[@id="containerName"]').send_keys(container_list[check_container]) 
-        container_number = container_list[check_container]
 
         # Submit
         driver.find_element(By.XPATH,'//*[@id="formcontent"]/form/div[2]/div[2]/button').click() 
@@ -251,7 +239,7 @@ while True:
         sleep(1)
 
         # Call out multi_date_checker
-        multi_date_checker (appt_dates, wait, start_time, end_time, driver, check_days, container_number)
+        multi_date_checker (appt_dates, wait, start_time, end_time, driver, check_days)
 
         # if date_check_method == 'Check Single Date':
         #     # Sinle Date Checker

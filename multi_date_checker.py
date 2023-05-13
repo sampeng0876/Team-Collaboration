@@ -13,7 +13,7 @@ from tkcalendar import *
 import datetime as dt
 
 # Multiple Dates Checker
-def multi_date_checker(appt_dates, wait, start_time, end_time, driver, check_days):
+def multi_date_checker(appt_dates, wait, start_time, end_time, driver, check_days, container_number):
     for appt_date in appt_dates:
         days_checked = 0
         start_over = 1
@@ -92,8 +92,12 @@ def multi_date_checker(appt_dates, wait, start_time, end_time, driver, check_day
                     if click_time_slots_text == earliest_time:
                         click_time.click()
                         #print(f"Selected Appt Times From: {start_time} to {end_time}")
+
+                        # # Click Submit Button
                         # driver.find_element(By.XPATH,'//*[@id="action-section"]/button[1]').click()
-                        print(f"Successfully Booked The Earliest time: {earliest_time}")
+                        
+                        print(f'Container# {container_number}')
+                        print(f"Successfully Booked The Earliest time at {earliest_time} on {appt_date}")
                         break
                 except:
                     if error_count == 0:

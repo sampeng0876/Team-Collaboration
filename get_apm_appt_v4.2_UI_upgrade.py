@@ -15,6 +15,57 @@ from multi_date_checker import multi_date_checker
 import sv_ttk
 import tkinter
 from tkinter import ttk
+import customtkinter
+from login_info import login_info
+# Login Window
+####################################################################################################################
+# Theme settings
+customtkinter.set_appearance_mode("default") # mode: dark, light, system, default
+customtkinter.set_default_color_theme("dark-blue") # color: dark-blue, green
+
+root = customtkinter.CTk()
+# root.geometry("500x350")
+
+# Get the screen width and height
+screen_width = root.winfo_screenwidth()
+screen_height = root.winfo_screenheight()
+
+# Calculate the x and y coordinates for the window to be centered
+x = (screen_width - 500) // 2
+y = (screen_height - 600) // 2
+
+# Set the position of the window
+root.geometry(f"400x350+{x}+{y}")
+
+def login():
+    global username, password
+    username = username_input.get()
+    password = password_input.get()
+    root.destroy()
+
+frame = customtkinter.CTkFrame(master=root)
+frame.pack(pady=20, padx=60, fill="both", expand=True)
+
+label = customtkinter.CTkLabel(master=frame, text="Login", font=("Roboto", 20,'bold'))
+label.pack(pady=12, padx=10)
+
+username_input = customtkinter.CTkEntry(master=frame, placeholder_text="Username")
+username_input.pack(pady=12, padx=10)
+
+password_input = customtkinter.CTkEntry(master=frame, placeholder_text="Password", show="*")
+password_input.pack(pady=12, padx=10)
+
+button = customtkinter.CTkButton(master=frame, text="Login", command=login)
+button.pack(pady=12, padx=10)
+
+checkbox = customtkinter.CTkCheckBox(master=frame, text="Remember Me")
+checkbox.pack(pady=12, padx=18)
+
+root.mainloop()
+
+# Appointment Scheduler Window
+####################################################################################################################
+
 # Create a function to get the selected value and close the window
 def on_submit():
     global date_picker, start_time, end_time, check_days, appt_dates, appt_type, container_entry
@@ -95,7 +146,7 @@ container_list = []
 # choose_method = ['Check Single Date', 'Check Multi Dates']
 
 # Create labels and dropdowns for a calendar picker
-# Label(root, text="Select The Appt Date:").grid(column=0, row=0, padx=10, pady=5)
+Label(root, text="Select The Appt Date:").grid(column=0, row=0, padx=10, pady=5)
 cal = Calendar(root, selectmode="day")
 cal.grid(column=1, row=0, padx=10, pady=5)
 
@@ -109,7 +160,7 @@ cal.grid(column=1, row=0, padx=10, pady=5)
 # Create a Text widget for data entry
 # Create a label for data entry
 Label(root, text="Enter Container Number:").grid(column=0, row=1, padx=10, pady=5)
-container_entry = Text(root,height=10, width=40)
+container_entry = Text(root,height=10, width=30)
 container_entry.grid(column=1, row=1, padx=10, pady=5)
 
 
@@ -151,7 +202,7 @@ check_day_dropdown.config(width=5)
 check_day_dropdown.grid(column=1, row=5, padx=10, pady=5)
 
 # Create submit button
-submit_button = ttk.Button(root, width=5, text="OK", command=on_submit)
+submit_button = customtkinter.CTkButton(root, width=60, text="OK", command=on_submit)
 submit_button.grid(column=1, row=6, padx=10, pady=5)
 
 # Start the mainloop to display the window
@@ -189,24 +240,12 @@ driver.get("https://termpoint.apmterminals.com")
 # print(appt_date)
 # print(type(appt_date))
 
-# P1
-driver.find_element(By.XPATH, '//*[@id="Login_form"]/div[1]/div/div/input').send_keys("P1logistics")
-
-driver.find_element(By.XPATH, '//*[@id="Login_form"]/div[2]/div/div/input').send_keys("P1log5418")
-
-# # 20
-# driver.find_element(By.XPATH, '//*[@id="Login_form"]/div[1]/div/div/input').send_keys("twenty")
-
-# driver.find_element(By.XPATH, '//*[@id="Login_form"]/div[2]/div/div/input').send_keys("20Trans!")
-
-# Yuna 
-# driver.find_element(By.XPATH, '//*[@id="Login_form"]/div[1]/div/div/input').send_keys("wcofreightinc@gmail.com")
-
-# driver.find_element(By.XPATH, '//*[@id="Login_form"]/div[2]/div/div/input').send_keys("Seawolf321!")
+login_info(username,driver)
 
 driver.find_element(By.XPATH, '//*[@id="Login_form"]/div[3]/div/button').click()
 
 ####################################################################################################################
+
 check_container = 0
 while True:
     
