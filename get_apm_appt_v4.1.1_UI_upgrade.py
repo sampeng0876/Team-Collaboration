@@ -263,4 +263,3 @@ print("Done")
 
 # Close the browser
 driver.quit()
-# 5-13 update

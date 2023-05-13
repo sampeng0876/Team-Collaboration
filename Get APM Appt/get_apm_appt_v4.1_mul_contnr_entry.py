@@ -15,9 +15,12 @@ from multi_date_checker import multi_date_checker
 import sv_ttk
 import tkinter
 from tkinter import ttk
+import customtkinter
+
+
 # Create a function to get the selected value and close the window
 def on_submit():
-    global date_picker, start_time, end_time, check_days, appt_dates, appt_type, container_entry
+    global date_picker, start_time, end_time, check_days, appt_dates, appt_type, container_entry, username
     # date_picker = cal.get_date().strftime('%Y-%m-%d')
     # date_picker = cal.get_date()  # Assuming cal.get_date() returns the date string '5/9/23'
     # date_string = cal.get_date()  # Assuming cal.get_date() returns the date string '5/9/23'
@@ -56,6 +59,9 @@ def on_submit():
     print("Container List:")
     print(container_list)
     
+    # Get Username value
+    username = username_var.get()
+
     root.destroy()
 
 root = tkinter.Tk()
@@ -91,6 +97,9 @@ appt_types = ['IMPORT PICKUP', 'EMPTY DROPOFF']
 # List to store container entries
 container_list = []
 
+# List of Username
+username_info = ['20','yuna','p1']
+
 # # Create a list of date check method
 # choose_method = ['Check Single Date', 'Check Multi Dates']
 
@@ -106,12 +115,10 @@ cal.grid(column=1, row=0, padx=10, pady=5)
 # container_input = ttk.Entry(root,textvariable=container_var)
 # container_input.grid(column=1, row=1, padx=10, pady=5)
 
-# Create a Text widget for data entry
 # Create a label for data entry
 Label(root, text="Enter Container Number:").grid(column=0, row=1, padx=10, pady=5)
-container_entry = Text(root,height=10, width=40)
+container_entry = customtkinter.CTkTextbox(root, height=160, width=200, border_width=1 ,border_color="lightgray" )
 container_entry.grid(column=1, row=1, padx=10, pady=5)
-
 
 # Create labels and dropdowns for APPOINTMENT TYPE
 Label(root, text="Appointment Type:").grid(column=0, row=2, padx=10, pady=5)
@@ -150,9 +157,19 @@ check_day_dropdown = ttk.OptionMenu(root, check_day_var, '1', *check_day)
 check_day_dropdown.config(width=5)
 check_day_dropdown.grid(column=1, row=5, padx=10, pady=5)
 
+# Create Username Seclection
+Label(root, text="Username: ").grid(column=0, row=6, padx=10, pady=5)
+username_var = StringVar(root)
+# check_day_var.set("1")
+username_dropdown = ttk.OptionMenu(root, username_var, '20', *username_info)
+username_dropdown.config(width=5)
+username_dropdown.grid(column=1, row=6, padx=10, pady=5)
+
 # Create submit button
-submit_button = ttk.Button(root, width=5, text="OK", command=on_submit)
-submit_button.grid(column=1, row=6, padx=10, pady=5)
+# style = ttk.Style()
+# style.configure('Blue.TButton', foreground='blue', background='white')
+submit_button = customtkinter.CTkButton(root, width=60, text="OK", command=on_submit)
+submit_button.grid(column=1, row=7, padx=10, pady=5)
 
 # Start the mainloop to display the window
 root.mainloop()
@@ -189,20 +206,19 @@ driver.get("https://termpoint.apmterminals.com")
 # print(appt_date)
 # print(type(appt_date))
 
-# P1
-driver.find_element(By.XPATH, '//*[@id="Login_form"]/div[1]/div/div/input').send_keys("P1logistics")
+if username == 'p1':
+    driver.find_element(By.XPATH, '//*[@id="Login_form"]/div[1]/div/div/input').send_keys("P1logistics")
 
-driver.find_element(By.XPATH, '//*[@id="Login_form"]/div[2]/div/div/input').send_keys("P1log5418")
+    driver.find_element(By.XPATH, '//*[@id="Login_form"]/div[2]/div/div/input').send_keys("P1log5418")
 
-# # 20
-# driver.find_element(By.XPATH, '//*[@id="Login_form"]/div[1]/div/div/input').send_keys("twenty")
+elif username == '20':
+    driver.find_element(By.XPATH, '//*[@id="Login_form"]/div[1]/div/div/input').send_keys("twenty")
+    driver.find_element(By.XPATH, '//*[@id="Login_form"]/div[2]/div/div/input').send_keys("20Trans!")
 
-# driver.find_element(By.XPATH, '//*[@id="Login_form"]/div[2]/div/div/input').send_keys("20Trans!")
+elif username == 'yuna':
+    driver.find_element(By.XPATH, '//*[@id="Login_form"]/div[1]/div/div/input').send_keys("wcofreightinc@gmail.com")
 
-# Yuna 
-# driver.find_element(By.XPATH, '//*[@id="Login_form"]/div[1]/div/div/input').send_keys("wcofreightinc@gmail.com")
-
-# driver.find_element(By.XPATH, '//*[@id="Login_form"]/div[2]/div/div/input').send_keys("Seawolf321!")
+    driver.find_element(By.XPATH, '//*[@id="Login_form"]/div[2]/div/div/input').send_keys("Seawolf321!")
 
 driver.find_element(By.XPATH, '//*[@id="Login_form"]/div[3]/div/button').click()
 

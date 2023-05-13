@@ -17,51 +17,52 @@ import tkinter
 from tkinter import ttk
 import customtkinter
 from login_info import login_info
+
 # Login Window
 ####################################################################################################################
 # Theme settings
-customtkinter.set_appearance_mode("default") # mode: dark, light, system, default
-customtkinter.set_default_color_theme("dark-blue") # color: dark-blue, green
+# customtkinter.set_appearance_mode("default") # mode: dark, light, system, default
+# customtkinter.set_default_color_theme("dark-blue") # color: dark-blue, green
 
-root = customtkinter.CTk()
-# root.geometry("500x350")
+# root = customtkinter.CTk()
+# # root.geometry("500x350")
 
-# Get the screen width and height
-screen_width = root.winfo_screenwidth()
-screen_height = root.winfo_screenheight()
+# # Get the screen width and height
+# screen_width = root.winfo_screenwidth()
+# screen_height = root.winfo_screenheight()
 
-# Calculate the x and y coordinates for the window to be centered
-x = (screen_width - 500) // 2
-y = (screen_height - 600) // 2
+# # Calculate the x and y coordinates for the window to be centered
+# x = (screen_width - 500) // 2
+# y = (screen_height - 600) // 2
 
-# Set the position of the window
-root.geometry(f"400x350+{x}+{y}")
+# # Set the position of the window
+# root.geometry(f"400x350+{x}+{y}")
 
-def login():
-    global username, password
-    username = username_input.get()
-    password = password_input.get()
-    root.destroy()
+# def login():
+#     global username, password
+#     username = username_input.get()
+#     password = password_input.get()
+#     root.destroy()
 
-frame = customtkinter.CTkFrame(master=root)
-frame.pack(pady=20, padx=60, fill="both", expand=True)
+# frame = customtkinter.CTkFrame(master=root)
+# frame.pack(pady=20, padx=60, fill="both", expand=True)
 
-label = customtkinter.CTkLabel(master=frame, text="Login", font=("Roboto", 20,'bold'))
-label.pack(pady=12, padx=10)
+# label = customtkinter.CTkLabel(master=frame, text="Login", font=("Roboto", 20,'bold'))
+# label.pack(pady=12, padx=10)
 
-username_input = customtkinter.CTkEntry(master=frame, placeholder_text="Username")
-username_input.pack(pady=12, padx=10)
+# username_input = customtkinter.CTkEntry(master=frame, placeholder_text="Username")
+# username_input.pack(pady=12, padx=10)
 
-password_input = customtkinter.CTkEntry(master=frame, placeholder_text="Password", show="*")
-password_input.pack(pady=12, padx=10)
+# password_input = customtkinter.CTkEntry(master=frame, placeholder_text="Password", show="*")
+# password_input.pack(pady=12, padx=10)
 
-button = customtkinter.CTkButton(master=frame, text="Login", command=login)
-button.pack(pady=12, padx=10)
+# button = customtkinter.CTkButton(master=frame, text="Login", command=login)
+# button.pack(pady=12, padx=10)
 
-checkbox = customtkinter.CTkCheckBox(master=frame, text="Remember Me")
-checkbox.pack(pady=12, padx=18)
+# checkbox = customtkinter.CTkCheckBox(master=frame, text="Remember Me")
+# checkbox.pack(pady=12, padx=18)
 
-root.mainloop()
+# root.mainloop()
 
 # Appointment Scheduler Window
 ####################################################################################################################
