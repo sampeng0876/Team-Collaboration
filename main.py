@@ -180,7 +180,7 @@ root.mainloop()
 
 # Chrome Driver settings
 ####################################################################################################################
-# chrome_options = Options()
+chrome_options = Options()
 # # #chrome_options.add_argument("--disable-extensions")
 # # #chrome_options.add_argument("--disable-gpu")
 # chrome_options.add_argument("--headless")
@@ -189,9 +189,9 @@ root.mainloop()
 # chrome_options.headless = True
 
 # driver = webdriver.Chrome(options=chrome_options)
-chrome_options = webdriver.ChromeOptions()
-chrome_options.add_argument('--headless')
-driver = webdriver.Chrome(options=chrome_options)
+# chrome_options = webdriver.ChromeOptions()
+# chrome_options.add_argument('--headless')
+driver = webdriver.Chrome()
 driver.maximize_window()
 wait = WebDriverWait(driver, 10)
 driver.get("https://termpoint.apmterminals.com")
