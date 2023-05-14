@@ -35,7 +35,13 @@ def multi_date_checker(appt_dates, wait, start_time, end_time, driver, check_day
 
             # Create a for loop to find the Appointment Date
             for date in picker_day_current + picker_day_current_selected:
+                # Get all dates in calendar
                 date_text = date.find_element(by="xpath", value='./span').text
+                print(f'this is appt_date {appt_date}')
+                
+                # if appt_date.strftime("%d")=='1':
+                #     driver.find_element(By.XPATH,'//*[@id="ipgrid_0"]/div[3]/div[2]/div/div[2]/div/div[1]/div[1]/div[3]').click() 
+                #     continue
                 if date_text == appt_date.strftime("%d"):
                     date.click()
                     sleep(1)

@@ -3,14 +3,11 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from datetime import datetime, date, timedelta
+from datetime import datetime, timedelta
 from time import sleep
-import tkinter as tk
-from tkcalendar import DateEntry
 from selenium.webdriver.chrome.options import Options
 from tkinter import *
 from tkcalendar import *
-import datetime as dt
 from multi_date_checker import multi_date_checker
 from login_info import login_info
 import sv_ttk
@@ -23,20 +20,13 @@ import customtkinter
 ####################################################################################################################
 def on_submit():
     global date_picker, start_time, end_time, check_days, appt_dates, appt_type, container_entry, username
-    # date_picker = cal.get_date().strftime('%Y-%m-%d')
-    # date_picker = cal.get_date()  # Assuming cal.get_date() returns the date string '5/9/23'
-    # date_string = cal.get_date()  # Assuming cal.get_date() returns the date string '5/9/23'
-    # date_object = datetime.strptime(date_string, '%m/%d/%y')
-    # date_picker = date_object.strftime('%Y-%m-%d')
-    # print(type(date_picker))
-    # print(date_picker)
-
     # Get the calendar values
     formatted_date = cal.get_date()
     date_picker = datetime.strptime(formatted_date, '%m/%d/%y').date()
     # Get the check_days values from dropdowns
     check_days = check_day_var.get()
     appt_dates = [date_picker + timedelta(days=i) for i in range(int(check_days))]
+    print(appt_dates)
     # print(appt_dates)
     
     # Get the selected time values from the dropdowns
@@ -45,9 +35,6 @@ def on_submit():
 
     # Get the values of appointment type
     appt_type = appt_type_var.get()
-
-    # # Get the values of container
-    # container = container_var.get()
 
     # Check if the selected time range is available
     start_time = start_time_1
@@ -72,8 +59,6 @@ root = tkinter.Tk()
 # Set theme
 # sv_ttk.use_dark_theme()
 sv_ttk.use_light_theme()
-# root.title("Appointment Scheduler")
-# root.geometry("500x500")
 
 root.title("Appointment Scheduler")
 
@@ -104,20 +89,9 @@ container_list = []
 # List of Username
 username_info = ['20','yuna','p1']
 
-# # Create a list of date check method
-# choose_method = ['Check Single Date', 'Check Multi Dates']
-
-# Create labels and dropdowns for a calendar picker
-# Label(root, text="Select The Appt Date:").grid(column=0, row=0, padx=10, pady=5)
+# # Create calender
 cal = Calendar(root, selectmode="day")
 cal.grid(column=1, row=0, padx=10, pady=5)
-
-# # Create a label for containers
-# Label(root, text="Container Number:").grid(column=0, row=1, padx=10, pady=5)
-# container_var = StringVar(root)
-# # container_var.set("Enter Container Number")
-# container_input = ttk.Entry(root,textvariable=container_var)
-# container_input.grid(column=1, row=1, padx=10, pady=5)
 
 # Create a label for data entry
 Label(root, text="Enter Container Number:").grid(column=0, row=1, padx=10, pady=5)
@@ -147,13 +121,6 @@ end_time_dropdown = ttk.OptionMenu(root, end_time_var, 'To', *choose_time)
 end_time_dropdown.config(width=5)
 end_time_dropdown.grid(column=1, row=4, padx=10, pady=5)
 
-
-# Label(root, text="Date Check Method: ").grid(column=0, row=3, padx=10, pady=5)
-# date_check_method_var = StringVar(root)
-# date_check_method_var.set("Select A Method")
-# date_check_method_dropdown = OptionMenu(root, date_check_method_var, *choose_method)
-# date_check_method_dropdown.grid(column=1, row=3, padx=10, pady=5)
-
 Label(root, text="Check How Many Days: ").grid(column=0, row=5, padx=10, pady=5)
 check_day_var = StringVar(root)
 # check_day_var.set("1")
@@ -170,8 +137,6 @@ username_dropdown.config(width=5)
 username_dropdown.grid(column=1, row=6, padx=10, pady=5)
 
 # Create submit button
-# style = ttk.Style()
-# style.configure('Blue.TButton', foreground='blue', background='white')
 submit_button = customtkinter.CTkButton(root, width=60, text="OK", command=on_submit)
 submit_button.grid(column=1, row=7, padx=10, pady=5)
 
@@ -185,12 +150,6 @@ chrome_options = Options()
 # # #chrome_options.add_argument("--disable-gpu")
 # chrome_options.add_argument("--headless")
 
-# # Set the options to run the browser in headless mode
-# chrome_options.headless = True
-
-# driver = webdriver.Chrome(options=chrome_options)
-# chrome_options = webdriver.ChromeOptions()
-# chrome_options.add_argument('--headless')
 driver = webdriver.Chrome()
 driver.maximize_window()
 wait = WebDriverWait(driver, 10)
