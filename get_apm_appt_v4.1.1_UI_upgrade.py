@@ -22,22 +22,16 @@ import customtkinter
 # Create a function to get the selected value and close the window
 ####################################################################################################################
 def on_submit():
-    global date_picker, start_time, end_time, check_days, appt_dates, appt_type, container_entry, username
-    # date_picker = cal.get_date().strftime('%Y-%m-%d')
-    # date_picker = cal.get_date()  # Assuming cal.get_date() returns the date string '5/9/23'
-    # date_string = cal.get_date()  # Assuming cal.get_date() returns the date string '5/9/23'
-    # date_object = datetime.strptime(date_string, '%m/%d/%y')
-    # date_picker = date_object.strftime('%Y-%m-%d')
-    # print(type(date_picker))
-    # print(date_picker)
+    global start_time, end_time, check_days, appt_dates_list, appt_type, container_entry, username
 
     # Get the calendar values
-    formatted_date = cal.get_date()
-    date_picker = datetime.strptime(formatted_date, '%m/%d/%y').date()
+    date_picker= cal.get_date()
+    formatted_date = datetime.strptime(date_picker, '%m/%d/%y').date()
+
+    
     # Get the check_days values from dropdowns
     check_days = check_day_var.get()
-    appt_dates = [date_picker + timedelta(days=i) for i in range(int(check_days))]
-    # print(appt_dates)
+    appt_dates_list = [formatted_date + timedelta(days=i) for i in range(int(check_days))]
     
     # Get the selected time values from the dropdowns
     start_time_1 = start_time_var.get()
@@ -180,7 +174,7 @@ root.mainloop()
 
 # Chrome Driver settings
 ####################################################################################################################
-# chrome_options = Options()
+chrome_options = Options()
 # # #chrome_options.add_argument("--disable-extensions")
 # # #chrome_options.add_argument("--disable-gpu")
 # chrome_options.add_argument("--headless")
@@ -189,9 +183,9 @@ root.mainloop()
 # chrome_options.headless = True
 
 # driver = webdriver.Chrome(options=chrome_options)
-chrome_options = webdriver.ChromeOptions()
-chrome_options.add_argument('--headless')
-driver = webdriver.Chrome(options=chrome_options)
+# chrome_options = webdriver.ChromeOptions()
+# chrome_options.add_argument('--headless')
+driver = webdriver.Chrome()
 driver.maximize_window()
 wait = WebDriverWait(driver, 10)
 driver.get("https://termpoint.apmterminals.com")
@@ -244,15 +238,8 @@ while True:
         sleep(1)
 
         # Call out multi_date_checker
-        multi_date_checker (appt_dates, wait, start_time, end_time, driver, check_days, container_number)
+        multi_date_checker (appt_dates_list, wait, start_time, end_time, driver, check_days, container_number)
 
-        # if date_check_method == 'Check Single Date':
-        #     # Sinle Date Checker
-        #     single_date_checker(appt_dates, wait, start_time, end_time, driver, date_picker)
-        # elif date_check_method == 'Check Multi Dates':
-        #     # Multiple Dates Checker
-        #     multi_date_checker (appt_dates, wait, start_time, end_time, driver)        
-        #print(check_container)          
     if check_container == len(container_list):
         break
     else: check_container+=1

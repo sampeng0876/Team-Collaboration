@@ -14,7 +14,6 @@ import datetime as dt
 
 # Multiple Dates Checker
 def multi_date_checker(appt_dates, wait, start_time, end_time, driver, check_days, container_number):
-    previous_month = None
     for appt_date in appt_dates:
         days_checked = 0
         start_over = 1
@@ -22,7 +21,7 @@ def multi_date_checker(appt_dates, wait, start_time, end_time, driver, check_day
             if appt_date.weekday() in [5, 6]:  # Skip weekends (Saturday: 5, Sunday: 6)
                 appt_date += timedelta(days=1)
                 continue
-            
+
             # Find the calendar picker element
             calendar_picker = wait.until(EC.presence_of_element_located((By.XPATH,'//*[@id="calendar0"]')))
 
@@ -36,29 +35,17 @@ def multi_date_checker(appt_dates, wait, start_time, end_time, driver, check_day
 
             # Create a for loop to find the Appointment Date
             for date in picker_day_current + picker_day_current_selected:
-                          
+                                
+
+
                 # Get all dates in calendar
                 date_text = date.find_element(by="xpath", value='./span').text
-                # year, month, day = map(int, appt_date.split('-'))
                 # Check if the date is the same as the appointment date
                 if date_text == appt_date.strftime("%d"):
-                    # Check if the next day is in the next month
-                    # Check if the date is the first day of the month
+
                     date.click()
                     sleep(1)
                     break
-                # elif month != previous_month:
-                #         print("Today is the first day of the month")
-                #         driver.find_element(By.XPATH,'//*[@id="ipgrid_0"]/div[3]/div[2]/div/div[2]/div/div[1]/div[1]/div[3]').click() 
-                #         date.click()
-                #         sleep(1)
-                    # if appt_date.month > previous_month:
-                    #     print("This is next month")
-                    # if appt_date.month > appt_dates[-1].month:
-                    #     print("This is next month")
-
-                    
-                    
 
             print(f"Selected Appt Date: {appt_date}")
             print(f"Selected Appt Times From: {start_time} to {end_time}")
@@ -138,5 +125,6 @@ def multi_date_checker(appt_dates, wait, start_time, end_time, driver, check_day
             print(f"Sorry, No Time Slot Was Booked in {check_days} days. Starting Over again {start_over} times")
             start_over += 1
             days_checked = 0
+
         days_checked = 0  # Reset the days_checked counter
 
