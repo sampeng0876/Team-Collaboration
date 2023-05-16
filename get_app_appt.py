@@ -18,7 +18,7 @@ import tkinter
 from tkinter import ttk
 import customtkinter
 
-
+# Version v4.1_mul_contnr_entry
 # Create a function to get the selected value and close the window
 ####################################################################################################################
 def on_submit():
@@ -96,7 +96,7 @@ appt_types = ['IMPORT PICKUP', 'EMPTY DROPOFF']
 container_list = []
 
 # List of Username
-username_info = ['20','yuna','p1']
+username_info = ['p2','20','yuna','p1']
 
 # # Create a list of date check method
 # choose_method = ['Check Single Date', 'Check Multi Dates']
@@ -159,7 +159,7 @@ check_day_dropdown.grid(column=1, row=5, padx=10, pady=5)
 Label(root, text="Username: ").grid(column=0, row=6, padx=10, pady=5)
 username_var = StringVar(root)
 # check_day_var.set("1")
-username_dropdown = ttk.OptionMenu(root, username_var, '20', *username_info)
+username_dropdown = ttk.OptionMenu(root, username_var, 'p2', *username_info)
 username_dropdown.config(width=5)
 username_dropdown.grid(column=1, row=6, padx=10, pady=5)
 
@@ -187,7 +187,7 @@ chrome_options = Options()
 # chrome_options.add_argument('--headless')
 driver = webdriver.Chrome()
 driver.maximize_window()
-wait = WebDriverWait(driver, 10)
+wait = WebDriverWait(driver, 15)
 driver.get("https://termpoint.apmterminals.com")
 login_info(username,driver)
 driver.find_element(By.XPATH, '//*[@id="Login_form"]/div[3]/div/button').click()
@@ -247,6 +247,6 @@ while True:
 
 print("Done")
 
-
+# 5/15 Updated
 # Close the browser
-driver.quit()
+driver.quit() 

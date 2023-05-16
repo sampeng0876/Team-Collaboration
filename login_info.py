@@ -4,6 +4,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from datetime import datetime, date, timedelta
+ 
 
 
 def login_info(username,driver):
@@ -16,3 +17,6 @@ def login_info(username,driver):
     elif username == 'yuna': 
         driver.find_element(By.XPATH, '//*[@id="Login_form"]/div[1]/div/div/input').send_keys("wcofreightinc@gmail.com")
         driver.find_element(By.XPATH, '//*[@id="Login_form"]/div[2]/div/div/input').send_keys("Seawolf321!")
+    elif username == 'p2':
+        driver.find_element(By.XPATH, '//*[@id="Login_form"]/div[1]/div/div/input').send_keys("p1logistics168")
+        driver.find_element(By.XPATH, '//*[@id="Login_form"]/div[2]/div/div/input').send_keys("Port@20072009")

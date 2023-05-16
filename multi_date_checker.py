@@ -12,9 +12,12 @@ from tkinter import *
 from tkcalendar import *
 import datetime as dt
 
-# Multiple Dates Checker
+# Version v3_check_next_monty
+# Multiple Dates Checker 
 def multi_date_checker(appt_dates, wait, start_time, end_time, driver, check_days, container_number):
     previous_month = None
+    earliest_time = None  # initializing earliest_time with a default value
+
     for appt_date in appt_dates:
         days_checked = 0
         start_over = 1
@@ -22,44 +25,45 @@ def multi_date_checker(appt_dates, wait, start_time, end_time, driver, check_day
             if appt_date.weekday() in [5, 6]:  # Skip weekends (Saturday: 5, Sunday: 6)
                 appt_date += timedelta(days=1)
                 continue
-            
+
             # Find the calendar picker element
             calendar_picker = wait.until(EC.presence_of_element_located((By.XPATH,'//*[@id="calendar0"]')))
 
             # Click the date picker element to open the date picker
             calendar_picker.click()
-            sleep(1)
+
+
+            if previous_month is not None and int(previous_month) < int(appt_date.strftime("%m")):
+                next_month = wait.until(EC.presence_of_element_located((By.XPATH,'//*[@id="ipgrid_0"]/div[3]/div[2]/div/div[2]/div/div[1]/div[1]/div[3]')))
+                next_month.click()
+                # print(f'Clicked next_month {appt_date.strftime("%m")}')
+
+            elif previous_month is not None and int(previous_month) > int(appt_date.strftime("%m")):
+                last_month = wait.until(EC.presence_of_element_located((By.XPATH,'//*[@id="ipgrid_0"]/div[3]/div[2]/div/div[2]/div/div[1]/div[1]/div[1]')))
+                last_month.click()
+                # print(f'Clicked last_month: {appt_date.strftime("%m")}')
+
+                
 
             # Locate the dates of this month
             picker_day_current = driver.find_elements(by="xpath", value='//div[@class="react-flex-view align-content-center justify-content-center react-datepicker-picker day current"]')
             picker_day_current_selected = driver.find_elements(by="xpath", value='//div[@class="react-flex-view align-content-center justify-content-center react-datepicker-picker day current selected"]')
+            
 
             # Create a for loop to find the Appointment Date
-            for date in picker_day_current + picker_day_current_selected:
-                          
-                # Get all dates in calendar
+            for date in picker_day_current + picker_day_current_selected:                          
+                # Get all dates in calendar                
                 date_text = date.find_element(by="xpath", value='./span').text
-                # year, month, day = map(int, appt_date.split('-'))
-                # Check if the date is the same as the appointment date
-                if date_text == appt_date.strftime("%d"):
-                    # Check if the next day is in the next month
-                    # Check if the date is the first day of the month
+                # print(date_text)
+                # print(appt_date.strftime("%d").lstrip("0"))
+                # # Check if the date is the same as the appointment date
+                if date_text == appt_date.strftime("%d").lstrip("0"):
                     date.click()
+                    previous_month = appt_date.strftime("%m")
+                    # print(f'This Month {appt_date.strftime("%m")}')
+                    # print("Cliecked date")
                     sleep(1)
                     break
-                # elif month != previous_month:
-                #         print("Today is the first day of the month")
-                #         driver.find_element(By.XPATH,'//*[@id="ipgrid_0"]/div[3]/div[2]/div/div[2]/div/div[1]/div[1]/div[3]').click() 
-                #         date.click()
-                #         sleep(1)
-                    # if appt_date.month > previous_month:
-                    #     print("This is next month")
-                    # if appt_date.month > appt_dates[-1].month:
-                    #     print("This is next month")
-
-                    
-                    
-
             print(f"Selected Appt Date: {appt_date}")
             print(f"Selected Appt Times From: {start_time} to {end_time}")
 
@@ -97,6 +101,9 @@ def multi_date_checker(appt_dates, wait, start_time, end_time, driver, check_day
                     print(f"Sorry, No Time Slot Was Booked in {check_days} days. Starting Over again {start_over} times")
                     start_over += 1
                     days_checked = 0
+                # break the while loop if checked 3 times
+                elif start_over == 4:
+                    break
                 continue
 
             # Error counter
@@ -113,7 +120,7 @@ def multi_date_checker(appt_dates, wait, start_time, end_time, driver, check_day
                         #print(f"Selected Appt Times From: {start_time} to {end_time}")
 
                         # # Click Submit Button
-                        # driver.find_element(By.XPATH,'//*[@id="action-section"]/button[1]').click()
+                        driver.find_element(By.XPATH,'//*[@id="action-section"]/button[1]').click()
                         
                         print(f'Container# {container_number}')
                         print(f"Successfully Booked The Earliest time at {earliest_time} on {appt_date}")
@@ -128,15 +135,18 @@ def multi_date_checker(appt_dates, wait, start_time, end_time, driver, check_day
                 break
 
             # Increment the appointment date by one day
-            appt_date += timedelta(days=1)
-
-        if earliest_time:
+            appt_date += timedelta(days=1)  
+            
+        # break the while loop if checked 3 times     
+        if earliest_time or start_over:
             break
-        # Print a message if no earliest time slot was booked after checking all days
-        if days_checked == len(appt_dates):
-            appt_date = appt_dates[0]
-            print(f"Sorry, No Time Slot Was Booked in {check_days} days. Starting Over again {start_over} times")
-            start_over += 1
-            days_checked = 0
-        days_checked = 0  # Reset the days_checked counter
+
+
+        # # Print a message if no earliest time slot was booked after checking all days
+        # if days_checked == len(appt_dates):
+        #     appt_date = appt_dates[0]
+        #     print(f"Sorry, No Time Slot Was Booked in {check_days} days. Starting Over again {start_over} times")
+        #     start_over += 1
+        #     days_checked = 0
+        # days_checked = 0  # Reset the days_checked counter
 

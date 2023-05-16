@@ -12,79 +12,26 @@ from tkinter import *
 from tkcalendar import *
 import datetime as dt
 from multi_date_checker import multi_date_checker
+from login_info import login_info
 import sv_ttk
 import tkinter
 from tkinter import ttk
 import customtkinter
-from login_info import login_info
 
-# Login Window
-####################################################################################################################
-# Theme settings
-# customtkinter.set_appearance_mode("default") # mode: dark, light, system, default
-# customtkinter.set_default_color_theme("dark-blue") # color: dark-blue, green
-
-# root = customtkinter.CTk()
-# # root.geometry("500x350")
-
-# # Get the screen width and height
-# screen_width = root.winfo_screenwidth()
-# screen_height = root.winfo_screenheight()
-
-# # Calculate the x and y coordinates for the window to be centered
-# x = (screen_width - 500) // 2
-# y = (screen_height - 600) // 2
-
-# # Set the position of the window
-# root.geometry(f"400x350+{x}+{y}")
-
-# def login():
-#     global username, password
-#     username = username_input.get()
-#     password = password_input.get()
-#     root.destroy()
-
-# frame = customtkinter.CTkFrame(master=root)
-# frame.pack(pady=20, padx=60, fill="both", expand=True)
-
-# label = customtkinter.CTkLabel(master=frame, text="Login", font=("Roboto", 20,'bold'))
-# label.pack(pady=12, padx=10)
-
-# username_input = customtkinter.CTkEntry(master=frame, placeholder_text="Username")
-# username_input.pack(pady=12, padx=10)
-
-# password_input = customtkinter.CTkEntry(master=frame, placeholder_text="Password", show="*")
-# password_input.pack(pady=12, padx=10)
-
-# button = customtkinter.CTkButton(master=frame, text="Login", command=login)
-# button.pack(pady=12, padx=10)
-
-# checkbox = customtkinter.CTkCheckBox(master=frame, text="Remember Me")
-# checkbox.pack(pady=12, padx=18)
-
-# root.mainloop()
-
-# Appointment Scheduler Window
-####################################################################################################################
 
 # Create a function to get the selected value and close the window
+####################################################################################################################
 def on_submit():
-    global date_picker, start_time, end_time, check_days, appt_dates, appt_type, container_entry
-    # date_picker = cal.get_date().strftime('%Y-%m-%d')
-    # date_picker = cal.get_date()  # Assuming cal.get_date() returns the date string '5/9/23'
-    # date_string = cal.get_date()  # Assuming cal.get_date() returns the date string '5/9/23'
-    # date_object = datetime.strptime(date_string, '%m/%d/%y')
-    # date_picker = date_object.strftime('%Y-%m-%d')
-    # print(type(date_picker))
-    # print(date_picker)
+    global start_time, end_time, check_days, appt_dates_list, appt_type, container_entry, username
 
     # Get the calendar values
-    formatted_date = cal.get_date()
-    date_picker = datetime.strptime(formatted_date, '%m/%d/%y').date()
+    date_picker= cal.get_date()
+    formatted_date = datetime.strptime(date_picker, '%m/%d/%y').date()
+
+    
     # Get the check_days values from dropdowns
     check_days = check_day_var.get()
-    appt_dates = [date_picker + timedelta(days=i) for i in range(int(check_days))]
-    # print(appt_dates)
+    appt_dates_list = [formatted_date + timedelta(days=i) for i in range(int(check_days))]
     
     # Get the selected time values from the dropdowns
     start_time_1 = start_time_var.get()
@@ -108,8 +55,13 @@ def on_submit():
     print("Container List:")
     print(container_list)
     
+    # Get Username value
+    username = username_var.get()
+
     root.destroy()
 
+# UI settings
+####################################################################################################################
 root = tkinter.Tk()
 # Set theme
 # sv_ttk.use_dark_theme()
@@ -143,11 +95,14 @@ appt_types = ['IMPORT PICKUP', 'EMPTY DROPOFF']
 # List to store container entries
 container_list = []
 
+# List of Username
+username_info = ['p2','20','yuna','p1']
+
 # # Create a list of date check method
 # choose_method = ['Check Single Date', 'Check Multi Dates']
 
 # Create labels and dropdowns for a calendar picker
-Label(root, text="Select The Appt Date:").grid(column=0, row=0, padx=10, pady=5)
+# Label(root, text="Select The Appt Date:").grid(column=0, row=0, padx=10, pady=5)
 cal = Calendar(root, selectmode="day")
 cal.grid(column=1, row=0, padx=10, pady=5)
 
@@ -158,12 +113,10 @@ cal.grid(column=1, row=0, padx=10, pady=5)
 # container_input = ttk.Entry(root,textvariable=container_var)
 # container_input.grid(column=1, row=1, padx=10, pady=5)
 
-# Create a Text widget for data entry
 # Create a label for data entry
 Label(root, text="Enter Container Number:").grid(column=0, row=1, padx=10, pady=5)
-container_entry = Text(root,height=10, width=30)
+container_entry = customtkinter.CTkTextbox(root, height=160, width=200, border_width=1 ,border_color="lightgray" )
 container_entry.grid(column=1, row=1, padx=10, pady=5)
-
 
 # Create labels and dropdowns for APPOINTMENT TYPE
 Label(root, text="Appointment Type:").grid(column=0, row=2, padx=10, pady=5)
@@ -202,15 +155,26 @@ check_day_dropdown = ttk.OptionMenu(root, check_day_var, '1', *check_day)
 check_day_dropdown.config(width=5)
 check_day_dropdown.grid(column=1, row=5, padx=10, pady=5)
 
+# Create Username Seclection
+Label(root, text="Username: ").grid(column=0, row=6, padx=10, pady=5)
+username_var = StringVar(root)
+# check_day_var.set("1")
+username_dropdown = ttk.OptionMenu(root, username_var, 'p2', *username_info)
+username_dropdown.config(width=5)
+username_dropdown.grid(column=1, row=6, padx=10, pady=5)
+
 # Create submit button
+# style = ttk.Style()
+# style.configure('Blue.TButton', foreground='blue', background='white')
 submit_button = customtkinter.CTkButton(root, width=60, text="OK", command=on_submit)
-submit_button.grid(column=1, row=6, padx=10, pady=5)
+submit_button.grid(column=1, row=7, padx=10, pady=5)
 
 # Start the mainloop to display the window
 root.mainloop()
 
-
-# chrome_options = Options()
+# Chrome Driver settings
+####################################################################################################################
+chrome_options = Options()
 # # #chrome_options.add_argument("--disable-extensions")
 # # #chrome_options.add_argument("--disable-gpu")
 # chrome_options.add_argument("--headless")
@@ -219,34 +183,17 @@ root.mainloop()
 # chrome_options.headless = True
 
 # driver = webdriver.Chrome(options=chrome_options)
-chrome_options = webdriver.ChromeOptions()
+# chrome_options = webdriver.ChromeOptions()
 # chrome_options.add_argument('--headless')
-
-
-driver = webdriver.Chrome(options=chrome_options)
-
+driver = webdriver.Chrome()
 driver.maximize_window()
-wait = WebDriverWait(driver, 10)
+wait = WebDriverWait(driver, 15)
 driver.get("https://termpoint.apmterminals.com")
-# Container Number
-# ctnrno = 'TGHU6723051'
-
-# print(date_picker)
-# print(type(date_picker))
-# appt_date = date_picker
-
-# print(apptdate)
-# print(type(apptdate))
-# appt_date = date.today()
-# print(appt_date)
-# print(type(appt_date))
-
 login_info(username,driver)
-
 driver.find_element(By.XPATH, '//*[@id="Login_form"]/div[3]/div/button').click()
 
+# Main Loop
 ####################################################################################################################
-
 check_container = 0
 while True:
     
@@ -291,15 +238,8 @@ while True:
         sleep(1)
 
         # Call out multi_date_checker
-        multi_date_checker (appt_dates, wait, start_time, end_time, driver, check_days, container_number)
+        multi_date_checker (appt_dates_list, wait, start_time, end_time, driver, check_days, container_number)
 
-        # if date_check_method == 'Check Single Date':
-        #     # Sinle Date Checker
-        #     single_date_checker(appt_dates, wait, start_time, end_time, driver, date_picker)
-        # elif date_check_method == 'Check Multi Dates':
-        #     # Multiple Dates Checker
-        #     multi_date_checker (appt_dates, wait, start_time, end_time, driver)        
-        #print(check_container)          
     if check_container == len(container_list):
         break
     else: check_container+=1

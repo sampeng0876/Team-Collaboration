@@ -108,7 +108,3 @@ def multi_date_checker(appt_date, wait, start_time, end_time, driver):
         return
 
     
-
-# Rest of the code...
-
-# You can include the necessary import statements and main code to run the function here

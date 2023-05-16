@@ -12,30 +12,26 @@ from tkinter import *
 from tkcalendar import *
 import datetime as dt
 from multi_date_checker import multi_date_checker
+from login_info import login_info
 import sv_ttk
 import tkinter
 from tkinter import ttk
 import customtkinter
 
-
+# Version V3
 # Create a function to get the selected value and close the window
+####################################################################################################################
 def on_submit():
-    global date_picker, start_time, end_time, check_days, appt_dates, appt_type, container_entry, username
-    # date_picker = cal.get_date().strftime('%Y-%m-%d')
-    # date_picker = cal.get_date()  # Assuming cal.get_date() returns the date string '5/9/23'
-    # date_string = cal.get_date()  # Assuming cal.get_date() returns the date string '5/9/23'
-    # date_object = datetime.strptime(date_string, '%m/%d/%y')
-    # date_picker = date_object.strftime('%Y-%m-%d')
-    # print(type(date_picker))
-    # print(date_picker)
+    global start_time, end_time, check_days, appt_dates_list, appt_type, container_entry, username
 
     # Get the calendar values
-    formatted_date = cal.get_date()
-    date_picker = datetime.strptime(formatted_date, '%m/%d/%y').date()
+    date_picker= cal.get_date()
+    formatted_date = datetime.strptime(date_picker, '%m/%d/%y').date()
+
+    
     # Get the check_days values from dropdowns
     check_days = check_day_var.get()
-    appt_dates = [date_picker + timedelta(days=i) for i in range(int(check_days))]
-    # print(appt_dates)
+    appt_dates_list = [formatted_date + timedelta(days=i) for i in range(int(check_days))]
     
     # Get the selected time values from the dropdowns
     start_time_1 = start_time_var.get()
@@ -64,6 +60,8 @@ def on_submit():
 
     root.destroy()
 
+# UI settings
+####################################################################################################################
 root = tkinter.Tk()
 # Set theme
 # sv_ttk.use_dark_theme()
@@ -98,7 +96,7 @@ appt_types = ['IMPORT PICKUP', 'EMPTY DROPOFF']
 container_list = []
 
 # List of Username
-username_info = ['20','yuna','p1']
+username_info = ['p2','20','yuna','p1']
 
 # # Create a list of date check method
 # choose_method = ['Check Single Date', 'Check Multi Dates']
@@ -161,7 +159,7 @@ check_day_dropdown.grid(column=1, row=5, padx=10, pady=5)
 Label(root, text="Username: ").grid(column=0, row=6, padx=10, pady=5)
 username_var = StringVar(root)
 # check_day_var.set("1")
-username_dropdown = ttk.OptionMenu(root, username_var, '20', *username_info)
+username_dropdown = ttk.OptionMenu(root, username_var, 'p2', *username_info)
 username_dropdown.config(width=5)
 username_dropdown.grid(column=1, row=6, padx=10, pady=5)
 
@@ -174,8 +172,9 @@ submit_button.grid(column=1, row=7, padx=10, pady=5)
 # Start the mainloop to display the window
 root.mainloop()
 
-
-# chrome_options = Options()
+# Chrome Driver settings
+####################################################################################################################
+chrome_options = Options()
 # # #chrome_options.add_argument("--disable-extensions")
 # # #chrome_options.add_argument("--disable-gpu")
 # chrome_options.add_argument("--headless")
@@ -184,44 +183,16 @@ root.mainloop()
 # chrome_options.headless = True
 
 # driver = webdriver.Chrome(options=chrome_options)
-chrome_options = webdriver.ChromeOptions()
+# chrome_options = webdriver.ChromeOptions()
 # chrome_options.add_argument('--headless')
-
-
-driver = webdriver.Chrome(options=chrome_options)
-
+driver = webdriver.Chrome()
 driver.maximize_window()
-wait = WebDriverWait(driver, 10)
+wait = WebDriverWait(driver, 15)
 driver.get("https://termpoint.apmterminals.com")
-# Container Number
-# ctnrno = 'TGHU6723051'
-
-# print(date_picker)
-# print(type(date_picker))
-# appt_date = date_picker
-
-# print(apptdate)
-# print(type(apptdate))
-# appt_date = date.today()
-# print(appt_date)
-# print(type(appt_date))
-
-if username == 'p1':
-    driver.find_element(By.XPATH, '//*[@id="Login_form"]/div[1]/div/div/input').send_keys("P1logistics")
-
-    driver.find_element(By.XPATH, '//*[@id="Login_form"]/div[2]/div/div/input').send_keys("P1log5418")
-
-elif username == '20':
-    driver.find_element(By.XPATH, '//*[@id="Login_form"]/div[1]/div/div/input').send_keys("twenty")
-    driver.find_element(By.XPATH, '//*[@id="Login_form"]/div[2]/div/div/input').send_keys("20Trans!")
-
-elif username == 'yuna':
-    driver.find_element(By.XPATH, '//*[@id="Login_form"]/div[1]/div/div/input').send_keys("wcofreightinc@gmail.com")
-
-    driver.find_element(By.XPATH, '//*[@id="Login_form"]/div[2]/div/div/input').send_keys("Seawolf321!")
-
+login_info(username,driver)
 driver.find_element(By.XPATH, '//*[@id="Login_form"]/div[3]/div/button').click()
 
+# Main Loop
 ####################################################################################################################
 check_container = 0
 while True:
@@ -267,15 +238,8 @@ while True:
         sleep(1)
 
         # Call out multi_date_checker
-        multi_date_checker (appt_dates, wait, start_time, end_time, driver, check_days, container_number)
+        multi_date_checker (appt_dates_list, wait, start_time, end_time, driver, check_days, container_number)
 
-        # if date_check_method == 'Check Single Date':
-        #     # Sinle Date Checker
-        #     single_date_checker(appt_dates, wait, start_time, end_time, driver, date_picker)
-        # elif date_check_method == 'Check Multi Dates':
-        #     # Multiple Dates Checker
-        #     multi_date_checker (appt_dates, wait, start_time, end_time, driver)        
-        #print(check_container)          
     if check_container == len(container_list):
         break
     else: check_container+=1
@@ -283,6 +247,6 @@ while True:
 
 print("Done")
 
-
+# 5/15 Updated
 # Close the browser
-driver.quit()
+driver.quit() 
