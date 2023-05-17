@@ -9,6 +9,8 @@ import tkinter as tk
 from tkcalendar import DateEntry
 from selenium.webdriver.chrome.options import Options
 import pandas as pd
+from openpyxl import load_workbook
+from openpyxl.utils import get_column_letter
 
 
 # chrome_options = Options()
@@ -18,6 +20,12 @@ import pandas as pd
 
 # Set the options to run the browser in headless mode
 # chrome_options.headless = True
+
+# Load the workbook
+workbook = load_workbook('LFD.xlsx')
+
+# Select sheet2
+sheet = workbook['APM']  # Change the sheet name accordingly
 
 driver = webdriver.Chrome()
 driver.maximize_window()
@@ -56,49 +64,33 @@ table_header = WebDriverWait(driver, 10).until(EC.presence_of_all_elements_locat
 table_row = WebDriverWait(driver, 10).until(EC.presence_of_all_elements_located((By.XPATH, '//*[@class="trace-listing__tbody"]/tr')))
 
 
-# print(container_id_elements)
-# print(len(container_id_elements))
+get_data = WebDriverWait(driver, 10).until(EC.presence_of_all_elements_located((By.XPATH, '//*[@class="trace-listing__tbody"]/tr/td')))
+data_list = []
 
-# for info in container_id_elements:
-#     #info_text = info.find_element(By.XPATH, '//*[@class="trace-listing__tbody"]/tr/td').text
-#     info_text = info.text
-#     print(info_text)
+# Replace empty strings with None
+#data_list = [item if item.strip() else None for item in data_list]
 
-# get_table_data = pd.read_html("https://www.apmterminals.com/en/los-angeles/track-and-trace/import-availability")
-
-# print(get_table_data)
-# Create a list to store the extracted text
-data = []
-i=1
 # Loop through the container_id_elements and extract the text
-for info in WebDriverWait(driver, 10).until(EC.presence_of_all_elements_located((By.XPATH, f'//*[@id="main"]/div[2]/div[1]/div[2]/div/div[8]/div/table/tbody/tr[{i}]/td'))):
-    info_text = info.text    
-    data.append([info_text])
-    print(data)
-    i+=1
-# Create a DataFrame from the data
-# df = pd.DataFrame(data, columns=["Check Box",
-#                                  "Container ID",
-#                                  "Bill Of Lading",
-#                                  "Status","Line",
-#                                  "Vessel name",
-#                                  "Vessel ETA",
-#                                  "Discharge Date", 
-#                                  "Yard Location Location",
-#                                  "Freight",
-#                                  "Customs",
-#                                  "Holds",
-#                                  "LFD",
-#                                  "Demurrage",
-#                                  "Size / Type / Height",
-#                                  "Weight","Hazardous",
-#                                  "Appointment date*",
-#                                  "Gate Out Date"])
-df = pd.DataFrame(data, columns=["Check Box"])
-# print(df)
+for info in get_data:
+    info_text = info.text  
+    #print(info_text)  
+    data_list.append(info_text)
+    #print(data_list)
+    
+# Store the data to Excel file
+row = 2 # Start row
+column = 1 # Start column
+for item in data_list:
+    sheet.cell(row=row, column=column).value = item
+    column += 1
 
-# Save the DataFrame to an Excel file named apm_container_info.xlsx
-df.to_excel("apm_container_info.xlsx", index=False)
+    if column % 21 == 0:
+        row += 1
+        column = 1
+
+
+# Save the modified workbook
+workbook.save("LFD.xlsx")
 
 
 
