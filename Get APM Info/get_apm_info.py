@@ -41,7 +41,7 @@ driver.find_element(By.XPATH, '//*[@id="main"]/div[3]/div/div[2]/button').click(
 sleep(3)
 
 # Click track and trace button
-containers = ['EMCU8377066','TLLU4574003']
+containers = ['EMCU8377066','MEDU7539050']
 driver.find_element(By.XPATH, '//*[@class="track-and-trace__tags"]').click()
 # print(containers)
 container_list = '\n'.join(containers)
@@ -60,27 +60,46 @@ driver.find_element(By.XPATH, '//*[@class="track-and-trace__submit-inner"]/butto
 # sleep(10)
 
 #container_id_elements = WebDriverWait(driver, 10).until(EC.presence_of_all_elements_located((By.XPATH, '//*[@id="main"]/div[2]/div[1]/div[2]/div/div[8]/div/table/tbody/tr[1]/td')))
-table_header = WebDriverWait(driver, 10).until(EC.presence_of_all_elements_located((By.XPATH, '//*[@class="trace-listing__row"]/th')))
-table_row = WebDriverWait(driver, 10).until(EC.presence_of_all_elements_located((By.XPATH, '//*[@class="trace-listing__tbody"]/tr')))
+# table_header = WebDriverWait(driver, 10).until(EC.presence_of_all_elements_located((By.XPATH, '//*[@class="trace-listing__row"]/th')))
+# table_row = WebDriverWait(driver, 10).until(EC.presence_of_all_elements_located((By.XPATH, '//*[@class="trace-listing__tbody"]/tr')))
 
-
+# Get data
 get_data = WebDriverWait(driver, 10).until(EC.presence_of_all_elements_located((By.XPATH, '//*[@class="trace-listing__tbody"]/tr/td')))
 data_list = []
-
-# Replace empty strings with None
-#data_list = [item if item.strip() else None for item in data_list]
 
 # Loop through the container_id_elements and extract the text
 for info in get_data:
     info_text = info.text  
-    #print(info_text)  
     data_list.append(info_text)
-    #print(data_list)
     
 # Store the data to Excel file
 row = 2 # Start row
 column = 1 # Start column
+availablebilities = driver.find_element(By.XPATH,'//*[@id="main"]/div[2]/div[1]/div[2]/div/div[8]/div/table/tbody/tr/td[4]/span').text
+
+# Find the element using its class name
+
+
+# alt_value = driver.find_element(By.XPATH, '//*[@ class="trace-listing__icon"]').get_attribute('alt')
+alt_elements = driver.find_elements(By.XPATH, '//*[@ class="trace-listing__icon"]')
+# Print the value of "alt"
+# print(alt_elements.get_attribute('alt')[0])
+# print(alt_elements.get_attribute('alt')[1])
+
+
 for item in data_list:
+    
+    # for alt_value in alt_elements:
+    #     get_alt_attribute = alt_value.get_attribute('alt')
+    #     if get_alt_attribute == 'ready':
+    #         item = 'Yes'
+    #         print(f'this is READY {item}')
+            
+    #     elif get_alt_attribute == 'not-ready':
+    #         item = 'No'
+    #         print(f'this is NOT READY {item}')
+            
+    print(item)
     sheet.cell(row=row, column=column).value = item
     column += 1
 
