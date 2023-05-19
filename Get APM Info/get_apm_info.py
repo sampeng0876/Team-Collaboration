@@ -5,21 +5,20 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from datetime import datetime, timedelta
 from time import sleep
-import tkinter as tk
-from tkcalendar import DateEntry
 from selenium.webdriver.chrome.options import Options
 import pandas as pd
 from openpyxl import load_workbook
 from openpyxl.utils import get_column_letter
+import tkinter as tk
+from tkcalendar import DateEntry
+from tkinter import *
+from tkcalendar import *
+import datetime as dt
+import sv_ttk
+import tkinter
+from tkinter import ttk
+import customtkinter
 
-
-# chrome_options = Options()
-# # #chrome_options.add_argument("--disable-extensions")
-# # #chrome_options.add_argument("--disable-gpu")
-# chrome_options.add_argument("--headless")
-
-# Set the options to run the browser in headless mode
-# chrome_options.headless = True
 
 # Load the workbook
 workbook = load_workbook('LFD.xlsx')
@@ -41,7 +40,15 @@ driver.find_element(By.XPATH, '//*[@id="main"]/div[3]/div/div[2]/button').click(
 sleep(3)
 
 # Click track and trace button
-containers = ['EMCU8377066','MEDU7539050']
+containers = ['EMCU8377066',
+              'MEDU7539050',
+              'TRHU5651832',
+              'FFAU2201877',
+              'MSMU6808501',
+              'MSMU4342780',
+              'TCNU8730356',
+              'GLDU7605680']
+
 driver.find_element(By.XPATH, '//*[@class="track-and-trace__tags"]').click()
 # print(containers)
 container_list = '\n'.join(containers)
@@ -64,48 +71,67 @@ driver.find_element(By.XPATH, '//*[@class="track-and-trace__submit-inner"]/butto
 # table_row = WebDriverWait(driver, 10).until(EC.presence_of_all_elements_located((By.XPATH, '//*[@class="trace-listing__tbody"]/tr')))
 
 # Get data
-get_data = WebDriverWait(driver, 10).until(EC.presence_of_all_elements_located((By.XPATH, '//*[@class="trace-listing__tbody"]/tr/td')))
+get_data = WebDriverWait(driver, 10).until(
+    EC.presence_of_all_elements_located((
+    # //*[@class="trace-listing__tbody"]/tr/td # Get all data elements
+    # //*[@id="main"]/div[2]/div[1]/div[2]/div/div[8]/div/table/tbody/tr[1] # 1st row data element
+    # //*[@id="main"]/div[2]/div[1]/div[2]/div/div[8]/div/table/tbody/tr[2] # 2nd row data element    
+    By.XPATH, '//*[@class="trace-listing__tbody"]/tr/td')))
+
+
 data_list = []
 
 # Loop through the container_id_elements and extract the text
 for info in get_data:
     info_text = info.text  
     data_list.append(info_text)
-    
-# Store the data to Excel file
-row = 2 # Start row
-column = 1 # Start column
-availablebilities = driver.find_element(By.XPATH,'//*[@id="main"]/div[2]/div[1]/div[2]/div/div[8]/div/table/tbody/tr/td[4]/span').text
+print(data_list)    
 
-# Find the element using its class name
-
-
+# Get alt attributes Yes or No 
 # alt_value = driver.find_element(By.XPATH, '//*[@ class="trace-listing__icon"]').get_attribute('alt')
-alt_elements = driver.find_elements(By.XPATH, '//*[@ class="trace-listing__icon"]')
+get_alt = driver.find_elements(By.XPATH, '//*[@ class="trace-listing__icon"]')
+alt_list = []
+for info in get_alt:
+    info_text = info.get_attribute('alt')
+    alt_list.append(info_text)
 # Print the value of "alt"
 # print(alt_elements.get_attribute('alt')[0])
 # print(alt_elements.get_attribute('alt')[1])
+print(alt_list)
 
 
-for item in data_list:
-    
-    # for alt_value in alt_elements:
-    #     get_alt_attribute = alt_value.get_attribute('alt')
-    #     if get_alt_attribute == 'ready':
-    #         item = 'Yes'
-    #         print(f'this is READY {item}')
-            
-    #     elif get_alt_attribute == 'not-ready':
-    #         item = 'No'
-    #         print(f'this is NOT READY {item}')
-            
-    print(item)
-    sheet.cell(row=row, column=column).value = item
-    column += 1
+# # V1 #################################
 
-    if column % 21 == 0:
-        row += 1
-        column = 1
+# Store the data to Excel file
+# row = 2 # Start row
+# column = 1 # Start column
+
+# for item in data_list:
+
+#     sheet.cell(row=row, column=column).value = item
+#     column += 1
+
+#     if column % 21 == 0:
+#         row += 1
+#         column = 1
+
+# V2 ##################################
+
+start_row = 2
+start_col = 1
+# Replacing values in list2
+alt_list = ['Yes' if item == 'ready' else 'No' for item in alt_list]
+
+# Iterate through the data and store it in the worksheet
+for i, value in enumerate(data_list):
+    col = start_col + (i % 20)
+    row = start_row + (i // 20)
+
+    # Check if the 4th, 24th, 44th, 64th, and so on elements are empty
+    if i % 20 == 3 and value == '':
+        value = alt_list[i // 20 % len(alt_list)]
+
+    sheet.cell(row=row, column=col).value = value
 
 
 # Save the modified workbook
