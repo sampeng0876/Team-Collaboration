@@ -19,7 +19,62 @@ import tkinter
 from tkinter import ttk
 import customtkinter
 
+# Create a function to get the selected value and close the window
+####################################################################################################################
+def on_submit():
+    global container_entry
+    
+    # Get container entries
+    data = container_entry.get("1.0", "end-1c")
+    lines = data.split("\n")
+    container_list.extend(lines)
+    container_entry.delete("1.0", "end")
+    print("Container List:")
+    print(container_list)  
+    root.destroy()
 
+
+# UI Window Settings
+####################################################################################################################
+root = tkinter.Tk()
+# Set theme
+# sv_ttk.use_dark_theme()
+sv_ttk.use_light_theme()
+# root.title("Appointment Scheduler")
+# root.geometry("500x500")
+
+root.title("Appointment Scheduler")
+
+# Get the screen width and height
+screen_width = root.winfo_screenwidth()
+screen_height = root.winfo_screenheight()
+
+# Calculate the x and y coordinates for the window to be centered
+x = (screen_width - 210) // 2
+y = (screen_height - 250) // 2
+
+# Set the position of the window
+root.geometry(f"210x250+{x}+{y}")
+
+# List to store container entries
+container_list = []
+
+# Create a label for data entry
+Label(root, text="Enter Container Number:").grid(column=1, row=1, padx=5, pady=5)
+container_entry = customtkinter.CTkTextbox(root, height=160, width=200, border_width=1 ,border_color="lightgray" )
+container_entry.grid(column=1, row=2, padx=5, pady=5)
+
+# Create submit button
+# style = ttk.Style()
+# style.configure('Blue.TButton', foreground='blue', background='white')
+submit_button = customtkinter.CTkButton(root, width=60, text="OK", command=on_submit)
+submit_button.grid(column=1, row=7, padx=10, pady=5)
+
+# Start the mainloop to display the window
+root.mainloop()
+
+# Main
+####################################################################################################################
 # Load the workbook
 workbook = load_workbook('LFD.xlsx')
 
@@ -40,18 +95,18 @@ driver.find_element(By.XPATH, '//*[@id="main"]/div[3]/div/div[2]/button').click(
 sleep(3)
 
 # Click track and trace button
-containers = ['EMCU8377066',
-              'MEDU7539050',
-              'TRHU5651832',
-              'FFAU2201877',
-              'MSMU6808501',
-              'MSMU4342780',
-              'TCNU8730356',
-              'GLDU7605680']
+# containers = ['EMCU8377066',
+#               'MEDU7539050',
+#               'TRHU5651832',
+#               'FFAU2201877',
+#               'MSMU6808501',
+#               'MSMU4342780',
+#               'TCNU8730356',
+#               'GLDU7605680']
 
 driver.find_element(By.XPATH, '//*[@class="track-and-trace__tags"]').click()
 # print(containers)
-container_list = '\n'.join(containers)
+container_list = '\n'.join(container_list)
 # print(container_list)
 
 # Enter container number
@@ -83,9 +138,10 @@ data_list = []
 
 # Loop through the container_id_elements and extract the text
 for info in get_data:
-    info_text = info.text  
+    info_text = info.text
+    print(info_text)
     data_list.append(info_text)
-print(data_list)    
+# print(data_list)    
 
 # Get alt attributes Yes or No 
 # alt_value = driver.find_element(By.XPATH, '//*[@ class="trace-listing__icon"]').get_attribute('alt')
@@ -97,7 +153,7 @@ for info in get_alt:
 # Print the value of "alt"
 # print(alt_elements.get_attribute('alt')[0])
 # print(alt_elements.get_attribute('alt')[1])
-print(alt_list)
+# print(alt_list)
 
 
 # # V1 #################################
