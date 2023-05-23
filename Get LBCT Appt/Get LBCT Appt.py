@@ -3,10 +3,8 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from datetime import datetime, timedelta
 from time import sleep
 import tkinter as tk
-from tkcalendar import DateEntry
 from selenium.webdriver.chrome.options import Options
 from tkinter import *
 from tkcalendar import *
@@ -15,9 +13,22 @@ import sv_ttk
 import tkinter
 from tkinter import ttk
 import customtkinter
+import re
+from pandas import DataFrame
+from bs4 import BeautifulSoup
+import pandas as pd
+import requests
+from re import findall
+import urllib3
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 # By Pass reCaptcha
 # https://www.youtube.com/watch?v=LDlD5k8S0oQ&ab_channel=ThePyCoach
+
+# Get Cookies
+# Video: https://www.youtube.com/watch?v=cVnYod9Fhko&ab_channel=JieJenn
+# Cookies Convertor: https://curlconverter.com/
+
 
 # Create a function to get the selected value and close the window
 ####################################################################################################################
@@ -77,28 +88,67 @@ import customtkinter
 ####################################################################################################################
 
 
-chrome_options = Options()
-# #chrome_options.add_argument("--disable-extensions")
-# #chrome_options.add_argument("--disable-gpu")
-chrome_options.add_argument("--headless")
+# chrome_options = Options()
+# # #chrome_options.add_argument("--disable-extensions")
+# # #chrome_options.add_argument("--disable-gpu")
+# chrome_options.add_argument("--headless")
 
 # Set the options to run the browser in headless mode
 # chrome_options.headless = True
+# cookies = {
+#     'ASP.NET_SessionId': 'ajcfidn1syij0nbqrx41qcyr',
+#     '__RequestVerificationToken': 'R3Ls-4a0tP3zMvpVikqXW8u_o_xMqXq-IT21FeZjFgMb6lX18QssE91BZV6wXDwZVbS5Pl_eTof6quUVN1yerTgZ9UkBX6zeIlmw2xrZ8mo1',
+#     'BIGipServerwww.lbct.com.app~www.lbct.com_pool': '3221673482.20480.0000',
+#     '.ASPXAUTH': '845485CAC45DF8788528D7F49834A1F5E69647807D312DE266DCAAFE8725C4881E8BDE3FEB2FFC96B42223D4BA239BD99559A6AE44493EE5DBA3EC2A87A1C5ACD87E4D4527D402FA1D6E8E335CE937C35969F33152BF07FCB219B9AD6D4CF18B296B619D56EE87DF87AA2CB7429B65B9D258963D346B1DB4B4E83DFD927A3FF4',
+#     'TS017fbeab': '01ce6a9536be68ad6f4059a482d3316721a8416acef5bca69f2a797b6d895a42ffffdd4cd51b92413cb56e4ca34e6d877bb6018555',
+#     'TSPD_101': '08d349dcdfab280007a29169d6ac66b3550ada38700f5ef2d62c858e3da86c241c6c98c1d99b16dba5dd9fd434dcad87086f3dd718051800f0b2765b473f8a55b971947562f2895f99073794d53abed7',
+#     'TS559b2606027': '08d349dcdfab2000740e21de21eb43f51cb04d5113b04293c631baba534620cbc0c76d7ccc499dd5080a5e83cd113000615df65a7b189a25f264bba242775c3f86b2015bf0cc286c22ee2a6f4bcdbefd8cd5b1fa668d4347c6a741e2ba7068ff',
+#     'TS80540fb2077': '08d349dcdfab2800fbfd53e2b14fa3527bd0e454a139a3b160fd1368107211798f94fc721db90d3411c874781ea3d368084af3f2da17200077433de7c1f17223107675f1aa47addb8a1552942bed712966f0ddbca439977b',
+#     'TS00000000076': '08d349dcdfab28006f125f257b9f657e1343f80e85c58e6d5ffae69943c484eb6a3d8b1b8d8d66736fdecc4a5a5cfc4e086bdfc88d09d000ab0320d87f490b52dbf745bec482a72519a807ee1c6c448220143739f624fcd4c9e5804f1dae9d5955b038bbe4326373e77837d69741ae41b63841e75a847f78064f3f8620bcad556eefd3475ec6ea30df060c77b49e15ccce57c6d7be0959d6148106af88a9d33f5e8f76bd561480b663401d65bdbfdac0121deef80ab6cace14903e25ee45fa08a1bb1ef3fbd80dd359e92aed7b7dd1bfc435922b3b27d0ba3a3cfc5b14d05263ae47686a5feb1d97b7d5b2ed7fcb6fc93ad2a7d5a66fd07a12a3e7c987a519b9e1da1e1ac9e4672f',
+#     'TSPD_101_DID': '08d349dcdfab28006f125f257b9f657e1343f80e85c58e6d5ffae69943c484eb6a3d8b1b8d8d66736fdecc4a5a5cfc4e086bdfc88d063800326a663cc58168d3c6e67eaf3ab8835fd6b96538769d578945eec8a1322b82334d577c648cd185e8ffd56638d94b7412e3339bcd2efb3e83',
+#     'TS80540fb2075': '0502c10108d349dcdfab28006f125f257b9f657e1343f80e85c58e6d5ffae69943c484eb6a3d8b1b8d8d66736fdecc4a5a5cfc4e:086bdfc88d04a800d56b66f3601f8ad0b0a1f02e73e4476363283a67359ab6ab3934da8a80dc7428bdf3e880d4f8e4de0e42384d1ce0f34951df243e7d6b043b4fe0ed4f429931d33ef959aefa3616df7f1dafc53a788db73ed77c38c9d51ff43f2863a014a07974b1e6005dd8b199bec6b3d90f4bdb0f3cfa9e687b327e85752c8320fea59c5020b2054bc6a3e9d3dc1b2b7b0530a1b0422fa4e2003c38f0c3e90e6cb6ae73bd718e5feccf524896e3a00108d349dcdfab28006f125f257b9f657e1343f80e85c58e6d5ffae69943c484eb6a3d8b1b8d8d66736fdecc4a5a5cfc4e086bdfc88d109800a708d0857b64c8baf43c2e8ae40312e0487b1a35571b4627632f19e4a7e7b2c74f0910d99539f556197c70c66519ba42e15924abfbc898e4836227b9d99bb4b55acf83ca8a56685faf53b4c4a867da2bad0b2fcdaaa37599df79ab7e914f8b5c24cb858018effd9adc6aaa91cd76726ea2d238b2a319b9ce3b36f1763adc8713a8e2b347fc96a0b9ba5f037e132641915ce65e130645e58d0001000f00008d349dcdfab2000fb76fbb1c12287ceb24200302c7e33259460c0f728da0345b629ad049c1aa63108eaa4e0ee0a480037987591331364d6b95493cd0e163d5e0bcf5fcd068927dab96c93f81527dc4230bbb7cb283969b4c32884081e8871fd64d907b43be657b6c79e5d01a1f4ca6bed92537c0b0bd0762700https%3a%2f%2fwww.lbct.com%2fViewMyList',
+# }
 
+# headers = {
+#     'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
+#     'Accept-Language': 'en-US,en;q=0.9',
+#     'Cache-Control': 'max-age=0',
+#     'Connection': 'keep-alive',
+#     # 'Cookie': 'ASP.NET_SessionId=ajcfidn1syij0nbqrx41qcyr; __RequestVerificationToken=R3Ls-4a0tP3zMvpVikqXW8u_o_xMqXq-IT21FeZjFgMb6lX18QssE91BZV6wXDwZVbS5Pl_eTof6quUVN1yerTgZ9UkBX6zeIlmw2xrZ8mo1; BIGipServerwww.lbct.com.app~www.lbct.com_pool=3221673482.20480.0000; .ASPXAUTH=845485CAC45DF8788528D7F49834A1F5E69647807D312DE266DCAAFE8725C4881E8BDE3FEB2FFC96B42223D4BA239BD99559A6AE44493EE5DBA3EC2A87A1C5ACD87E4D4527D402FA1D6E8E335CE937C35969F33152BF07FCB219B9AD6D4CF18B296B619D56EE87DF87AA2CB7429B65B9D258963D346B1DB4B4E83DFD927A3FF4; TS017fbeab=01ce6a9536be68ad6f4059a482d3316721a8416acef5bca69f2a797b6d895a42ffffdd4cd51b92413cb56e4ca34e6d877bb6018555; TSPD_101=08d349dcdfab280007a29169d6ac66b3550ada38700f5ef2d62c858e3da86c241c6c98c1d99b16dba5dd9fd434dcad87086f3dd718051800f0b2765b473f8a55b971947562f2895f99073794d53abed7; TS559b2606027=08d349dcdfab2000740e21de21eb43f51cb04d5113b04293c631baba534620cbc0c76d7ccc499dd5080a5e83cd113000615df65a7b189a25f264bba242775c3f86b2015bf0cc286c22ee2a6f4bcdbefd8cd5b1fa668d4347c6a741e2ba7068ff; TS80540fb2077=08d349dcdfab2800fbfd53e2b14fa3527bd0e454a139a3b160fd1368107211798f94fc721db90d3411c874781ea3d368084af3f2da17200077433de7c1f17223107675f1aa47addb8a1552942bed712966f0ddbca439977b; TS00000000076=08d349dcdfab28006f125f257b9f657e1343f80e85c58e6d5ffae69943c484eb6a3d8b1b8d8d66736fdecc4a5a5cfc4e086bdfc88d09d000ab0320d87f490b52dbf745bec482a72519a807ee1c6c448220143739f624fcd4c9e5804f1dae9d5955b038bbe4326373e77837d69741ae41b63841e75a847f78064f3f8620bcad556eefd3475ec6ea30df060c77b49e15ccce57c6d7be0959d6148106af88a9d33f5e8f76bd561480b663401d65bdbfdac0121deef80ab6cace14903e25ee45fa08a1bb1ef3fbd80dd359e92aed7b7dd1bfc435922b3b27d0ba3a3cfc5b14d05263ae47686a5feb1d97b7d5b2ed7fcb6fc93ad2a7d5a66fd07a12a3e7c987a519b9e1da1e1ac9e4672f; TSPD_101_DID=08d349dcdfab28006f125f257b9f657e1343f80e85c58e6d5ffae69943c484eb6a3d8b1b8d8d66736fdecc4a5a5cfc4e086bdfc88d063800326a663cc58168d3c6e67eaf3ab8835fd6b96538769d578945eec8a1322b82334d577c648cd185e8ffd56638d94b7412e3339bcd2efb3e83; TS80540fb2075=0502c10108d349dcdfab28006f125f257b9f657e1343f80e85c58e6d5ffae69943c484eb6a3d8b1b8d8d66736fdecc4a5a5cfc4e:086bdfc88d04a800d56b66f3601f8ad0b0a1f02e73e4476363283a67359ab6ab3934da8a80dc7428bdf3e880d4f8e4de0e42384d1ce0f34951df243e7d6b043b4fe0ed4f429931d33ef959aefa3616df7f1dafc53a788db73ed77c38c9d51ff43f2863a014a07974b1e6005dd8b199bec6b3d90f4bdb0f3cfa9e687b327e85752c8320fea59c5020b2054bc6a3e9d3dc1b2b7b0530a1b0422fa4e2003c38f0c3e90e6cb6ae73bd718e5feccf524896e3a00108d349dcdfab28006f125f257b9f657e1343f80e85c58e6d5ffae69943c484eb6a3d8b1b8d8d66736fdecc4a5a5cfc4e086bdfc88d109800a708d0857b64c8baf43c2e8ae40312e0487b1a35571b4627632f19e4a7e7b2c74f0910d99539f556197c70c66519ba42e15924abfbc898e4836227b9d99bb4b55acf83ca8a56685faf53b4c4a867da2bad0b2fcdaaa37599df79ab7e914f8b5c24cb858018effd9adc6aaa91cd76726ea2d238b2a319b9ce3b36f1763adc8713a8e2b347fc96a0b9ba5f037e132641915ce65e130645e58d0001000f00008d349dcdfab2000fb76fbb1c12287ceb24200302c7e33259460c0f728da0345b629ad049c1aa63108eaa4e0ee0a480037987591331364d6b95493cd0e163d5e0bcf5fcd068927dab96c93f81527dc4230bbb7cb283969b4c32884081e8871fd64d907b43be657b6c79e5d01a1f4ca6bed92537c0b0bd0762700https%3a%2f%2fwww.lbct.com%2fViewMyList',
+#     'Referer': 'https://www.lbct.com/ViewMyList',
+#     'Sec-Fetch-Dest': 'document',
+#     'Sec-Fetch-Mode': 'navigate',
+#     'Sec-Fetch-Site': 'same-origin',
+#     'Upgrade-Insecure-Requests': '1',
+#     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36',
+#     'sec-ch-ua': '"Google Chrome";v="113", "Chromium";v="113", "Not-A.Brand";v="24"',
+#     'sec-ch-ua-mobile': '?0',
+#     'sec-ch-ua-platform': '"Windows"',
+# }
+
+# # Create a new Chrome session
 driver = webdriver.Chrome()
 driver.maximize_window()
 wait = WebDriverWait(driver, 10)
+
 driver.get("https://www.lbct.com/Login/Login")
 
+# # Add the cookies
+# for cookie_name, cookie_value in cookies.items():
+#     cookie = {
+#         'name': cookie_name,
+#         'value': cookie_value
+#     }
+#     driver.add_cookie(cookie)
 
-containers = ['TRHU5383128',
-              'CSLU1957155',
-              'FCIU9915913',
-              'TGBU9211653',
-              'TRHU4303560',
-              'TGBU4954255',
-              'TXGU5678920',
-              'OOCU6881615']
+# sleep(10)
+# # Refresh the page to apply the cookies
+# driver.refresh()
+
+containers = ['OOCU8494641',
+              'CSNU8069786',
+              'TRHU7267364',
+              'TGBU9211653']
 
 # containers = ['CSLU1957155']
 
@@ -136,43 +186,69 @@ driver.find_element(By.XPATH, '//*[@class ="k-textbox sideBarCargoAvailabilityTe
 driver.find_element(By.XPATH, '//*[@class ="k-textbox sideBarCargoAvailabilityTextArea textareaPlaceholder"]').send_keys(container_list)
 driver.find_element(By.XPATH, '//*[@id="sideBarTextareaSubmitBtn"]').click() # Click Search Button
 
-# Expand Table
+# V1 
+################################################################
+# Expand Tables
 get_expand_icon = WebDriverWait(driver, 10).until(
     # //*[@class="k-hierarchy-cell"]/a
     # //*[@class="k-icon k-i-expand"]
     EC.presence_of_all_elements_located((
     By.XPATH, '//*[@class="k-hierarchy-cell"]/a')))
-
-print(get_expand_icon)
-
-# i = 3
-# WebDriverWait(driver, 10).until(
-# EC.element_to_be_clickable((
-# By.XPATH, f'//*[@id="batchCargoSearchGrid"]/tbody/tr[{i}]/td[1]/a')))
-
+# Click on the expand icon
 for icon in get_expand_icon[1:]:
-
     icon.click()
     sleep(1)
 
+# # Get Details Information
+# get_details_info = WebDriverWait(driver, 10).until(
+#     EC.presence_of_all_elements_located((
+#     By.XPATH, '//*[@class="table-default container-table-horizontal"]/tbody/tr/td/strong')))
 
+# details_info_list = []
 
-# Get Details Information
-get_details_info = WebDriverWait(driver, 10).until(
-    EC.presence_of_all_elements_located((
-    By.XPATH, '//*[@class="table-default container-table-horizontal"]/tbody/tr/td/strong')))
+# # Loop through the container_id_elements and extract the text
+# for info in get_details_info:
+#     info_text = info.text
+#     print(info_text)
+#     details_info_list.append(info_text)
 
-details_info_list = []
+# V2 with beautiful soup
+################################################################
 
-# Loop through the container_id_elements and extract the text
+# url = 'https://www.lbct.com/ViewMyList'
+# response = requests.get(url, verify=False)
+# page = response.text
+# # url = 'https://www.lbct.com/ViewMyList'
+# # page = requests.get(url).text
+# doc = BeautifulSoup(page, 'html.parser')
+# page_text = doc.find_all(class_='k-grid k-widget k-display-block')
 
-for info in get_details_info:
-    info_text = info.text
-    print(info_text)
-    details_info_list.append(info_text)
-# print(data_list)    
+# for item in page_text:
+#     item_text = item.text
+#     print(item_text.strip())
+    
+    
+# # Send a GET request to the desired page after logging in
+# data_url = 'https://www.lbct.com/ViewMyList'
+# response = requests.get(data_url)
+# soup = BeautifulSoup(response.content, 'html.parser')
 
-# print(f'this is get_details_info {details_info_list}')
+# # Find the elements with the specified class and extract the data
+# data_elements = soup.find_all(class_='k-grid k-widget k-display-block')
+# for element in data_elements:
+#     print(element.text)    
+
+# Scrape data
+soup = BeautifulSoup(driver.page_source, 'html.parser')
+data_elements = soup.find_all(class_='k-grid k-widget k-display-block')
+# for element in data_elements:
+#     element_text = element.text
+#     print(element_text.strip()) 
+for element in data_elements:
+    tbody = element.find('tbody')
+    if tbody:
+        print(tbody.text)
+
 
 sleep(1)
 print("Done")
