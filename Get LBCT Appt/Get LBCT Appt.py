@@ -240,17 +240,58 @@ for icon in get_expand_icon[1:]:
 
 # Scrape data
 soup = BeautifulSoup(driver.page_source, 'html.parser')
-data_elements = soup.find_all(class_='k-grid k-widget k-display-block')
+# Read tbody
+tbody = soup.find_all('tbody', role = 'rowgroup')
+# Read all tr from tbody tag
+
+master_row=[]
+for tb in tbody:
+    trs = tb.find_all(class_=['k-master-row','k-alt k-master-row'])
+    for tr in trs:
+
+        parent = tr.find(class_='7693c383-1571-43d3-95b6-9c84d174e0ef')
+        print(parent)
+        # print(tr.text)
+
+        # container_number = tr.text
+        # container_number = container_number.strip()       
+        # container_number = container_number[:11]
+
+        # available = tr.text
+        # available = available.strip() 
+        # available = available[11:14]
+                
+        # master_row.append(container_number)
+        # master_row.append(available)
+
+print(master_row)
+
+
+
+# master_row = soup.find_all(class_='k-master-row k-state-selected')
+
+# # Get all tds using tr
+# for tr in trs:
+#     # find all tds
+#     tds = tr.find_all('td')
+#     for td in tds:
+#         ps = td.find_all('p')
+#         # find all p tags
+#         for p in ps:
+#             print(p.text)
+
+sleep(1)
+
 # for element in data_elements:
 #     element_text = element.text
 #     print(element_text.strip()) 
-for element in data_elements:
-    tbody = element.find('tbody')
-    if tbody:
-        print(tbody.text)
+
+# for element in data_elements:
+#     tbody = element.find('tbody')
+#     if tbody:
+#         print(tbody.text)
 
 
-sleep(1)
 print("Done")
 
 
