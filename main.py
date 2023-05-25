@@ -193,6 +193,9 @@ login_info(username,driver)
 driver.find_element(By.XPATH, '//*[@id="Login_form"]/div[3]/div/button').click()
 
 # Main Loop
+# Appt Release Time:
+# Import 11:00 - 11:30
+# Empty Dropoff: 12:00 - 12:30, 3:00 - 3:30
 ####################################################################################################################
 check_container = 0
 while True:
@@ -240,9 +243,13 @@ while True:
         # Call out multi_date_checker
         multi_date_checker (appt_dates_list, wait, start_time, end_time, driver, check_days, container_number)
 
+
     if check_container == len(container_list):
-        break
+        check_container = 0
+        continue
+        # break
     else: check_container+=1
+    
         
 
 print("Done")

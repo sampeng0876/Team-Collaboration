@@ -224,52 +224,150 @@ block = soup.find(class_='k-grid k-widget k-display-block')
 # Read tbody
 tbody = block.find('tbody', role = 'rowgroup')
 # Read all tr from tbody tag
-trs = tbody.find_all(class_=['k-master-row','k-detail-row','k-alt k-master-row','k-detail-row k-alt'])
-master_row=[]
-for tr in trs:
-    # # Get the container
-    # get_container = tr.find('td',class_='')
-    # get_container = get_container.find('p')
-    # if get_container == None:
-    #     continue
-    # container = get_container.text
+trs = tbody.find_all(class_=['k-master-row','k-detail-row', 'k-detail-row k-alt','k-alt k-master-row']) # 
+
+data_list=[]
+# for tr in trs:
+#     # # Get the container
+#     # get_container = tr.find('td',class_='')
+#     # get_container = get_container.find('p')
+#     # if get_container == None:
+#     #     continue
+#     # container = get_container.text    
+#     print(tr)
+
+#     # get_master_row = tr.get('class') == ['k-detail-row k-alt']
     
-    get_available = tr.find_parent(class_='k-master-row')
-    get_available = tr.find_all('td',class_='')
-    
-    for available in get_available:
-        # td_element = row.find('td', attrs={'aria-describedby': '8f8938ff-fd7c-40c1-abcb-ff43a91db13d'})
+#     get_master_row_data = tr.find_all('td',class_='')
+#     for check_data in get_master_row_data:
+#         # td_element = row.find('td', attrs={'aria-describedby': '8f8938ff-fd7c-40c1-abcb-ff43a91db13d'})
         
-        if available is not None:
-            data = available.text.strip()
-            print(data)
-        else:
-            print("Data not found for this row")
+#         if check_data is not None:
+#             master_row_data = check_data.text.strip()
+#             # print(master_row_data)
+#             #data_list.append(master_row_data)
+#         else:
+#             print("Data not found for this row")
     
-    # try:
-#   container = get_container.get_text()
-    # except AttributeError as e:
-    #   print(f"Error: {e}")
-    # else:
-    #   if container is not None:
-    #     print(container.strip())
+#     get_fee_details = tr.find_all('div', class_='table-container')
+
     
-    # print(tr.text)
+#     # try:
+# #   container = get_container.get_text()
+#     # except AttributeError as e:
+#     #   print(f"Error: {e}")
+#     # else:
+#     #   if container is not None:
+#     #     print(container.strip())
+    
+#     # print(tr.text)
 
-    # container_number = tr.text
-    # container_number = container_number.strip()       
-    # container_number = container_number[:11]
+#     # container_number = tr.text
+#     # container_number = container_number.strip()       
+#     # container_number = container_number[:11]
 
-    # available = tr.text
-    # available = available.strip() 
-    # available = available[11:14]
+#     # available = tr.text
+#     # available = available.strip() 
+#     # available = available[11:14]
             
-    # master_row.append(container_number)
-    # master_row.append(available)
+#     # master_row.append(container_number)
+#     # master_row.append(available)
 
-# print(master_row)
+# print(data_list)
+
+data_list = []
+for tr in trs:
+
+    # Check if 'data-uid' attribute exists in the element
+    if 'data-uid' in tr.attrs:
+    # Extract the desired data from the element
+        main_data = {
+            "Container": tr.find("p").text.strip(),
+            "Available": tr.find_all("td")[2].text.strip(),
+            "Type": tr.find_all("td")[3].text.strip(),
+            "Line": tr.find_all("td")[4].text.strip(),
+            "Vessel": tr.find_all("td")[5].text.strip(),
+            # Add more data extraction as needed
+        }
+
+        # data_list.append(main_data)
+
+    # if 'k-detail-row' in tr['class']:
+    #     # Extract the desired data from the element
+    #     details_data = {
+    #         # "2": tr.find_all("td")[2].text.strip(),
+    #         "LINE DEMURRAGE": tr.find_all("td")[3].text.strip(),
+    #         # "4": tr.find_all("td")[4].text.strip(),
+    #         "LFD": tr.find_all("td")[5].text.strip(),
+    #         "EXTENDED DWELL TIME FEE": tr.find_all("td")[6].text.strip(),
+    #         # "7": tr.find_all("td")[7].text.strip(),
+    #         # "8": tr.find_all("td")[8].text.strip(),
+    #         # "9": tr.find_all("td")[9].text.strip(),
+    #         # "10": tr.find_all("td")[10].text.strip(),
+    #         # "11": tr.find_all("td")[11].text.strip(),
+    #         # "12": tr.find_all("td")[12].text.strip(),
+    #         "Total": tr.find_all("td")[13].text.strip(),
+
+            
+    #         # Add more data extraction as needed
+    #     }
+    if 'container_detail_OOCU8494641' in tr.id:
+        # Extract the desired data from the element
+        details_data = {
+            "2": tr.find_all("td")[2].text.strip(),
+            "LINE DEMURRAGE": tr.find_all("td")[3].text.strip(),
+            "4": tr.find_all("td")[4].text.strip(),
+            "LFD": tr.find_all("td")[5].text.strip(),
+            "EXTENDED DWELL TIME FEE": tr.find_all("td")[6].text.strip(),
+            "7": tr.find_all("td")[7].text.strip(),
+            "8": tr.find_all("td")[8].text.strip(),
+            "9": tr.find_all("td")[9].text.strip(),
+            "10": tr.find_all("td")[10].text.strip(),
+            "11": tr.find_all("td")[11].text.strip(),
+            "12": tr.find_all("td")[12].text.strip(),
+            "Total": tr.find_all("td")[13].text.strip(),
+
+            
+            # Add more data extraction as needed
+        }
+        print(details_data  )
+    else:
+        print('Found nothing to extract')
+        # # Merge the two dictionaries into a single dictionary
+        # main_data.update(fee_data)
+
+        # # Append the merged dictionary to the list
+        # data_list.append(main_data)
 
 
+
+# detail_row = soup.find('tr', class_='k-detail-row')
+
+# # Scrape data from the 'FEES' tab
+# fees_tab = detail_row.find('div', id='container_fees_OOCU8494641')
+
+# # Extract specific data from the fees tab
+# line_demurrage = fees_tab.find('td', text='LINE DEMURRAGE').find_next_sibling('td').text.strip()
+# free_time_expiration = fees_tab.find('label', id='lblLineDemrrageGuarantee_8373091873').find_next_sibling('td').text.strip()
+
+# # Print the scraped data
+# print('Line Demurrage:', line_demurrage)
+# print('Free Time Expiration:', free_time_expiration)
+
+# # Scrape data from the 'DETAILS' tab
+# details_tab = detail_row.find('div', id='container_detail_OOCU8494641')
+
+# # Extract specific data from the details tab
+# discharged = details_tab.find('th', text='Discharged').find_next_sibling('td').text.strip()
+# location = details_tab.find('th', text='Location').find_next_sibling('td').text.strip()
+
+# # Print the scraped data
+# print('Discharged:', discharged)
+# print('Location:', location)
+
+# Print the scraped data
+for data in data_list:
+    print(data)
 
 print("Done")
 

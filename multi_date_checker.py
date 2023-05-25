@@ -25,6 +25,10 @@ def multi_date_checker(appt_dates, wait, start_time, end_time, driver, check_day
             if appt_date.weekday() in [5, 6]:  # Skip weekends (Saturday: 5, Sunday: 6)
                 appt_date += timedelta(days=1)
                 continue
+            # break the while loop if checked 3 times
+            # elif start_over == 4:
+            #     break
+
 
             # Find the calendar picker element
             calendar_picker = wait.until(EC.presence_of_element_located((By.XPATH,'//*[@id="calendar0"]')))
@@ -64,6 +68,7 @@ def multi_date_checker(appt_dates, wait, start_time, end_time, driver, check_day
                     # print("Cliecked date")
                     sleep(1)
                     break
+            print(f"Checking...>>> {container_number}")    
             print(f"Selected Appt Date: {appt_date}")
             print(f"Selected Appt Times From: {start_time} to {end_time}")
 
@@ -92,18 +97,15 @@ def multi_date_checker(appt_dates, wait, start_time, end_time, driver, check_day
 
             # If no available time slots or no time slots in selected range
             if not available_time_slots or not available_times:
-                print(f"No available time slots or no time slots in selected range for {appt_date}. \nChecking next appointment date.")
+                print(f"No available time slots or no time slots in selected range for {appt_date}.")
                 days_checked += 1
                 appt_date += timedelta(days=1)
                 
                 if days_checked == len(appt_dates):
                     appt_date = appt_dates[0]
-                    print(f"Sorry, No Time Slot Was Booked in {check_days} days. Starting Over again {start_over} times")
+                    print(f"Sorry, No Time Slot Was Booked in {check_days} days. Starting Over again {start_over} times.\n\nChecking... next appointment date.\n\n")
                     start_over += 1
                     days_checked = 0
-                # break the while loop if checked 3 times
-                elif start_over == 4:
-                    break
                 continue
 
             # Error counter
@@ -138,7 +140,7 @@ def multi_date_checker(appt_dates, wait, start_time, end_time, driver, check_day
             appt_date += timedelta(days=1)  
             
         # break the while loop if checked 3 times     
-        if earliest_time or start_over:
+        if earliest_time or start_over == 4:
             break
 
 
