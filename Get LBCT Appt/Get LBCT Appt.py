@@ -145,10 +145,10 @@ driver.get("https://www.lbct.com/Login/Login")
 # # Refresh the page to apply the cookies
 # driver.refresh()
 
-containers = ['OOCU8494641',
+containers = ['CSNU6566119',
+              'OOCU7402018',
               'CSNU8069786',
-              'TRHU7267364',
-              'TGBU9211653']
+              'TRHU7267364']
 
 # containers = ['CSLU1957155']
 
@@ -254,16 +254,7 @@ data_list=[]
 
 # print(data_list)
 
-for tr in trs:
-
-
-    # container_detail_table = tr.find('div', id ='container_detail_OOCU8494641')
-    # # print(container_detail_table)
-    # # if container_detail_table == None:
-    # #     continue
-    # discharged = tr.find("strong")   
-    # print(discharged)
-    
+for tr in trs:    
     # GOOD TO USE
     # Get the Main Data
     if 'data-uid' in tr.attrs:
@@ -277,7 +268,7 @@ for tr in trs:
             # Add more data extraction as needed
         }
 
-    #     data_list.append(main_data)
+        # data_list.append(main_data)
 
     # GOOD TO USE
     # Get the Fees Tab 
@@ -306,46 +297,70 @@ for tr in trs:
             # Add more data extraction as needed
         }
         # print(details_data)
-        
+
+
     # Get the Appointments Tab
     # appt = tr.find(class_='k-grid-header')
     # print(appt)
     # if tr.find('tr', attrs = {"data-uid": "8b4ba1a1-7f07-4059-9b3e-c85f1585165f"}):
+    
     # appt = tr.find(class_='k-detail-cell')
-
     # if appt is not None:
     #     get_appt_trs = appt.find_all('td')
     #     print(get_appt_trs)
     # else:
     #     print("Could not find element with class k-detail-cell")
     
-    get_master_row_data = tr.find_all('td',class_='')
-    for check_data in get_master_row_data:
-        # td_element = row.find('td', attrs={'aria-describedby': '8f8938ff-fd7c-40c1-abcb-ff43a91db13d'})
-        
-        if check_data is not None:
-            master_row_data = check_data.text.strip()
-            print(master_row_data)
-            data_list.append(master_row_data)
-        else:
-            print("Data not found for this row")
+    # appt_tbody = tr.find_all('td', role='gridcell')
 
+    # if appt_tbody:
+    #     data = [td for td in appt_tbody]
+    #     print(data)
 
-    # if tr.find_all('td',class_=''):
-    #     appointments_data = {
-    #         "Date": tr.find_all("td")[0].text.strip(),
-    #         "Time": tr.find_all("td")[1].text.strip(),
-    #         "State": tr.find_all("td")[2].text.strip(),
-    #         "Company": tr.find_all("td")[3].text.strip(),
-    #         "Appt": tr.find_all("td")[4].text.strip(),
-    #         "Sub-H": tr.find_all("td")[5].text.strip(),
-    #         "7": tr.find_all("td")[6].text.strip(),
-    #         "8": tr.find_all("td")[7].text.strip(),
-    #     }
-    #     print(appointments_data)
+    #     # for element in appt_tbody:
+    #     #     text = element.text.strip()
+    #     #     print(text)
+    #     # appt_data = {
+    #     # "1": tr.find_all("td")[9].text.strip(),
+    #     # "2": tr.find_all("td")[10].text.strip(),
+    #     # "3": tr.find_all("td")[11].text.strip(),
+    #     # "4": tr.find_all("td")[12].text.strip(),
+    #     # "5": tr.find_all("td")[13].text.strip(),
+    #     # "6": tr.find_all("td")[15].text.strip()
+    #     # }
     # else:
-    #     print("appt Not found")        
-    
+    #     print("Could not find element with class tbody")
+
+detail_row = tr.find('td', class_='k-detail-row')
+
+print(detail_row.table)
+
+    # 'k-detail-row' in tr.get('class', []) or 'k-detail-row k-alt' in tr.get('class', [])
+    # tr.find('table', role='grid')
+    # td = tr.find_all('td', role='gridcell')
+    # if tr.find('table', role='grid'):      
+    #     appt_data = {
+    #     "Date": tr.find_all('td', role='gridcell')[0].text.strip(),
+    #     "Time": tr.find_all('td', role='gridcell')[1].text.strip(),
+    #     "State": tr.find_all('td', role='gridcell')[2].text.strip(),
+    #     "Company": tr.find_all('td', role='gridcell')[3].text.strip(),
+    #     "Appt": tr.find_all('td', role='gridcell')[4].text.strip(),
+    #     "SUB-H": tr.find_all('td', role='gridcell')[5].text.strip(),
+    #     # # "6": tr.find_all('td', role='gridcell')[6].text.strip(),
+    #     # "TMF_CONTAINER_HOLD": tr.find_all('td', role='gridcell')[7].text.strip(),
+    #     # "STATUS": tr.find_all('td', role='gridcell')[8].text.strip(),
+    #     # # "9": tr.find_all('td', role='gridcell')[9].text.strip(),
+    #     # "CTF_CONTAINER_HOLD": tr.find_all('td', role='gridcell')[10].text.strip(),
+    #     # "STATUS": tr.find_all('td', role='gridcell')[11].text.strip(),
+    #     # # "12": tr.find_all('td', role='gridcell')[12].text.strip(),
+    #     # "CUSTOMS_DEFAULT_HOLD": tr.find_all('td', role='gridcell')[13].text.strip(),
+    #     # "STATUS": tr.find_all('td', role='gridcell')[14].text.strip(),
+
+    #     }
+    #     print(appt_data)
+    # else:
+    #     print("Could not data")
+   
         
         
         
@@ -360,7 +375,7 @@ for tr in trs:
 # Print the scraped data
 # for data in data_list:
 #     print(data)
-print(data_list)
+# print(data_list)
 print("Done")
 
 
