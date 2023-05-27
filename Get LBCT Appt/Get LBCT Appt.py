@@ -13,14 +13,10 @@ import sv_ttk
 import tkinter
 from tkinter import ttk
 import customtkinter
-import re
-from pandas import DataFrame
 from bs4 import BeautifulSoup
-import pandas as pd
-import requests
-from re import findall
-import urllib3
-urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
+
+
 
 # By Pass reCaptcha
 # https://www.youtube.com/watch?v=LDlD5k8S0oQ&ab_channel=ThePyCoach
@@ -131,7 +127,8 @@ driver = webdriver.Chrome()
 driver.maximize_window()
 wait = WebDriverWait(driver, 10)
 
-driver.get("https://www.lbct.com/Login/Login")
+# driver.get("https://www.lbct.com/Login/Login")
+driver.get("https://www.lbct.com/Home/index")
 
 # # Add the cookies
 # for cookie_name, cookie_value in cookies.items():
@@ -145,10 +142,11 @@ driver.get("https://www.lbct.com/Login/Login")
 # # Refresh the page to apply the cookies
 # driver.refresh()
 
-containers = ['CSNU6566119',
+containers = ['CCLU7723702',
               'OOCU7402018',
-              'CSNU8069786',
-              'TRHU7267364']
+              'BMOU5128510',
+              'OOCU8990868',
+              'CCLU7308661',]
 
 # containers = ['CSLU1957155']
 
@@ -156,46 +154,78 @@ containers = ['CSNU6566119',
 container_list = '\n'.join(containers)
 
 
-WebDriverWait(driver, 15).until( 
-    EC.presence_of_all_elements_located((By.XPATH, '//*[@id="UserName"]'))
-)
-driver.find_element(By.XPATH, '//*[@id="UserName"]').send_keys("p1logistics@mail.com")
+# V1 Make Appointment
+################################################################
+# WebDriverWait(driver, 15).until( 
+#     EC.presence_of_all_elements_located((By.XPATH, '//*[@id="UserName"]'))
+# )
+# driver.find_element(By.XPATH, '//*[@id="UserName"]').send_keys("p1logistics@mail.com")
 
-driver.find_element(By.XPATH, '//*[@id="Password"]').send_keys("8802616")
-#driver.get('https://www.lbct.com/Login/Login')
+# driver.find_element(By.XPATH, '//*[@id="Password"]').send_keys("8802616")
+# #driver.get('https://www.lbct.com/Login/Login')
 
-WebDriverWait(driver, 20).until(EC.frame_to_be_available_and_switch_to_it((By.XPATH,"//iframe[@title='reCAPTCHA']")))
-WebDriverWait(driver, 20).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "div.recaptcha-checkbox-border"))).click()
-sleep(20)
+# WebDriverWait(driver, 20).until(EC.frame_to_be_available_and_switch_to_it((By.XPATH,"//iframe[@title='reCAPTCHA']")))
+# WebDriverWait(driver, 20).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "div.recaptcha-checkbox-border"))).click()
+# sleep(20)
 
 
-driver.switch_to.default_content()
+# driver.switch_to.default_content()
+
+# # Click cookies Accept Button
+# driver.find_element(By.XPATH, '//*[@id="cookie-bar"]/div/span[2]/button').click()
+
+
+# # WebDriverWait(driver, 20).until(EC.frame_to_be_available_and_switch_to_it((By.XPATH, '//*[@id="loginBoxLogin"]')))
+# WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,'//*[@id="loginBoxLogin"]')))
+# driver.find_element(By.XPATH, '//*[@id="loginBoxLogin"]').click()
+
+# # driver.find_element(By.XPATH, '//*[@id="cookie-bar"]/div/span[2]/button').click() # Click Cookies
+
+# WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,'//*[@class ="k-textbox sideBarCargoAvailabilityTextArea textareaPlaceholder"]')))
+# driver.find_element(By.XPATH, '//*[@class ="k-textbox sideBarCargoAvailabilityTextArea textareaPlaceholder"]').click() # Search Box Send Keys
+# driver.find_element(By.XPATH, '//*[@class ="k-textbox sideBarCargoAvailabilityTextArea textareaPlaceholder"]').send_keys(container_list)
+# driver.find_element(By.XPATH, '//*[@id="sideBarTextareaSubmitBtn"]').click() # Click Search Button
+
+# ################################################################
+# # Expand Tables
+# get_expand_icon = WebDriverWait(driver, 10).until(
+#     # //*[@class="k-hierarchy-cell"]/a
+#     # //*[@class="k-icon k-i-expand"]
+#     EC.presence_of_all_elements_located((
+#     By.XPATH, '//*[@class="k-hierarchy-cell"]/a')))
+
+# # Click on the expand icon
+# for icon in get_expand_icon[1:]:
+#     icon.click()
+#     sleep(1)
+
+# V2 Search Info
+################################################################
+
+WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,'//*[@id="circle-inner"]')))
+driver.find_element(By.XPATH, '//*[@id="circle-inner"]').click() # Enter
 
 # Click cookies Accept Button
+WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,'//*[@id="cookie-bar"]/div/span[2]/button')))
 driver.find_element(By.XPATH, '//*[@id="cookie-bar"]/div/span[2]/button').click()
 
-
-# WebDriverWait(driver, 20).until(EC.frame_to_be_available_and_switch_to_it((By.XPATH, '//*[@id="loginBoxLogin"]')))
-WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,'//*[@id="loginBoxLogin"]')))
-driver.find_element(By.XPATH, '//*[@id="loginBoxLogin"]').click()
-
-# driver.find_element(By.XPATH, '//*[@id="cookie-bar"]/div/span[2]/button').click() # Click Cookies
-
-WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,'//*[@class ="k-textbox sideBarCargoAvailabilityTextArea textareaPlaceholder"]')))
-driver.find_element(By.XPATH, '//*[@class ="k-textbox sideBarCargoAvailabilityTextArea textareaPlaceholder"]').click() # Search Box Send Keys
-driver.find_element(By.XPATH, '//*[@class ="k-textbox sideBarCargoAvailabilityTextArea textareaPlaceholder"]').send_keys(container_list)
+WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,'//*[@class ="k-textbox sideBarCargoAvailabilityTextArea textareaPlaceholder"]'))) # WAit for Search Box
+driver.find_element(By.XPATH, '//*[@class ="k-textbox sideBarCargoAvailabilityTextArea textareaPlaceholder"]').click() # Cllick Search Box
+driver.find_element(By.XPATH, '//*[@class ="k-textbox sideBarCargoAvailabilityTextArea textareaPlaceholder"]').send_keys(container_list) # Search Box Send Keys
 driver.find_element(By.XPATH, '//*[@id="sideBarTextareaSubmitBtn"]').click() # Click Search Button
 
-# V1 
 ################################################################
 # Expand Tables
-get_expand_icon = WebDriverWait(driver, 10).until(
+
+WebDriverWait(driver, 10).until(
     # //*[@class="k-hierarchy-cell"]/a
     # //*[@class="k-icon k-i-expand"]
-    EC.presence_of_all_elements_located((
-    By.XPATH, '//*[@class="k-hierarchy-cell"]/a')))
+    EC.element_to_be_clickable((
+    By.XPATH, '//*[@class="k-icon k-i-expand"]')))
+get_expand_icon = driver.find_elements(By.XPATH, '//*[@class="k-icon k-i-expand"]')
+# print(get_expand_icon)
 # Click on the expand icon
-for icon in get_expand_icon[1:]:
+for icon in get_expand_icon:
     icon.click()
     sleep(1)
 
@@ -218,15 +248,19 @@ for icon in get_expand_icon[1:]:
 # Scrape data
 soup = BeautifulSoup(driver.page_source, 'html.parser')
 
-# Find the elements with the specified class and extract the data
-block = soup.find(class_='k-grid k-widget k-display-block')
+# # Find the elements with the specified class and extract the data
+# block = soup.find(class_='k-grid k-widget k-display-block')
 
-# Read tbody
-tbody = block.find('tbody', role = 'rowgroup')
+# # Read tbody
+# tbody = block.find('tbody', role = 'rowgroup')
+
 # Read all tr from tbody tag
-trs = tbody.find_all(class_=['k-master-row','k-detail-row', 'k-detail-row k-alt','k-alt k-master-row']) # 
+trs = soup.find_all(class_=['k-master-row','k-detail-row', 'k-detail-row k-alt','k-alt k-master-row']) # 
 
 data_list=[]
+
+# V1 Get Data
+################################################################ 
 # for tr in trs:
 #     # # Get the container
 #     # get_container = tr.find('td',class_='')
@@ -254,50 +288,74 @@ data_list=[]
 
 # print(data_list)
 
+
+# V2 Get Data
+# GOOD TO USE
+################################################################ 
 for tr in trs:    
+    get_class = tr.find('div', class_='k-tabstrip-wrapper')
+    get_table = tr.find_all('table', role = 'grid')
+    for table in get_table:
+    # print(len(get_table))
+        print(table.text.strip())
+        data_list.append(table.text.strip())
+
+
     # GOOD TO USE
     # Get the Main Data
-    if 'data-uid' in tr.attrs:
-    # Extract the desired data from the element
-        main_data = {
-            "Container": tr.find("p").text.strip(),
-            "Available": tr.find_all("td")[2].text.strip(),
-            "Type": tr.find_all("td")[3].text.strip(),
-            "Line": tr.find_all("td")[4].text.strip(),
-            "Vessel": tr.find_all("td")[5].text.strip(),                        
-            # Add more data extraction as needed
-        }
-
-        # data_list.append(main_data)
-
-    # GOOD TO USE
-    # Get the Fees Tab 
-    if tr.find('div', class_ ='table-container'):
-        # Extract the desired data from the element
-        fees_data = {
-            "LINE DEMURRAGE": tr.find_all("td")[3].text.strip(),
-            "LFD": tr.find_all("td")[5].text.strip(),
-            "EXTENDED DWELL TIME FEE": tr.find_all("td")[6].text.strip(),
-            "Total": tr.find_all("td")[13].text.strip(),            
-            # Add more data extraction as needed
-        }
-        # print(fees_data)
+    # if 'data-uid' in tr.attrs:
+    # # Extract the desired data from the element
+    #     main_data = {
+    #         "Container": tr.find("p").text.strip(),
+    #         "Available": tr.find_all("td")[2].text.strip(),
+    #         "Type": tr.find_all("td")[3].text.strip(),
+    #         "Line": tr.find_all("td")[4].text.strip(),
+    #         "Vessel": tr.find_all("td")[5].text.strip(),                        
+    #         # Add more data extraction as needed
+    #     }
         
-    # GOOD TO USE
-    # Get The Details Tab
-    if tr.find('tr', class_ ='table-container'):
-        # Extract the desired data from the element
-        details_data = {
-            "Discharged": tr.find_all("strong")[0].text.strip(),
-            "Location": tr.find_all("strong")[1].text.strip(),
-            "Delivered": tr.find_all("strong")[2].text.strip(),
-            "Full/Empty": tr.find_all("strong")[3].text.strip(),
-            "Exam Status": tr.find_all("strong")[4].text.strip(),
-            "Bond Status": tr.find_all("strong")[5].text.strip(),          
-            # Add more data extraction as needed
-        }
-        # print(details_data)
+    #     data_list.append(main_data)
+    # else:
+    #     # print("No Main Data")
+    #     pass
 
+
+    # # GOOD TO USE
+    # # Get the Fees Tab 
+    # if tr.find('div', class_ ='table-container'):
+    #     # Extract the desired data from the element
+    #     fees_data = {
+    #         "LINE DEMURRAGE": tr.find_all("td")[3].text.strip(),
+    #         "LFD": tr.find_all("td")[5].text.strip(),
+    #         "EXTENDED DWELL TIME FEE": tr.find_all("td")[6].text.strip(),
+    #         "Total": tr.find_all("td")[13].text.strip(),           
+    #         # Add more data extraction as needed
+    #     }
+    #     # Merge the two dictionaries into a single dictionary
+    #     main_data.update(fees_data)
+
+    # else:
+    #     # print("No Fees Data")
+    #     pass
+ 
+    # # GOOD TO USE
+    # # Get The Details Tab
+    # if tr.find('tr', class_ ='table-container'):
+    #     # Extract the desired data from the element
+    #     details_data = {
+    #         "Discharged": tr.find_all("strong")[0].text.strip(),
+    #         "Location": tr.find_all("strong")[1].text.strip(),
+    #         "Delivered": tr.find_all("strong")[2].text.strip(),
+    #         "Full/Empty": tr.find_all("strong")[3].text.strip(),
+    #         "Exam Status": tr.find_all("strong")[4].text.strip(),
+    #         "Bond Status": tr.find_all("strong")[5].text.strip(),          
+    #         # Add more data extraction as needed
+    #     }
+    #     # Merge the two dictionaries into a single dictionary
+    #     main_data.update(details_data) 
+    # else:
+    #     # print("No Fees Data")
+    #     pass  
 
     # Get the Appointments Tab
     # appt = tr.find(class_='k-grid-header')
@@ -331,13 +389,12 @@ for tr in trs:
     # else:
     #     print("Could not find element with class tbody")
 
-detail_row = tr.find('td', class_='k-detail-row')
-
-print(detail_row.table)
 
     # 'k-detail-row' in tr.get('class', []) or 'k-detail-row k-alt' in tr.get('class', [])
-    # tr.find('table', role='grid')
-    # td = tr.find_all('td', role='gridcell')
+
+
+
+    
     # if tr.find('table', role='grid'):      
     #     appt_data = {
     #     "Date": tr.find_all('td', role='gridcell')[0].text.strip(),
@@ -355,27 +412,54 @@ print(detail_row.table)
     #     # # "12": tr.find_all('td', role='gridcell')[12].text.strip(),
     #     # "CUSTOMS_DEFAULT_HOLD": tr.find_all('td', role='gridcell')[13].text.strip(),
     #     # "STATUS": tr.find_all('td', role='gridcell')[14].text.strip(),
-
     #     }
-    #     print(appt_data)
+    #     main_data.update(appt_data)
+    #     # print(appt_data)
     # else:
-    #     print("Could not data")
-   
-        
-        
-        
-        
-        # # Merge the two dictionaries into a single dictionary
-        # main_data.update(fee_data)
+    #     print("Not Appt Data")
+    
+    
+    # if tr.find('table', role='grid'):      
+    #     holds_data = {
+    #     # "Date": tr.find_all('td', role='gridcell')[0].text.strip(),
+    #     # "Time": tr.find_all('td', role='gridcell')[1].text.strip(),
+    #     # "State": tr.find_all('td', role='gridcell')[2].text.strip(),
+    #     # "Company": tr.find_all('td', role='gridcell')[3].text.strip(),
+    #     # "Appt": tr.find_all('td', role='gridcell')[4].text.strip(),
+    #     # "SUB-H": tr.find_all('td', role='gridcell')[5].text.strip(),
+    #     # # "6": tr.find_all('td', role='gridcell')[6].text.strip(),
+    #     "TMF_CONTAINER_HOLD": tr.find_all('td', role='gridcell')[7].text.strip(),
+    #     "STATUS": tr.find_all('td', role='gridcell')[8].text.strip(),
+    #     # # "9": tr.find_all('td', role='gridcell')[9].text.strip(),
+    #     "CTF_CONTAINER_HOLD": tr.find_all('td', role='gridcell')[10].text.strip(),
+    #     "STATUS": tr.find_all('td', role='gridcell')[11].text.strip(),
+    #     # # "12": tr.find_all('td', role='gridcell')[12].text.strip(),
+    #     "CUSTOMS_DEFAULT_HOLD": tr.find_all('td', role='gridcell')[13].text.strip(),
+    #     "STATUS": tr.find_all('td', role='gridcell')[14].text.strip(),
+    #     # "15": tr.find_all('td', role='gridcell')[15].text.strip(),
+    #     "FREIGHT_BL_HOLD": tr.find_all('td', role='gridcell')[16].text.strip(),
+    #     "STATUS": tr.find_all('td', role='gridcell')[17].text.strip(),
+    #     }
 
-        # # Append the merged dictionary to the list
-        # data_list.append(main_data)
+    # else:
+    #     # print("Not Appt Data")
+    #     pass
 
+        
 
+# Append the merged dictionary to the list
+# data_list.append(main_data)
+print(data_list)
 # Print the scraped data
 # for data in data_list:
 #     print(data)
-# print(data_list)
+
+
+
+
+
+
+
 print("Done")
 
 
