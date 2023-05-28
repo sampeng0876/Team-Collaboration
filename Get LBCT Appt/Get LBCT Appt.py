@@ -143,7 +143,7 @@ driver.get("https://www.lbct.com/Home/index")
 # driver.refresh()
 
 containers = ['CCLU7723702',
-              'OOCU7402018',
+              'CSNU8069786',
               'BMOU5128510',
               'OOCU8990868',
               'CCLU7308661',]
@@ -292,32 +292,26 @@ data_list=[]
 # V2 Get Data
 # GOOD TO USE
 ################################################################ 
-for tr in trs:    
-    get_class = tr.find('div', class_='k-tabstrip-wrapper')
-    get_table = tr.find_all('table', role = 'grid')
-    for table in get_table:
-    # print(len(get_table))
-        print(table.text.strip())
-        data_list.append(table.text.strip())
 
+for tr in trs:    
 
     # GOOD TO USE
     # Get the Main Data
-    # if 'data-uid' in tr.attrs:
-    # # Extract the desired data from the element
-    #     main_data = {
-    #         "Container": tr.find("p").text.strip(),
-    #         "Available": tr.find_all("td")[2].text.strip(),
-    #         "Type": tr.find_all("td")[3].text.strip(),
-    #         "Line": tr.find_all("td")[4].text.strip(),
-    #         "Vessel": tr.find_all("td")[5].text.strip(),                        
-    #         # Add more data extraction as needed
-    #     }
+    if 'data-uid' in tr.attrs:
+    # Extract the desired data from the element
+        main_data = {
+            "Container": tr.find("p").text.strip(),
+            "Available": tr.find_all("td")[2].text.strip(),
+            # "Type": tr.find_all("td")[3].text.strip(),
+            # "Line": tr.find_all("td")[4].text.strip(),
+            # "Vessel": tr.find_all("td")[5].text.strip(),                        
+            # Add more data extraction as needed
+        }
         
-    #     data_list.append(main_data)
-    # else:
-    #     # print("No Main Data")
-    #     pass
+        data_list.append(main_data)
+    else:
+        # print("No Main Data")
+        pass
 
 
     # # GOOD TO USE
@@ -340,7 +334,7 @@ for tr in trs:
  
     # # GOOD TO USE
     # # Get The Details Tab
-    # if tr.find('tr', class_ ='table-container'):
+    # if tr.find('div', class_ ='table-container'):
     #     # Extract the desired data from the element
     #     details_data = {
     #         "Discharged": tr.find_all("strong")[0].text.strip(),
@@ -354,14 +348,14 @@ for tr in trs:
     #     # Merge the two dictionaries into a single dictionary
     #     main_data.update(details_data) 
     # else:
-    #     # print("No Fees Data")
+    #     # print("No Details Data")
     #     pass  
 
     # Get the Appointments Tab
     # appt = tr.find(class_='k-grid-header')
     # print(appt)
     # if tr.find('tr', attrs = {"data-uid": "8b4ba1a1-7f07-4059-9b3e-c85f1585165f"}):
-    
+            
     # appt = tr.find(class_='k-detail-cell')
     # if appt is not None:
     #     get_appt_trs = appt.find_all('td')
@@ -393,33 +387,35 @@ for tr in trs:
     # 'k-detail-row' in tr.get('class', []) or 'k-detail-row k-alt' in tr.get('class', [])
 
 
-
+    # get_class = tr.find('td', class_='k-detail-cell')
+    # get_table = tr.find_all('td', role = 'gridcell')
+    # for table in get_table:
+    #     print(table.text.strip())
+    #     data_list.append(table.text.strip())
     
-    # if tr.find('table', role='grid'):      
-    #     appt_data = {
-    #     "Date": tr.find_all('td', role='gridcell')[0].text.strip(),
-    #     "Time": tr.find_all('td', role='gridcell')[1].text.strip(),
-    #     "State": tr.find_all('td', role='gridcell')[2].text.strip(),
-    #     "Company": tr.find_all('td', role='gridcell')[3].text.strip(),
-    #     "Appt": tr.find_all('td', role='gridcell')[4].text.strip(),
-    #     "SUB-H": tr.find_all('td', role='gridcell')[5].text.strip(),
-    #     # # "6": tr.find_all('td', role='gridcell')[6].text.strip(),
-    #     # "TMF_CONTAINER_HOLD": tr.find_all('td', role='gridcell')[7].text.strip(),
-    #     # "STATUS": tr.find_all('td', role='gridcell')[8].text.strip(),
-    #     # # "9": tr.find_all('td', role='gridcell')[9].text.strip(),
-    #     # "CTF_CONTAINER_HOLD": tr.find_all('td', role='gridcell')[10].text.strip(),
-    #     # "STATUS": tr.find_all('td', role='gridcell')[11].text.strip(),
-    #     # # "12": tr.find_all('td', role='gridcell')[12].text.strip(),
-    #     # "CUSTOMS_DEFAULT_HOLD": tr.find_all('td', role='gridcell')[13].text.strip(),
-    #     # "STATUS": tr.find_all('td', role='gridcell')[14].text.strip(),
-    #     }
-    #     main_data.update(appt_data)
-    #     # print(appt_data)
-    # else:
-    #     print("Not Appt Data")
+    # GOOD TO USE
     
+    if tr.find('div', class_='container-appointment_CCLU7308661'):  
+        if tr.find_all('td', role='gridcell'):
+            appt_data = {
+            "Date": tr.find_all('td', role='gridcell')[0].text.strip(),
+            "Time": tr.find_all('td', role='gridcell')[1].text.strip(),
+            "State": tr.find_all('td', role='gridcell')[2].text.strip(),
+            "Company": tr.find_all('td', role='gridcell')[3].text.strip(),
+            "Appt": tr.find_all('td', role='gridcell')[4].text.strip(),
+            "SUB-H": tr.find_all('td', role='gridcell')[5].text.strip(),
+            }
+            main_data.update(appt_data)
+            # print(appt_data)  
+                      
+        else:   
+            pass
+    else:
+        # print("Not Appt Data")
+        pass
     
-    # if tr.find('table', role='grid'):      
+    # # Get the Holds Tab
+    # if tr.find('tbody', role='rowgroup'):      
     #     holds_data = {
     #     # "Date": tr.find_all('td', role='gridcell')[0].text.strip(),
     #     # "Time": tr.find_all('td', role='gridcell')[1].text.strip(),
@@ -427,20 +423,20 @@ for tr in trs:
     #     # "Company": tr.find_all('td', role='gridcell')[3].text.strip(),
     #     # "Appt": tr.find_all('td', role='gridcell')[4].text.strip(),
     #     # "SUB-H": tr.find_all('td', role='gridcell')[5].text.strip(),
-    #     # # "6": tr.find_all('td', role='gridcell')[6].text.strip(),
-    #     "TMF_CONTAINER_HOLD": tr.find_all('td', role='gridcell')[7].text.strip(),
+    #     # "6": tr.find_all('td', role='gridcell')[6].text.strip(),
+    #     "BLOCK_DOWN": tr.find_all('td', role='gridcell')[7].text.strip(),
     #     "STATUS": tr.find_all('td', role='gridcell')[8].text.strip(),
-    #     # # "9": tr.find_all('td', role='gridcell')[9].text.strip(),
-    #     "CTF_CONTAINER_HOLD": tr.find_all('td', role='gridcell')[10].text.strip(),
+    #     # "9": tr.find_all('td', role='gridcell')[9].text.strip(),
+    #     "TMF_CONTAINER_HOLD": tr.find_all('td', role='gridcell')[10].text.strip(),
     #     "STATUS": tr.find_all('td', role='gridcell')[11].text.strip(),
-    #     # # "12": tr.find_all('td', role='gridcell')[12].text.strip(),
-    #     "CUSTOMS_DEFAULT_HOLD": tr.find_all('td', role='gridcell')[13].text.strip(),
-    #     "STATUS": tr.find_all('td', role='gridcell')[14].text.strip(),
-    #     # "15": tr.find_all('td', role='gridcell')[15].text.strip(),
-    #     "FREIGHT_BL_HOLD": tr.find_all('td', role='gridcell')[16].text.strip(),
-    #     "STATUS": tr.find_all('td', role='gridcell')[17].text.strip(),
+    #     # "12": tr.find_all('td', role='gridcell')[12].text.strip(),
+    #     # "CUSTOMS_DEFAULT_HOLD": tr.find_all('td', role='gridcell')[13].text.strip(),
+    #     # "STATUS": tr.find_all('td', role='gridcell')[14].text.strip(),
+    #     # # "15": tr.find_all('td', role='gridcell')[15].text.strip(),
+    #     # "FREIGHT_BL_HOLD": tr.find_all('td', role='gridcell')[16].text.strip(),
+    #     # "STATUS": tr.find_all('td', role='gridcell')[17].text.strip(),
     #     }
-
+    #     main_data.update(holds_data)
     # else:
     #     # print("Not Appt Data")
     #     pass
