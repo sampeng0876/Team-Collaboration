@@ -123,7 +123,7 @@ from openpyxl import load_workbook
 # }
 
 # Load the workbook
-workbook = load_workbook('LFD.xlsx')
+workbook = load_workbook('Get Terminal Info.xlsx')
 
 # Select sheet2
 sheet = workbook['LBCT']  # Change the sheet name accordingly

@@ -77,7 +77,7 @@ root.mainloop()
 # Main
 ####################################################################################################################
 # Load the workbook
-workbook = load_workbook('LFD.xlsx')
+workbook = load_workbook('Get Terminal Info.xlsx')
 
 # Select sheet2
 sheet = workbook['APM']  # Change the sheet name accordingly
