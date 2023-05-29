@@ -19,6 +19,7 @@ import tkinter
 from tkinter import ttk
 import customtkinter
 
+
 # Create a function to get the selected value and close the window
 ####################################################################################################################
 def on_submit():

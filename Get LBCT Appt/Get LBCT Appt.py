@@ -14,7 +14,7 @@ import tkinter
 from tkinter import ttk
 import customtkinter
 from bs4 import BeautifulSoup
-
+from openpyxl import load_workbook
 
 
 
@@ -121,6 +121,12 @@ from bs4 import BeautifulSoup
 #     'sec-ch-ua-mobile': '?0',
 #     'sec-ch-ua-platform': '"Windows"',
 # }
+
+# Load the workbook
+workbook = load_workbook('LFD.xlsx')
+
+# Select sheet2
+sheet = workbook['LBCT']  # Change the sheet name accordingly
 
 # # Create a new Chrome session
 driver = webdriver.Chrome()
@@ -248,46 +254,10 @@ for icon in get_expand_icon:
 # Scrape data
 soup = BeautifulSoup(driver.page_source, 'html.parser')
 
-# # Find the elements with the specified class and extract the data
-# block = soup.find(class_='k-grid k-widget k-display-block')
-
-# # Read tbody
-# tbody = block.find('tbody', role = 'rowgroup')
-
 # Read all tr from tbody tag
 trs = soup.find_all(class_=['k-master-row','k-detail-row', 'k-detail-row k-alt','k-alt k-master-row']) # 
 
 data_list=[]
-
-# V1 Get Data
-################################################################ 
-# for tr in trs:
-#     # # Get the container
-#     # get_container = tr.find('td',class_='')
-#     # get_container = get_container.find('p')
-#     # if get_container == None:
-#     #     continue
-#     # container = get_container.text    
-#     print(tr)
-
-#     # get_master_row = tr.get('class') == ['k-detail-row k-alt']
-    
-#     get_master_row_data = tr.find_all('td',class_='')
-#     for check_data in get_master_row_data:
-#         # td_element = row.find('td', attrs={'aria-describedby': '8f8938ff-fd7c-40c1-abcb-ff43a91db13d'})
-        
-#         if check_data is not None:
-#             master_row_data = check_data.text.strip()
-#             # print(master_row_data)
-#             #data_list.append(master_row_data)
-#         else:
-#             print("Data not found for this row")
-    
-#     get_fee_details = tr.find_all('div', class_='table-container')
-
-
-# print(data_list)
-
 
 # V2 Get Data
 # GOOD TO USE
@@ -302,9 +272,9 @@ for tr in trs:
         main_data = {
             "Container": tr.find("p").text.strip(),
             "Available": tr.find_all("td")[2].text.strip(),
-            # "Type": tr.find_all("td")[3].text.strip(),
-            # "Line": tr.find_all("td")[4].text.strip(),
-            # "Vessel": tr.find_all("td")[5].text.strip(),                        
+            "Type": tr.find_all("td")[3].text.strip(),
+            "Line": tr.find_all("td")[4].text.strip(),
+            "Vessel": tr.find_all("td")[5].text.strip(),                        
             # Add more data extraction as needed
         }
         
@@ -313,150 +283,237 @@ for tr in trs:
         # print("No Main Data")
         pass
 
+    # GOOD TO USE
+    # Get the Fees Tab 
+    if tr.find('div', class_ ='table-container'):
+        # Extract the desired data from the element
+        fees_data = {
+            "LINE DEMURRAGE": tr.find_all("td")[3].text.strip(),
+            "LFD": tr.find_all("td")[5].text.strip(),
+            "EXTENDED DWELL TIME FEE": tr.find_all("td")[6].text.strip(),
+            "Total": tr.find_all("td")[13].text.strip(),           
+            # Add more data extraction as needed
+        }
+        # Merge the two dictionaries into a single dictionary
+        main_data.update(fees_data)
 
-    # # GOOD TO USE
-    # # Get the Fees Tab 
-    # if tr.find('div', class_ ='table-container'):
-    #     # Extract the desired data from the element
-    #     fees_data = {
-    #         "LINE DEMURRAGE": tr.find_all("td")[3].text.strip(),
-    #         "LFD": tr.find_all("td")[5].text.strip(),
-    #         "EXTENDED DWELL TIME FEE": tr.find_all("td")[6].text.strip(),
-    #         "Total": tr.find_all("td")[13].text.strip(),           
-    #         # Add more data extraction as needed
-    #     }
-    #     # Merge the two dictionaries into a single dictionary
-    #     main_data.update(fees_data)
-
-    # else:
-    #     # print("No Fees Data")
-    #     pass
+    else:
+        # print("No Fees Data")
+        pass
  
-    # # GOOD TO USE
-    # # Get The Details Tab
-    # if tr.find('div', class_ ='table-container'):
-    #     # Extract the desired data from the element
-    #     details_data = {
-    #         "Discharged": tr.find_all("strong")[0].text.strip(),
-    #         "Location": tr.find_all("strong")[1].text.strip(),
-    #         "Delivered": tr.find_all("strong")[2].text.strip(),
-    #         "Full/Empty": tr.find_all("strong")[3].text.strip(),
-    #         "Exam Status": tr.find_all("strong")[4].text.strip(),
-    #         "Bond Status": tr.find_all("strong")[5].text.strip(),          
-    #         # Add more data extraction as needed
-    #     }
-    #     # Merge the two dictionaries into a single dictionary
-    #     main_data.update(details_data) 
-    # else:
-    #     # print("No Details Data")
-    #     pass  
-
-    # Get the Appointments Tab
-    # appt = tr.find(class_='k-grid-header')
-    # print(appt)
-    # if tr.find('tr', attrs = {"data-uid": "8b4ba1a1-7f07-4059-9b3e-c85f1585165f"}):
-            
-    # appt = tr.find(class_='k-detail-cell')
-    # if appt is not None:
-    #     get_appt_trs = appt.find_all('td')
-    #     print(get_appt_trs)
-    # else:
-    #     print("Could not find element with class k-detail-cell")
+    # GOOD TO USE
+    # Get The Details Tab
+    if tr.find('div', class_ ='table-container'):
+        # Extract the desired data from the element
+        details_data = {
+            "Discharged": tr.find_all("strong")[0].text.strip(),
+            "Location": tr.find_all("strong")[1].text.strip(),
+            "Delivered": tr.find_all("strong")[2].text.strip(),
+            "Full/Empty": tr.find_all("strong")[3].text.strip(),
+            "Exam Status": tr.find_all("strong")[4].text.strip(),
+            "Bond Status": tr.find_all("strong")[5].text.strip(),          
+            # Add more data extraction as needed
+        }
+        # Merge the two dictionaries into a single dictionary
+        main_data.update(details_data) 
+    else:
+        # print("No Details Data")
+        pass  
     
-    # appt_tbody = tr.find_all('td', role='gridcell')
-
-    # if appt_tbody:
-    #     data = [td for td in appt_tbody]
-    #     print(data)
-
-    #     # for element in appt_tbody:
-    #     #     text = element.text.strip()
-    #     #     print(text)
-    #     # appt_data = {
-    #     # "1": tr.find_all("td")[9].text.strip(),
-    #     # "2": tr.find_all("td")[10].text.strip(),
-    #     # "3": tr.find_all("td")[11].text.strip(),
-    #     # "4": tr.find_all("td")[12].text.strip(),
-    #     # "5": tr.find_all("td")[13].text.strip(),
-    #     # "6": tr.find_all("td")[15].text.strip()
-    #     # }
-    # else:
-    #     print("Could not find element with class tbody")
-
-
-    # 'k-detail-row' in tr.get('class', []) or 'k-detail-row k-alt' in tr.get('class', [])
-
-
-    # get_class = tr.find('td', class_='k-detail-cell')
-    # get_table = tr.find_all('td', role = 'gridcell')
-    # for table in get_table:
-    #     print(table.text.strip())
-    #     data_list.append(table.text.strip())
+    # 'k-detail-row' in tr.get('class', []) or 'k-detail-row k-alt' in tr.get('class', [])   
+    # GOOD TO USE 
+    # Get the Appointments Tab
+    if tr.find('tbody', role='rowgroup'):
+        appt_data = {
+        "Date": tr.find_all('td', role='gridcell')[0].text.strip(),
+        "Time": tr.find_all('td', role='gridcell')[1].text.strip(),
+        "State": tr.find_all('td', role='gridcell')[2].text.strip(),
+        "Company": tr.find_all('td', role='gridcell')[3].text.strip(),
+        "Appt": tr.find_all('td', role='gridcell')[4].text.strip(),
+        "SUB-H": tr.find_all('td', role='gridcell')[5].text.strip(),
+        }
+        main_data.update(appt_data)
+        # print(appt_data)
+    else:
+        appt_data = {
+        "Date": 'N/A',
+        "Time": 'N/A',
+        "State": 'N/A',
+        "Company": 'N/A',
+        "Appt": 'N/A',
+        "SUB-H": 'N/A',
+        }
+        main_data.update(appt_data)
     
     # GOOD TO USE
-    
-    if tr.find('div', class_='container-appointment_CCLU7308661'):  
-        if tr.find_all('td', role='gridcell'):
-            appt_data = {
-            "Date": tr.find_all('td', role='gridcell')[0].text.strip(),
-            "Time": tr.find_all('td', role='gridcell')[1].text.strip(),
-            "State": tr.find_all('td', role='gridcell')[2].text.strip(),
-            "Company": tr.find_all('td', role='gridcell')[3].text.strip(),
-            "Appt": tr.find_all('td', role='gridcell')[4].text.strip(),
-            "SUB-H": tr.find_all('td', role='gridcell')[5].text.strip(),
+    # Get the Holds Tab
+    if tr.find('tbody', role='rowgroup'): 
+        if  len(tr.find_all('td',role='gridcell')) == 21:
+            holds_data = {
+            "BLOCK_DOWN": tr.find_all('td', role='gridcell')[7].text.strip(),
+            "BLOCK_DOWN_STATUS": tr.find_all('td', role='gridcell')[8].text.strip(),
+            # "9": tr.find_all('td', role='gridcell')[9].text.strip(),
+            "TMF_CONTAINER_HOLD": tr.find_all('td', role='gridcell')[10].text.strip(),
+            "TMF_CONTAINER_HOLD_STATUS": tr.find_all('td', role='gridcell')[11].text.strip(),
+            # "12": tr.find_all('td', role='gridcell')[12].text.strip(),
+            "CTF_CONTAINER_HOLD": tr.find_all('td', role='gridcell')[13].text.strip(),
+            "CTF_CONTAINER_HOLD_STATUS": tr.find_all('td', role='gridcell')[14].text.strip(),
+            # # "15": tr.find_all('td', role='gridcell')[15].text.strip(),
+            "CUSTOMS_DEFAULT_HOLD": tr.find_all('td', role='gridcell')[16].text.strip(),
+            "CUSTOMS_DEFAULT_HOLD_STATUS": tr.find_all('td', role='gridcell')[17].text.strip(),
+            # "18": tr.find_all('td', role='gridcell')[18].text.strip(),
+            "FREIGHT_BL_HOLD": tr.find_all('td', role='gridcell')[19].text.strip(),
+            "FREIGHT_BL_HOLD_STATUS": tr.find_all('td', role='gridcell')[20].text.strip(),
             }
-            main_data.update(appt_data)
-            # print(appt_data)  
-                      
-        else:   
-            pass
+            main_data.update(holds_data)
+            # print(len(tr.find_all('td',role='gridcell')))
+        if  len(tr.find_all('td',role='gridcell')) == 18:
+            holds_data = {
+            "TMF_CONTAINER_HOLD": tr.find_all('td', role='gridcell')[7].text.strip(),
+            "TMF_CONTAINER_HOLD_STATUS": tr.find_all('td', role='gridcell')[8].text.strip(),
+            # "9": tr.find_all('td', role='gridcell')[9].text.strip(),
+            "CTF_CONTAINER_HOLD": tr.find_all('td', role='gridcell')[10].text.strip(),
+            "CTF_CONTAINER_HOLD_STATUS": tr.find_all('td', role='gridcell')[11].text.strip(),
+            # "12": tr.find_all('td', role='gridcell')[12].text.strip(),
+            "CUSTOMS_DEFAULT_HOLD": tr.find_all('td', role='gridcell')[13].text.strip(),
+            "CUSTOMS_DEFAULT_HOLD_STATUS": tr.find_all('td', role='gridcell')[14].text.strip(),
+            # # "15": tr.find_all('td', role='gridcell')[15].text.strip(),
+            "FREIGHT_BL_HOLD": tr.find_all('td', role='gridcell')[16].text.strip(),
+            "FREIGHT_BL_HOLD_STATUS": tr.find_all('td', role='gridcell')[17].text.strip(),
+            }
+            main_data.update(holds_data)
+            # print(len(tr.find_all('td',role='gridcell')))
     else:
-        # print("Not Appt Data")
-        pass
-    
-    # # Get the Holds Tab
-    # if tr.find('tbody', role='rowgroup'):      
-    #     holds_data = {
-    #     # "Date": tr.find_all('td', role='gridcell')[0].text.strip(),
-    #     # "Time": tr.find_all('td', role='gridcell')[1].text.strip(),
-    #     # "State": tr.find_all('td', role='gridcell')[2].text.strip(),
-    #     # "Company": tr.find_all('td', role='gridcell')[3].text.strip(),
-    #     # "Appt": tr.find_all('td', role='gridcell')[4].text.strip(),
-    #     # "SUB-H": tr.find_all('td', role='gridcell')[5].text.strip(),
-    #     # "6": tr.find_all('td', role='gridcell')[6].text.strip(),
-    #     "BLOCK_DOWN": tr.find_all('td', role='gridcell')[7].text.strip(),
-    #     "STATUS": tr.find_all('td', role='gridcell')[8].text.strip(),
-    #     # "9": tr.find_all('td', role='gridcell')[9].text.strip(),
-    #     "TMF_CONTAINER_HOLD": tr.find_all('td', role='gridcell')[10].text.strip(),
-    #     "STATUS": tr.find_all('td', role='gridcell')[11].text.strip(),
-    #     # "12": tr.find_all('td', role='gridcell')[12].text.strip(),
-    #     # "CUSTOMS_DEFAULT_HOLD": tr.find_all('td', role='gridcell')[13].text.strip(),
-    #     # "STATUS": tr.find_all('td', role='gridcell')[14].text.strip(),
-    #     # # "15": tr.find_all('td', role='gridcell')[15].text.strip(),
-    #     # "FREIGHT_BL_HOLD": tr.find_all('td', role='gridcell')[16].text.strip(),
-    #     # "STATUS": tr.find_all('td', role='gridcell')[17].text.strip(),
-    #     }
-    #     main_data.update(holds_data)
-    # else:
-    #     # print("Not Appt Data")
-    #     pass
+        holds_data = {
+        "BLOCK_DOWN": 'N/A',
+        "BLOCK_DOWN_STATUS": 'N/A',
+        # "9": tr.find_all('td', role='gridcell')[9].text.strip(),
+        "TMF_CONTAINER_HOLD": 'N/A',
+        "TMF_CONTAINER_HOLD_STATUS": 'N/A',
+        # "12": tr.find_all('td', role='gridcell')[12].text.strip(),
+        "CTF_CONTAINER_HOLD": 'N/A',
+        "CTF_CONTAINER_HOLD_STATUS": 'N/A',
+        # # "15": tr.find_all('td', role='gridcell')[15].text.strip(),
+        "CUSTOMS_DEFAULT_HOLD": 'N/A',
+        "CUSTOMS_DEFAULT_HOLD_STATUS": 'N/A',
+        # "18": tr.find_all('td', role='gridcell')[18].text.strip(),
+        "FREIGHT_BL_HOLD": 'N/A',
+        "FREIGHT_BL_HOLD_STATUS": 'N/A',
+        }
+        main_data.update(holds_data)
 
-        
+# Step 3: Define the title-key mapping
+title_key_mapping = {
+    'Container': 'Container',
+    'Available': 'Available',
+    'Type': 'Type',
+    'Line': 'Line',
+    'Vessel': 'Vessel',
+    'LINE DEMURRAGE': 'LINE DEMURRAGE',
+    'LFD': 'LFD',
+    'EXTENDED DWELL TIME FEE': 'EXTENDED DWELL TIME FEE',
+    'Total': 'Total',        
+    'Discharged': 'Discharged',
+    'Location': 'Location',
+    'Delivered': 'Delivered',
+    'Full/Empty': 'Full/Empty',
+    'Exam Status': 'Exam Status',
+    'Bond Status': 'Bond Status',
+    'Date': 'Date',
+    'Time': 'Time',
+    'Company': 'Company',
+    'Appt': 'Appt',
+    'SUB-H': 'SUB-H',
+    'BLOCK_DOWN': 'BLOCK_DOWN',
+    'BLOCK_DOWN_STATUS': 'BLOCK_DOWN_STATUS',
+    'TMF_CONTAINER_HOLD': 'TMF_CONTAINER_HOLD',
+    'TMF_CONTAINER_HOLD_STATUS': 'TMF_CONTAINER_HOLD_STATUS',
+    'CTF_CONTAINER_HOLD': 'CTF_CONTAINER_HOLD',
+    'CTF_CONTAINER_HOLD_STATUS': 'CTF_CONTAINER_HOLD_STATUS',
+    'CUSTOMS_DEFAULT_HOLD': 'CUSTOMS_DEFAULT_HOLD',
+    'CUSTOMS_DEFAULT_HOLD_STATUS': 'CUSTOMS_DEFAULT_HOLD_STATUS',
+    'FREIGHT_BL_HOLD': 'FREIGHT_BL_HOLD',
+    'FREIGHT_BL_HOLD_STATUS': 'FREIGHT_BL_HOLD_STATUS',
+    # Add more titles and keys as needed
+}
 
-# Append the merged dictionary to the list
-# data_list.append(main_data)
-print(data_list)
-# Print the scraped data
-# for data in data_list:
-#     print(data)
+
+# Get the existing titles from row 1
+titles = [cell.value for cell in sheet[1]]
+
+# Save data to the Excel file
+row_index = 2  # Start saving data at row 2 (A2)
+
+for data in data_list:
+    for title in titles:
+        if title == 'Container':
+            sheet.cell(row=row_index, column=titles.index(title) + 1).value = data['Container']
+        elif title == 'Available':
+            sheet.cell(row=row_index, column=titles.index(title) + 1).value = data['Available']
+        elif title == 'Type':
+            sheet.cell(row=row_index, column=titles.index(title) + 1).value = data['Type']
+        elif title == 'Line':
+            sheet.cell(row=row_index, column=titles.index(title) + 1).value = data['Line']
+        elif title == 'Vessel':
+            sheet.cell(row=row_index, column=titles.index(title) + 1).value = data['Vessel']
+        elif title == 'LINE DEMURRAGE':
+            sheet.cell(row=row_index, column=titles.index(title) + 1).value = data['LINE DEMURRAGE']
+        elif title == 'LFD':
+            sheet.cell(row=row_index, column=titles.index(title) + 1).value = data['LFD']
+        elif title == 'EXTENDED DWELL TIME FEE':
+            sheet.cell(row=row_index, column=titles.index(title) + 1).value = data['EXTENDED DWELL TIME FEE']
+        elif title == 'Total':
+            sheet.cell(row=row_index, column=titles.index(title) + 1).value = data['Total']
+        elif title == 'Discharged':
+            sheet.cell(row=row_index, column=titles.index(title) + 1).value = data['Discharged']
+        elif title == 'Location':
+            sheet.cell(row=row_index, column=titles.index(title) + 1).value = data['Location']
+        elif title == 'Delivered':
+            sheet.cell(row=row_index, column=titles.index(title) + 1).value = data['Delivered']
+        elif title == 'Full/Empty':
+            sheet.cell(row=row_index, column=titles.index(title) + 1).value = data['Full/Empty']
+        elif title == 'Exam Status':
+            sheet.cell(row=row_index, column=titles.index(title) + 1).value = data['Exam Status']
+        elif title == 'Bond Status':
+            sheet.cell(row=row_index, column=titles.index(title) + 1).value = data['Bond Status']
+        elif title == 'Date':
+            sheet.cell(row=row_index, column=titles.index(title) + 1).value = data['Date']
+        elif title == 'Time':
+            sheet.cell(row=row_index, column=titles.index(title) + 1).value = data['Time']
+        elif title == 'Company':
+            sheet.cell(row=row_index, column=titles.index(title) + 1).value = data['Company']
+        elif title == 'Appt':
+            sheet.cell(row=row_index, column=titles.index(title) + 1).value = data['Appt']
+        elif title == 'SUB-H':
+            sheet.cell(row=row_index, column=titles.index(title) + 1).value = data['SUB-H']
+        elif title == 'BLOCK_DOWN':
+            sheet.cell(row=row_index, column=titles.index(title) + 1).value = data['BLOCK_DOWN']
+        elif title == 'BLOCK_DOWN_STATUS':
+            sheet.cell(row=row_index, column=titles.index(title) + 1).value = data['BLOCK_DOWN_STATUS']
+        elif title == 'TMF_CONTAINER_HOLD':
+            sheet.cell(row=row_index, column=titles.index(title) + 1).value = data['TMF_CONTAINER_HOLD']
+        elif title == 'TMF_CONTAINER_HOLD_STATUS':
+            sheet.cell(row=row_index, column=titles.index(title) + 1).value = data['TMF_CONTAINER_HOLD_STATUS']
+        elif title == 'CTF_CONTAINER_HOLD':
+            sheet.cell(row=row_index, column=titles.index(title) + 1).value = data['CTF_CONTAINER_HOLD']
+        elif title == 'CTF_CONTAINER_HOLD_STATUS':
+            sheet.cell(row=row_index, column=titles.index(title) + 1).value = data['CTF_CONTAINER_HOLD_STATUS']
+        elif title == 'CUSTOMS_DEFAULT_HOLD':
+            sheet.cell(row=row_index, column=titles.index(title) + 1).value = data['CUSTOMS_DEFAULT_HOLD']
+        elif title == 'CUSTOMS_DEFAULT_HOLD_STATUS':
+            sheet.cell(row=row_index, column=titles.index(title) + 1).value = data['CUSTOMS_DEFAULT_HOLD_STATUS']
+        elif title == 'FREIGHT_BL_HOLD':
+            sheet.cell(row=row_index, column=titles.index(title) + 1).value = data['FREIGHT_BL_HOLD']
+        elif title == 'FREIGHT_BL_HOLD_STATUS':
+            sheet.cell(row=row_index, column=titles.index(title) + 1).value = data['FREIGHT_BL_HOLD_STATUS']
+        # Add more conditions for additional titles as needed
+
+    row_index += 1
+# Save the modified workbook
+workbook.save("LFD.xlsx")
 
 
-
-
-
-
-
-print("Done")
+print("Finished")
 
 
 # Close the browser
