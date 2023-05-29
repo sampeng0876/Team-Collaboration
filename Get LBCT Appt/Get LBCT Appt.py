@@ -511,7 +511,7 @@ for data in data_list:
 
     row_index += 1
 # Save the modified workbook
-workbook.save("Get Terminal Info.xlsx.xlsx")
+workbook.save("Get Terminal Info.xlsx")
 
 
 print("Finished")
