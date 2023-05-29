@@ -27,67 +27,68 @@ from openpyxl import load_workbook
 
 
 # Create a function to get the selected value and close the window
-####################################################################################################################
-# def on_submit():
-#     global container_entry
+###################################################################################################################
+def on_submit():
+    global container_entry
     
-#     # Get container entries
-#     data = container_entry.get("1.0", "end-1c")
-#     lines = data.split("\n")
-#     container_list.extend(lines)
-#     container_entry.delete("1.0", "end")
-#     print("Container List:")
-#     print(container_list)  
-#     root.destroy()
+    # Get container entries
+    data = container_entry.get("1.0", "end-1c")
+    lines = data.split("\n")
+    container_list.extend(lines)
+    container_entry.delete("1.0", "end")
+    print("Container List:")
+    print(container_list)  
+    root.destroy()
 
 
-# # UI Window Settings
-# ####################################################################################################################
-# root = tkinter.Tk()
-# # Set theme
-# # sv_ttk.use_dark_theme()
-# sv_ttk.use_light_theme()
-# # root.title("Appointment Scheduler")
-# # root.geometry("500x500")
-
+# UI Window Settings
+####################################################################################################################
+root = tkinter.Tk()
+# Set theme
+# sv_ttk.use_dark_theme()
+sv_ttk.use_light_theme()
 # root.title("Appointment Scheduler")
+# root.geometry("500x500")
 
-# # Get the screen width and height
-# screen_width = root.winfo_screenwidth()
-# screen_height = root.winfo_screenheight()
+root.title("Appointment Scheduler")
 
-# # Calculate the x and y coordinates for the window to be centered
-# x = (screen_width - 210) // 2
-# y = (screen_height - 250) // 2
+# Get the screen width and height
+screen_width = root.winfo_screenwidth()
+screen_height = root.winfo_screenheight()
 
-# # Set the position of the window
-# root.geometry(f"210x250+{x}+{y}")
+# Calculate the x and y coordinates for the window to be centered
+x = (screen_width - 210) // 2
+y = (screen_height - 250) // 2
 
-# # List to store container entries
-# container_list = []
+# Set the position of the window
+root.geometry(f"210x250+{x}+{y}")
 
-# # Create a label for data entry
-# Label(root, text="Enter Container Number:").grid(column=1, row=1, padx=5, pady=5)
-# container_entry = customtkinter.CTkTextbox(root, height=160, width=200, border_width=1 ,border_color="lightgray" )
-# container_entry.grid(column=1, row=2, padx=5, pady=5)
+# List to store container entries
+container_list = []
 
-# # Create submit button
-# # style = ttk.Style()
-# # style.configure('Blue.TButton', foreground='blue', background='white')
-# submit_button = customtkinter.CTkButton(root, width=60, text="OK", command=on_submit)
-# submit_button.grid(column=1, row=7, padx=10, pady=5)
+# Create a label for data entry
+Label(root, text="Enter Container Number:").grid(column=1, row=1, padx=5, pady=5)
+container_entry = customtkinter.CTkTextbox(root, height=160, width=200, border_width=1 ,border_color="lightgray" )
+container_entry.grid(column=1, row=2, padx=5, pady=5)
 
-# # Start the mainloop to display the window
-# root.mainloop()
+# Create submit button
+# style = ttk.Style()
+# style.configure('Blue.TButton', foreground='blue', background='white')
+submit_button = customtkinter.CTkButton(root, width=60, text="OK", command=on_submit)
+submit_button.grid(column=1, row=7, padx=10, pady=5)
+
+# Start the mainloop to display the window
+root.mainloop()
 
 # Main
 ####################################################################################################################
 
 
 # chrome_options = Options()
+# chrome_options.add_argument("--headless")
 # # #chrome_options.add_argument("--disable-extensions")
 # # #chrome_options.add_argument("--disable-gpu")
-# chrome_options.add_argument("--headless")
+
 
 # Set the options to run the browser in headless mode
 # chrome_options.headless = True
@@ -148,17 +149,17 @@ driver.get("https://www.lbct.com/Home/index")
 # # Refresh the page to apply the cookies
 # driver.refresh()
 
-containers = ['CCLU7723702',
-              'CSNU8069786',
-              'BMOU5128510',
-              'OOCU8990868',
-              'CCLU7308661',]
+# containers = ['CCLU7723702',
+#               'CSNU8069786',
+#               'BMOU5128510',
+#               'OOCU8990868',
+#               'CCLU7308661',]
 
 # containers = ['CSLU1957155']
 
 # Container List
-container_list = '\n'.join(containers)
-
+# container_list = '\n'.join(containers)
+container_list = '\n'.join(container_list)
 
 # V1 Make Appointment
 ################################################################
@@ -510,7 +511,7 @@ for data in data_list:
 
     row_index += 1
 # Save the modified workbook
-workbook.save("LFD.xlsx")
+workbook.save("Get Terminal Info.xlsx.xlsx")
 
 
 print("Finished")

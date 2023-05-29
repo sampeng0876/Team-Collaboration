@@ -192,7 +192,7 @@ for i, value in enumerate(data_list):
 
 
 # Save the modified workbook
-workbook.save("LFD.xlsx")
+workbook.save("Get Terminal Info.xlsx.xlsx")
 
 
 
