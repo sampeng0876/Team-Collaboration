@@ -299,8 +299,15 @@ for tr in trs:
         main_data.update(fees_data)
 
     else:
-        # print("No Fees Data")
-        pass
+        fees_data = {
+            "LINE DEMURRAGE": 'N/A',
+            "LFD": 'N/A',
+            "EXTENDED DWELL TIME FEE": 'N/A',
+            "Total": 'N/A',           
+            # Add more data extraction as needed
+        }
+        # Merge the two dictionaries into a single dictionary
+        main_data.update(fees_data)
  
     # GOOD TO USE
     # Get The Details Tab
