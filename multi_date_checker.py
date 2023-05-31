@@ -11,13 +11,16 @@ from selenium.webdriver.chrome.options import Options
 from tkinter import *
 from tkcalendar import *
 import datetime as dt
+from datetime import datetime
+
+
 
 # Version v3_check_next_monty
 # Multiple Dates Checker 
-def multi_date_checker(appt_dates, wait, start_time, end_time, driver, check_days, container_number):
+def multi_date_checker(appt_dates, wait, start_time, end_time, driver, check_days, container_number, container_list):
     previous_month = None
     earliest_time = None  # initializing earliest_time with a default value
-
+    
     for appt_date in appt_dates:
         days_checked = 0
         start_over = 1
@@ -26,8 +29,8 @@ def multi_date_checker(appt_dates, wait, start_time, end_time, driver, check_day
                 appt_date += timedelta(days=1)
                 continue
             # break the while loop if checked 3 times
-            # elif start_over == 4:
-            #     break
+            elif start_over == 4:
+                break
 
 
             # Find the calendar picker element
@@ -36,12 +39,19 @@ def multi_date_checker(appt_dates, wait, start_time, end_time, driver, check_day
             # Click the date picker element to open the date picker
             calendar_picker.click()
 
+            # Get the Month
+            this_month_element = wait.until(EC.presence_of_element_located((By.XPATH,'//*[@id="ipgrid_0"]/div[3]/div[2]/div/div[2]/div/div[1]/div[1]/div[2]/strong'))).text
+            this_month=datetime.strptime(this_month_element, "%B %Y").strftime("%m")
+
+            # print (this_month, appt_date.strftime("%m"))
 
             if previous_month is not None and int(previous_month) < int(appt_date.strftime("%m")):
                 next_month = wait.until(EC.presence_of_element_located((By.XPATH,'//*[@id="ipgrid_0"]/div[3]/div[2]/div/div[2]/div/div[1]/div[1]/div[3]')))
                 next_month.click()
                 # print(f'Clicked next_month {appt_date.strftime("%m")}')
-
+            elif int(this_month) < int(appt_date.strftime("%m")): # int(datetime.datetime.now().strftime("%m"))
+                next_month = wait.until(EC.presence_of_element_located((By.XPATH,'//*[@id="ipgrid_0"]/div[3]/div[2]/div/div[2]/div/div[1]/div[1]/div[3]')))
+                next_month.click()
             elif previous_month is not None and int(previous_month) > int(appt_date.strftime("%m")):
                 last_month = wait.until(EC.presence_of_element_located((By.XPATH,'//*[@id="ipgrid_0"]/div[3]/div[2]/div/div[2]/div/div[1]/div[1]/div[1]')))
                 last_month.click()
@@ -122,16 +132,20 @@ def multi_date_checker(appt_dates, wait, start_time, end_time, driver, check_day
                         #print(f"Selected Appt Times From: {start_time} to {end_time}")
 
                         # # Click Submit Button
-                        driver.find_element(By.XPATH,'//*[@id="action-section"]/button[1]').click()
+                        # driver.find_element(By.XPATH,'//*[@id="action-section"]/button[1]').click()
                         
                         print(f'Container# {container_number}')
                         print(f"Successfully Booked The Earliest time at {earliest_time} on {appt_date}")
+
+                        # When Appt Made Remove Container Number From Container List
+                        container_list.remove(container_number)
+                        print(f"Updated list : {container_list}\n")
                         break
                 except:
                     if error_count == 0:
                         print(f"No Time Slots Available From: {start_time} to {end_time}")
                     error_count += 1
-
+                
             # Break the while loop if a successful booking is made
             if earliest_time:
                 break
@@ -140,9 +154,10 @@ def multi_date_checker(appt_dates, wait, start_time, end_time, driver, check_day
             appt_date += timedelta(days=1)  
             
         # break the while loop if checked 3 times     
-        if earliest_time or start_over == 4:
+        if earliest_time or start_over == 4: # or start_over == 4
+        # if earliest_time:
             break
-
+            
 
         # # Print a message if no earliest time slot was booked after checking all days
         # if days_checked == len(appt_dates):
@@ -151,4 +166,4 @@ def multi_date_checker(appt_dates, wait, start_time, end_time, driver, check_day
         #     start_over += 1
         #     days_checked = 0
         # days_checked = 0  # Reset the days_checked counter
-
+    

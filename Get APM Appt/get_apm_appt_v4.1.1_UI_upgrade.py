@@ -238,10 +238,14 @@ while True:
         sleep(1)
 
         # Call out multi_date_checker
-        multi_date_checker (appt_dates_list, wait, start_time, end_time, driver, check_days, container_number)
+        multi_date_checker (appt_dates_list, wait, start_time, end_time, driver, check_days, container_number, container_list)
 
+    # print(check_container)
     if check_container == len(container_list):
-        break
+        # If reached the last container start over to check the first container
+        check_container = 0
+        if len(container_list) == 0:
+            break
     else: check_container+=1
         
 
