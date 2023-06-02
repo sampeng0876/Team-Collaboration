@@ -18,8 +18,7 @@ import tkinter
 from tkinter import ttk
 import customtkinter
 
-# 
-
+# Version V4
 # Create a function to get the selected value and close the window
 ####################################################################################################################
 def on_submit():
@@ -35,18 +34,14 @@ def on_submit():
     appt_dates_list = [formatted_date + timedelta(days=i) for i in range(int(check_days))]
     
     # Get the selected time values from the dropdowns
-    start_time_1 = start_time_var.get()
-    end_time_2 = end_time_var.get()
+    start_time = start_time_var.get()
+    end_time = end_time_var.get()
 
     # Get the values of appointment type
     appt_type = appt_type_var.get()
 
     # # Get the values of container
     # container = container_var.get()
-
-    # Check if the selected time range is available
-    start_time = start_time_1
-    end_time = end_time_2
     
     # Get container entries
     data = container_entry.get("1.0", "end-1c")
@@ -61,7 +56,7 @@ def on_submit():
 
     root.destroy()
 
-# UI Window Settings
+# UI settings
 ####################################################################################################################
 root = tkinter.Tk()
 # Set theme
@@ -194,6 +189,9 @@ login_info(username,driver)
 driver.find_element(By.XPATH, '//*[@id="Login_form"]/div[3]/div/button').click()
 
 # Main Loop
+# Appt Release Time:
+# Import 11:00 - 11:30
+# Empty Dropoff: 12:00 - 12:30, 3:00 - 3:30
 ####################################################################################################################
 check_container = 0
 while True:
@@ -249,9 +247,9 @@ while True:
             break
     else: check_container+=1   
         
+print(datetime.now())
+print("Finished")
 
-print("Done")
-
-
+# 5/30 Updated
 # Close the browser
-driver.quit()
+driver.quit() 

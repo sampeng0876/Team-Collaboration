@@ -113,7 +113,7 @@ containers = ['CCLU7723702']
 # Container List
 container_list = '\n'.join(containers)
 
-
+# Appt Release Time 11:10am
 # V1 Make Appointment
 ################################################################
 WebDriverWait(driver, 15).until( 
@@ -142,7 +142,7 @@ driver.find_element(By.XPATH, '//*[@id="loginBoxLogin"]').click()
 # Click Create Appt
 WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,'//*[@id="sideBarCreateApptItem"]/div'))).click()
 
-# Click Arrow Down 
+# Click Transaction Type Drop Down 
 WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,'//*[@id="CreateApptTable"]/tbody/tr[2]/td[2]/span/span/span/span[2]/span'))).click()
 
 # Click Empty In 
@@ -157,9 +157,31 @@ WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,'//*[@id="i
 # Click Get Time Slots
 WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,'//*[@id="id_sub_GetTimeslot"]'))).click()
 
-# Click Date / Time Slots Arrow Down
-WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,'//*[@id="id_DateTimeRow_CreateAppt"]/td[2]/span/span/span/span[2]/span'))).click()
+# Click Date / Time Slots Box
+sleep(3)
+WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,'//*[@id="id_DateTimeRow_CreateAppt"]/td[2]/span/span/span/span[1]'))).click()
 
+# appt_time = wait.until(EC.presence_of_element_located((By.XPATH,'')))
+# 
+
+# Locate the Appointment Time Slots
+# WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH,'')))
+time_slots_container = driver.find_elements(by="xpath", value='//*[@id="newDateTime_CreateAppt_listbox"]/li')
+
+available_time_slots = []
+
+# Check available time slots
+for time in time_slots_container:
+    try:
+        # Read time slot text
+        time_slots_text = time.text  
+        if time_slots_text.strip():
+            available_time_slots.append(time_slots_text)
+        print(time_slots_text)
+    except:
+        print("No Time Slots Appended")
+ 
+print(available_time_slots)
 
 # ################################################################
 # # Expand Tables
