@@ -29,8 +29,8 @@ def multi_date_checker(appt_dates, wait, start_time, end_time, driver, check_day
                 appt_date += timedelta(days=1)
                 continue
             # break the while loop if checked 3 times
-            elif start_over == 4:
-                break
+            # elif start_over == 4:
+            #     break
 
 
             # Find the calendar picker element
@@ -132,11 +132,12 @@ def multi_date_checker(appt_dates, wait, start_time, end_time, driver, check_day
                         #print(f"Selected Appt Times From: {start_time} to {end_time}")
 
                         # # Click Submit Button
-                        # driver.find_element(By.XPATH,'//*[@id="action-section"]/button[1]').click()
+                        driver.find_element(By.XPATH,'//*[@id="action-section"]/button[1]').click()
                         
                         print(f'Container# {container_number}')
-                        print(f"Successfully Booked The Earliest time at {earliest_time} on {appt_date}")
-
+                        print(f"Successfully Booked The Earliest Time: {earliest_time} on {appt_date}")
+                        print(f'Appt Booked at {datetime.now().strftime("%H:%M:%S")}') #("%Y-%m-%d %H:%M:%S"))
+                        
                         # When Appt Made Remove Container Number From Container List
                         container_list.remove(container_number)
                         print(f"Updated list : {container_list}\n")
@@ -154,7 +155,7 @@ def multi_date_checker(appt_dates, wait, start_time, end_time, driver, check_day
             appt_date += timedelta(days=1)  
             
         # break the while loop if checked 3 times     
-        if earliest_time or start_over == 4: # or start_over == 4
+        if earliest_time: # or start_over == 4
         # if earliest_time:
             break
             

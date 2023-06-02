@@ -251,8 +251,8 @@ while True:
             break
     else: check_container+=1   
         
-
-print("Done")
+print(datetime.now())
+print("Finished")
 
 # 5/30 Updated
 # Close the browser
