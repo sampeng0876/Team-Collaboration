@@ -1,3 +1,5 @@
+from datetime import datetime
+
 available_time_slots = [
     "04-Jun 09:00-09:29 (Current Openings: 5) (Canceled: 2)",
     "04-Jun 09:30-09:59 (Current Openings: 14)",
@@ -18,9 +20,14 @@ dates = [
     (2023, 6, 4),
     (2023, 6, 5)
 ]
+
+formatted_dates = [datetime(year, month, day).strftime("%Y, %m, %d") for year, month, day in dates]
+# print(formatted_dates)
+print(formatted_dates[0].strf)
+
 for slot in available_time_slots:
-    slot_date = slot.split()[0]  # Extract the date from the time slot entry
-    print(slot_date)
-    for date in dates:
-        if slot_date == f"{date[2]:02d}-{date[1]:02d}":  # Format date as "day-month"
-            print(f"Matching date found: {date[2]}-{date[1]}-{date[0]}")
+    date = slot.split()[0].split("-")[0]
+    # print(type(date))
+    # print(date)
+    if date in [d for d in formatted_dates]:
+        print(date)

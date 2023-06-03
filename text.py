@@ -193,11 +193,13 @@ available_time_slots = [
 
 # Check available times in selected range from start time to end time
 available_times = [time[6:12].strip() for time in available_time_slots if start_time <= time[6:12].strip() <= end_time]
-available_dates = [date[:2].strip() for date in available_time_slots]
-
-
 # print(available_times)
-# print(available_dates)
+available_dates = list(set([date[:2].strip() for date in available_time_slots]))
+print(available_dates)
+
+if appt_dates_list[0].strftime("%d") in available_dates:
+    print("found")
+
 # for appt_date in available_time_slots:
 #     # print(appt_date)
 #     if appt_dates_list[0].strftime("%d") == appt_date[:2].strip():
