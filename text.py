@@ -169,7 +169,7 @@ submit_button.grid(column=1, row=7, padx=10, pady=5)
 # Start the mainloop to display the window
 root.mainloop()
 
-available_time_slots = [
+available_appt_slots = [
     "04-Jun 09:00-09:29 (Current Openings: 5) (Canceled: 2)",
     "04-Jun 09:30-09:59 (Current Openings: 14)",
     "04-Jun 10:00-10:29 (Current Openings: 13) (Canceled: 2)",
@@ -192,13 +192,21 @@ available_time_slots = [
 # print(appt_dates)
 
 # Check available times in selected range from start time to end time
-available_times = [time[6:12].strip() for time in available_time_slots if start_time <= time[6:12].strip() <= end_time]
-# print(available_times)
-available_dates = list(set([date[:2].strip() for date in available_time_slots]))
-print(available_dates)
+available_times = [time[6:12].strip() for time in available_appt_slots if start_time <= time[6:12].strip() <= end_time]
 
-if appt_dates_list[0].strftime("%d") in available_dates:
-    print("found")
+available_appt_dates = [date[:2].strip() for date in available_appt_slots]
+  
+# check appte dates
+for appt_date in appt_dates_list:
+    
+    # check if appte dates are in the available_appt_dates
+    if appt_date.strftime("%d") in available_appt_dates:
+        print(f'appte date {appt_date.strftime("%d")} is available')
+        
+    else:
+        print('no appt date')
+
+# if appt_dates_list[0].strftime("%d") in available_dates:
 
 # for appt_date in available_time_slots:
 #     # print(appt_date)
