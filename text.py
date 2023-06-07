@@ -27,7 +27,7 @@ def on_submit():
     # Get the calendar values
     date_picker= cal.get_date()
     formatted_date = datetime.strptime(date_picker, '%m/%d/%y').date()
-    print(f'formated date {formatted_date}')
+    # print(f'Selected Date {formatted_date}')
     
     # Get the check_days values from dropdowns
     check_days = check_day_var.get()
@@ -169,65 +169,63 @@ submit_button.grid(column=1, row=7, padx=10, pady=5)
 # Start the mainloop to display the window
 root.mainloop()
 
-available_appt_slots = [
-    "04-Jun 09:00-09:29 (Current Openings: 5) (Canceled: 2)",
-    "04-Jun 09:30-09:59 (Current Openings: 14)",
-    "04-Jun 10:00-10:29 (Current Openings: 13) (Canceled: 2)",
-    "04-Jun 10:30-10:59 (Current Openings: 12) (Canceled: 1)",
-    "04-Jun 11:00-11:29 (Current Openings: 18) (Canceled: 3)",
-    "04-Jun 11:30-11:59 (Current Openings: 25) (Canceled: 1)",
-    "04-Jun 12:00-12:29 (Current Openings: 19)",
-    "04-Jun 12:30-12:59 (Current Openings: 23)",
-    "04-Jun 13:00-13:29 (Current Openings: 14)",
-    "04-Jun 13:30-13:59 (Current Openings: 13)",
-    "04-Jun 14:00-14:29 (Current Openings: 14)",
-    "04-Jun 14:30-14:59 (Current Openings: 17)",
-    "05-Jun 15:00-15:29 (Current Openings: 15) (Canceled: 1)"
+available_time_slots = [
+    "",
+    "",
+    "06-Jun 09:00-09:29 (Current Openings: 5) (Canceled: 2)",
+    "06-Jun 09:30-09:59 (Current Openings: 14)",
+    "06-Jun 10:00-10:29 (Current Openings: 13) (Canceled: 2)",
+    "06-Jun 10:30-10:59 (Current Openings: 12) (Canceled: 1)",
+    "06-Jun 11:00-11:29 (Current Openings: 18) (Canceled: 3)",
+    "06-Jun 11:30-11:59 (Current Openings: 25) (Canceled: 1)",
+    "06-Jun 12:00-12:29 (Current Openings: 19)",
+    "06-Jun 12:30-12:59 (Current Openings: 23)",
+    "06-Jun 13:00-13:29 (Current Openings: 14)",
+    "06-Jun 13:30-13:59 (Current Openings: 13)",
+    "06-Jun 14:00-14:29 (Current Openings: 14)",
+    "06-Jun 14:30-14:59 (Current Openings: 17)",
+    "07-Jun 15:00-15:29 (Current Openings: 15) (Canceled: 1)"
 ]
-# 1. check if checking dates are available in the available_time_slots if available print the available dates
-
-
 
 # appt_dates = [appt_date[:2].strip() for appt_date in available_time_slots]
 # print(appt_dates)
 
-# Check available times in selected range from start time to end time
-available_times = [time[6:12].strip() for time in available_appt_slots if start_time <= time[6:12].strip() <= end_time]
+# # Check available times in selected range from start time to end time
+# available_times = [time[6:12].strip() for time in available_time_slots if start_time <= time[6:12].strip() <= end_time]
 
-available_appt_dates = [date[:2].strip() for date in available_appt_slots]
-  
+available_appt_dates = [date[:2].strip() for date in available_time_slots]
+
+
 # check appte dates
 for appt_date in appt_dates_list:
     
+    print(f"Checking...")
+    print(f"Appt Date: {appt_date}\n") 
+
     # check if appte dates are in the available_appt_dates
     if appt_date.strftime("%d") in available_appt_dates:
-        print(f'appte date {appt_date.strftime("%d")} is available')
-        
+
+        new_available_time_slots=[]
+        print('Available Appts:')
+        print(f'****************************')
+        for available_date in available_time_slots:
+            # Check if available date is available
+            if available_date[:2].strip() == appt_date.strftime("%d"):
+                new_available_time_slots.append(available_date)              
+                print(f'***  {available_date[:19]} ***')
+        print(f'****************************')
+        # Check available times in selected range from start time to end time
+        available_times = [time[6:12].strip() for time in new_available_time_slots if start_time <= time[6:12].strip() <= end_time]
+
+        if available_times:
+            print(f"\nSelected Appt Times From {start_time} to {end_time}")
+            print(f'Available Times in Selected Range: {available_times}\n')
+            print(f'Successful Booked Appt: {available_times[0]}\n')
+            break
+        else:
+            print(f'\nAppt is Available\nBut No Appt Time in Selected Range From {start_time} to {end_time}\n')
     else:
-        print('no appt date')
-
-# if appt_dates_list[0].strftime("%d") in available_dates:
-
-# for appt_date in available_time_slots:
-#     # print(appt_date)
-#     if appt_dates_list[0].strftime("%d") == appt_date[:2].strip():
-        
-#         # If no available time slots or no time slots in selected range
-#         if available_times:
-#             print(appt_date[:2].strip())
-#             print(available_times)
-#             break
-#         else:
-#             print("No available time slots.")
+        print(f'No Appt on {appt_date}')
 
 
-#         # available_time_slots2 = [
-#         #     "08:00 - 09:00 (11)",
-#         #     "09:00 - 10:00 (17)",
-#         #     "10:00 - 11:00 (20)",
-#         #     "13:00 - 14:00 (8)"
-#         # ]
-#     else:
-#         print('No Appt Date Available')
-
-        
+print('Finished')

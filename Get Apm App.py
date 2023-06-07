@@ -92,7 +92,7 @@ appt_types = ['IMPORT PICKUP', 'EMPTY DROPOFF']
 container_list = []
 
 # List of Username
-username_info = ['p2','20','yuna','p1']
+username_info = ['p2','20','yuna','p1','jimbo']
 
 # # Create a list of date check method
 # choose_method = ['Check Single Date', 'Check Multi Dates']
@@ -247,7 +247,7 @@ while True:
             break
     else: check_container+=1   
         
-print(datetime.now())
+print(datetime.now().strftime("%H:%M:%S"))
 print("Finished")
 
 # 5/30 Updated

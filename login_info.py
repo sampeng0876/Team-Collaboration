@@ -20,3 +20,6 @@ def login_info(username,driver):
     elif username == 'p2':
         driver.find_element(By.XPATH, '//*[@id="Login_form"]/div[1]/div/div/input').send_keys("p1logistics168")
         driver.find_element(By.XPATH, '//*[@id="Login_form"]/div[2]/div/div/input').send_keys("Port@20072009")
+    elif username == 'jimbo':
+        driver.find_element(By.XPATH, '//*[@id="Login_form"]/div[1]/div/div/input').send_keys("alinet")
+        driver.find_element(By.XPATH, '//*[@id="Login_form"]/div[2]/div/div/input').send_keys("Alnd19885.")

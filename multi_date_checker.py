@@ -78,7 +78,7 @@ def multi_date_checker(appt_dates, wait, start_time, end_time, driver, check_day
                     # print("Cliecked date")
                     sleep(1)
                     break
-            print(f"Checking...>>> {container_number}")    
+            print(f"Checking...\nContainer#: {container_number}")    
             print(f"Selected Appt Date: {appt_date}")
             print(f"Selected Appt Times From: {start_time} to {end_time}")
 
