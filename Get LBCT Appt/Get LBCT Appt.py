@@ -214,10 +214,14 @@ driver.find_element(By.XPATH, '//*[@id="UserName"]').send_keys("p1logistics@mail
 driver.find_element(By.XPATH, '//*[@id="Password"]').send_keys("8802616")
 #driver.get('https://www.lbct.com/Login/Login')
 
-WebDriverWait(driver, 20).until(EC.frame_to_be_available_and_switch_to_it((By.XPATH,"//iframe[@title='reCAPTCHA']")))
-WebDriverWait(driver, 20).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "div.recaptcha-checkbox-border"))).click()
-sleep(20)
+# WebDriverWait(driver, 20).until(EC.frame_to_be_available_and_switch_to_it((By.XPATH,"//iframe[@title='reCAPTCHA']")))
 
+iframe = driver.find_element(By.XPATH,'//*[@id="loginBoxTable"]/tbody/tr[4]/td/div/div/div/iframe') #Change iframe
+driver.switch_to.frame(iframe)
+# Click Check Box
+WebDriverWait(driver, 20).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "div.recaptcha-checkbox-border"))).click()
+# sleep(30)
+WebDriverWait(driver, 120).until(EC.presence_of_element_located((By.CSS_SELECTOR, 'span.recaptcha-checkbox-checked'))) # #判断绿色打勾
 
 driver.switch_to.default_content()
 
@@ -243,7 +247,7 @@ while True:
 
         if appt_type == 'LOAD OUT':
             # IMPORT PICKUP
-            driver.find_element(By.XPATH,'//*[@id="SelectedType_CreateAppt_listbox"]/li[7]').click() 
+            WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,'//*[@id="SelectedType_CreateAppt_listbox"]/li[7]'))).click()
 
         elif appt_type =='EMPTY DROPOFF':
             # Click Empty In
@@ -269,50 +273,6 @@ while True:
         if len(container_list) == 0:
             break
     else: check_container+=1   
-
-
-
-
-
-
-
-
-
-
-
-# Call out multi_date_checker
-# multi_date_checker (appt_dates_list, wait, start_time, end_time, driver, check_days, container_number, container_list)
-
-# ################################################################
-# # Expand Tables
-# get_expand_icon = WebDriverWait(driver, 10).until(
-#     # //*[@class="k-hierarchy-cell"]/a
-#     # //*[@class="k-icon k-i-expand"]
-#     EC.presence_of_all_elements_located((
-#     By.XPATH, '//*[@class="k-hierarchy-cell"]/a')))
-
-# # Click on the expand icon
-# for icon in get_expand_icon[1:]:
-#     icon.click()
-#     sleep(1)
-
-
-
-################################################################
-# Expand Tables
-
-# WebDriverWait(driver, 10).until(
-#     # //*[@class="k-hierarchy-cell"]/a
-#     # //*[@class="k-icon k-i-expand"]
-#     EC.element_to_be_clickable((
-#     By.XPATH, '//*[@class="k-icon k-i-expand"]')))
-# get_expand_icon = driver.find_elements(By.XPATH, '//*[@class="k-icon k-i-expand"]')
-# # print(get_expand_icon)
-# # Click on the expand icon
-# for icon in get_expand_icon:
-#     icon.click()
-#     sleep(1)
-
 
 
 
