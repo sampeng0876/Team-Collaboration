@@ -17,6 +17,7 @@ from bs4 import BeautifulSoup
 from openpyxl import load_workbook
 from LBCT_multi_date_checker import multi_date_checker
 from datetime import datetime, date, timedelta
+import os
 
 
 # By Pass reCaptcha
@@ -176,9 +177,15 @@ root.mainloop()
 
 # Main
 ####################################################################################################################
+# Solved path: https://stackoverflow.com/questions/50443955/how-to-load-extension-within-chrome-driver-in-selenium-with-python
+# Get Chrome EXT crx file: https://www.youtube.com/watch?v=Fx1hbZMVS7k&ab_channel=ComputingHUB
+chrome_options = webdriver.ChromeOptions()
+# extension_path = './Buster'
+# chrome_options.add_argument('--load-extension=' + extension_path)
+chrome_options.add_extension(r'C:\Users\Grace\Desktop\Manual\SP\Team-Collaboration\Get_LBCT_Appt\Buster.crx')
 
 # # Create a new Chrome session
-driver = webdriver.Chrome()
+driver = webdriver.Chrome(options=chrome_options, executable_path=r'C:\Users\Grace\Desktop\Manual\SP\Team-Collaboration\chromedriver.exe')
 driver.maximize_window()
 wait = WebDriverWait(driver, 10)
 
@@ -220,6 +227,13 @@ iframe = driver.find_element(By.XPATH,'//*[@id="loginBoxTable"]/tbody/tr[4]/td/d
 driver.switch_to.frame(iframe)
 # Click Check Box
 WebDriverWait(driver, 20).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "div.recaptcha-checkbox-border"))).click()
+
+driver.switch_to.default_content()
+
+iframe = driver.find_element(By.XPATH,'/html/body/div[6]/div[4]/iframe') #Change iframe//*[@title="recaptcha challenge expires in two minutes"]
+driver.switch_to.frame(iframe)
+
+WebDriverWait(driver, 20).until(EC.element_to_be_clickable((By.XPATH, '//*[@id="solver-button"]'))).click()
 # sleep(30)
 WebDriverWait(driver, 120).until(EC.presence_of_element_located((By.CSS_SELECTOR, 'span.recaptcha-checkbox-checked'))) # #判断绿色打勾
 
