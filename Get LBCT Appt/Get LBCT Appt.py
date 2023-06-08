@@ -235,24 +235,26 @@ driver.find_element(By.XPATH, '//*[@id="loginBoxLogin"]').click()
 
 
 check_container = 0
+check_date = 1
 while True:
     
     if check_container < len(container_list) :
 
         # Click Create Appt
         WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,'//*[@id="sideBarCreateApptItem"]/div'))).click()
-
+        sleep(1)
         # Click Transaction Type Drop Down 
         WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,'//*[@id="CreateApptTable"]/tbody/tr[2]/td[2]/span/span/span/span[2]/span'))).click()              
-
+        sleep(1)
         if appt_type == 'LOAD OUT':
             # IMPORT PICKUP
             WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,'//*[@id="SelectedType_CreateAppt_listbox"]/li[7]'))).click()
-
+            sleep(1)
         elif appt_type =='EMPTY DROPOFF':
             # Click Empty In
             WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,'//*[@id="SelectedType_CreateAppt_listbox"]/li[4]'))).click()
-        sleep(1)
+            sleep(1)
+        
         
         # Send Key Container Number Input Box
         WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,'//*[@id="id_CntrId_txt"]'))).send_keys(container_list[check_container])
@@ -264,7 +266,7 @@ while True:
 
 
         # Call out multi_date_checker
-        multi_date_checker (appt_dates_list, wait, start_time, end_time, driver, check_days, container_number, container_list)
+        multi_date_checker (appt_dates_list, wait, start_time, end_time, driver, check_days, container_number, container_list, check_date)
 
     # print(check_container)
     if check_container == len(container_list):
@@ -272,6 +274,8 @@ while True:
         check_container = 0
         if len(container_list) == 0:
             break
+    elif check_date == len(appt_dates_list):
+        break
     else: check_container+=1   
 
 

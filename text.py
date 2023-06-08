@@ -172,19 +172,19 @@ root.mainloop()
 available_time_slots = [
     "",
     "",
-    "06-Jun 09:00-09:29 (Current Openings: 5) (Canceled: 2)",
-    "06-Jun 09:30-09:59 (Current Openings: 14)",
-    "06-Jun 10:00-10:29 (Current Openings: 13) (Canceled: 2)",
-    "06-Jun 10:30-10:59 (Current Openings: 12) (Canceled: 1)",
-    "06-Jun 11:00-11:29 (Current Openings: 18) (Canceled: 3)",
-    "06-Jun 11:30-11:59 (Current Openings: 25) (Canceled: 1)",
-    "06-Jun 12:00-12:29 (Current Openings: 19)",
-    "06-Jun 12:30-12:59 (Current Openings: 23)",
-    "06-Jun 13:00-13:29 (Current Openings: 14)",
-    "06-Jun 13:30-13:59 (Current Openings: 13)",
-    "06-Jun 14:00-14:29 (Current Openings: 14)",
-    "06-Jun 14:30-14:59 (Current Openings: 17)",
-    "07-Jun 15:00-15:29 (Current Openings: 15) (Canceled: 1)"
+    "07-Jun 09:00-09:29 (Current Openings: 5) (Canceled: 2)",
+    "07-Jun 09:30-09:59 (Current Openings: 14)",
+    "07-Jun 10:00-10:29 (Current Openings: 13) (Canceled: 2)",
+    "07-Jun 10:30-10:59 (Current Openings: 12) (Canceled: 1)",
+    "08-Jun 11:00-11:29 (Current Openings: 18) (Canceled: 3)",
+    "08-Jun 11:30-11:59 (Current Openings: 25) (Canceled: 1)",
+    "08-Jun 12:00-12:29 (Current Openings: 19)",
+    "08-Jun 12:30-12:59 (Current Openings: 23)",
+    "09-Jun 13:00-13:29 (Current Openings: 14)",
+    "09-Jun 13:30-13:59 (Current Openings: 13)",
+    "09-Jun 14:00-14:29 (Current Openings: 14)",
+    "09-Jun 14:30-14:59 (Current Openings: 17)",
+    "09-Jun 15:00-15:29 (Current Openings: 15) (Canceled: 1)"
 ]
 
 # appt_dates = [appt_date[:2].strip() for appt_date in available_time_slots]
@@ -206,7 +206,9 @@ for appt_date in appt_dates_list:
     if appt_date.strftime("%d") in available_appt_dates:
 
         new_available_time_slots=[]
-        print('Available Appts:')
+        
+        print(f'****************************')
+        print(f'***   Available Appts   ****')
         print(f'****************************')
         for available_date in available_time_slots:
             # Check if available date is available

@@ -17,14 +17,14 @@ from datetime import datetime
 
 # Version v3_check_next_monty
 # Multiple Dates Checker 
-def multi_date_checker(appt_dates, wait, start_time, end_time, driver, check_days, container_number, container_list):
+def multi_date_checker(appt_dates, wait, start_time, end_time, driver, check_days, container_number, container_list, check_date):
     
     earliest_time = None  # initializing earliest_time with a default value
     
     for appt_date in appt_dates:
         days_checked = 0
         start_over = 1
-        
+        check_date+=1
         if appt_date.weekday() in [5, 6]:  # Skip weekends (Saturday: 5, Sunday: 6)
             appt_date += timedelta(days=1)
             continue
@@ -36,32 +36,54 @@ def multi_date_checker(appt_dates, wait, start_time, end_time, driver, check_day
         print(f"Selected Appt Date: {appt_date}")
         print(f"Selected Appt Times From: {start_time} to {end_time}")
 
-        sleep(20)
+        # Wait for Searching for time slots...
+        WebDriverWait(driver, 20).until(EC.invisibility_of_element_located((By.XPATH,'//*[@id="timeslot_loading_bar"]/span')))
         # Click Date / Time Slots Box
         WebDriverWait(driver, 20).until(EC.element_to_be_clickable((By.XPATH,'//*[@id="id_DateTimeRow_CreateAppt"]/td[2]/span/span/span/span[1]'))).click()
-        WebDriverWait(driver, 20).until(EC.element_to_be_clickable((By.XPATH,'//*[@id="id_DateTimeRow_CreateAppt"]/td[2]/span/span/span/span[1]'))).click()
 
-        # Click Refresh
-        # WebDriverWait(driver, 20).until(EC.element_to_be_clickable((By.XPATH,'//*[@id="id_sub_RefreshTimeslot"]'))).click()
+
+        # V1
+        ################################################################
+        # Locate the Appointment Time Slots
+        # time_slots_container = driver.find_elements(by="xpath", value='//*[@id="newDateTime_CreateAppt_listbox"]/li')
+
+        # # Available Time Slots List
+        # available_time_slots = []
+
+        # # Check available time slots
+        # for time in time_slots_container:
+        #     try:
+        #         # Read time slot text
+        #         time_slots_text = time.text  
+        #         if time_slots_text.strip():
+        #             # Append time slots to the list
+        #             available_time_slots.append(time_slots_text)
+        #         print(time_slots_text)
+        #     except:
+        #         print("NOT AVAILABLE")
+
+
+
+        # V2
+        ################################################################
 
         # Locate the Appointment Time Slots
-        time_slots_container = driver.find_elements(by="xpath", value='//*[@id="newDateTime_CreateAppt_listbox"]/li')
-
+        # WebDriverWait(driver, 20).until(EC.presence_of_all_elements_located((By.XPATH,'//*[@id="newDateTime_CreateAppt_listbox"]/li')))
+        time_slots = WebDriverWait(driver, 20).until(EC.presence_of_all_elements_located((By.XPATH,'//*[@id="newDateTime_CreateAppt_listbox"]/li')))
         # Available Time Slots List
         available_time_slots = []
 
         # Check available time slots
-        for time in time_slots_container:
-            try:
-                # Read time slot text
-                time_slots_text = time.text  
-                if time_slots_text.strip():
-                    # Append time slots to the list
-                    available_time_slots.append(time_slots_text)
-                # print(time_slots_text)
-            except:
-                print("NOT AVAILABLE")
+        for time in time_slots:            
+            available_time_slots.append(time.text)
+            print(time.text)
+                
+        # print(available_time_slots)
+        print(len(available_time_slots))
         
+        # slot_list = driver.find_elements(By.XPATH, '//*[@id="newDateTime_CreateAppt_listbox"]')[0].text
+        # print(slot_list)
+
 
         # Check available times in selected range from start time to end time
         available_times = [time[6:12].strip() for time in available_time_slots if start_time <= time[6:12].strip() <= end_time]
@@ -83,7 +105,9 @@ def multi_date_checker(appt_dates, wait, start_time, end_time, driver, check_day
         if appt_date.strftime("%d") in available_appt_dates:
 
             new_available_time_slots=[]
-            print('Available Appts:')
+
+            print(f'****************************')
+            print(f'***    Available Appts   ***')
             print(f'****************************')
             for available_date in available_time_slots:
                 # Check if available date is available
@@ -109,10 +133,15 @@ def multi_date_checker(appt_dates, wait, start_time, end_time, driver, check_day
 
             else:
                 print(f'\nAppt is Available\nBut No Appt Time in Selected Range From {start_time} to {end_time}\n')
+
+                # Click Date / Time Slots Box
+                sleep(5)
+                WebDriverWait(driver, 20).until(EC.element_to_be_clickable((By.XPATH,'//*[@id="id_DateTimeRow_CreateAppt"]/td[2]/span/span/span/span[1]'))).click() # //*[@id="id_DateTimeRow_CreateAppt"]/td[2]/span/span/span/span[1]
                 # Click Refresh
                 WebDriverWait(driver, 35).until(EC.element_to_be_clickable((By.XPATH,'//*[@id="id_sub_RefreshTimeslot"]'))).click()
         else:
             print(f'No Appt on {appt_date}\n')
+
              
                
                      
@@ -125,9 +154,8 @@ def multi_date_checker(appt_dates, wait, start_time, end_time, driver, check_day
             # appt_date += timedelta(days=1)              
             
         # break the while loop if checked 3 times     
-        if earliest_time: # or start_over == 4
-        # if earliest_time:
-            break
+        # if earliest_time: # or start_over == 4
+        #     break
     
 
     
