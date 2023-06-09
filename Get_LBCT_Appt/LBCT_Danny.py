@@ -9,6 +9,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.action_chains import ActionChains
 
 chrome_options = Options()
+chrome_options.add_argument('--ignore-certificate-errors')
 
 # #chrome_options.add_argument("--disable-extensions")
 # #chrome_options.add_argument("--disable-gpu")
@@ -40,7 +41,7 @@ def bypass(driver):
     WebDriverWait(driver, 120).until(EC.presence_of_element_located((By.CSS_SELECTOR, 'span.recaptcha-checkbox-checked'))) # #判断绿色打勾
     driver.switch_to.default_content()
 
-driver = webdriver.Chrome()
+driver = webdriver.Chrome(options=chrome_options)
 driver.maximize_window()
 # driver = webdriver.Chrome(options=chrome_options)
 
@@ -67,7 +68,10 @@ lines = slot_list.split("\n")
 num_lines = len(lines)
 print("Number of lines:", num_lines)
 
-
+# slots = []
+# for line in slot_list.split("\n"):
+#     slots.append(line)
+# print(slots)
 # for item in load:
     
 #     iframe = driver.find_element(By.XPATH,'//*[@id="businessView"]') #Change iframe
