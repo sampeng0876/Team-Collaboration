@@ -39,7 +39,7 @@ def process_pdf(pdf_paths):
     workbook = load_workbook("do.xlsx")
 
     # Select the sheet named 'SMART'
-    sheet = workbook["PG"]
+    sheet = workbook["RECORD_DO"]
 
     # Find the next available row
     next_row = sheet.max_row + 1
@@ -52,7 +52,7 @@ def process_pdf(pdf_paths):
         # Save the captured data to the next available row
         for i, data in enumerate(captured_data):
             cell = sheet.cell(row=next_row, column=i + 1)
-            cell.value = data
+            cell.value = str(data).replace('\n', '').strip()
 
         next_row += 1
 

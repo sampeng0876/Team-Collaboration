@@ -51,7 +51,7 @@ def process_pdf(pdf_paths):
         # Save the captured data to the next available row
         for i, data in enumerate(captured_data):
             cell = sheet.cell(row=next_row, column=i + 1)
-            cell.value = data
+            cell.value = str(data).replace('\n', '').strip()
 
         next_row += 1
 
