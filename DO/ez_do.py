@@ -38,7 +38,7 @@ def process_pdf(pdf_paths):
     workbook = load_workbook("do.xlsx")
 
     # Select the sheet named 'SMART'
-    sheet = workbook["DRAY_EASY"]
+    sheet = workbook["EZ"]
 
     # Find the next available row
     next_row = sheet.max_row + 1
