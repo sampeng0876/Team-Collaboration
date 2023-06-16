@@ -72,12 +72,12 @@ def multi_date_checker(appt_dates, wait, start_time, end_time, driver, check_day
         time_slots = WebDriverWait(driver, 20).until(EC.presence_of_all_elements_located((By.XPATH,'//*[@id="newDateTime_CreateAppt-list"]/div[2]/ul/li')))
         # Available Time Slots List
         available_time_slots = []
-
+        sleep(3)
         # Check available time slots
         for time in time_slots:            
-            slot = time.text
-            available_time_slots.append(slot)
-            print(slot)
+            # slot = time.text
+            available_time_slots.append(time.text)
+            print(time)
                 
         # print(available_time_slots)
         print(len(available_time_slots))

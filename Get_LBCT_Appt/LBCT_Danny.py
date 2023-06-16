@@ -58,7 +58,7 @@ driver.find_element(By.XPATH, '//*[@id="loginBoxLogin"]').click() #Login
 WebDriverWait(driver, 5).until(EC.element_to_be_clickable((By.XPATH, '//*[@id="sideBarCreateApptItem"]/div'))).click() #Create Appointment    
 WebDriverWait(driver, 5).until(EC.element_to_be_clickable((By.XPATH, '//*[@id="CreateApptTable"]/tbody/tr[2]/td[2]/span/span/span'))).click() #Dropdownlist click
 WebDriverWait(driver, 5).until(EC.element_to_be_clickable((By.XPATH, '//*[@id="SelectedType_CreateAppt_listbox"]/li[7]'))).click() #Load out
-driver.find_element(By.XPATH,'//*[@id="id_CntrId_txt"]').send_keys('FCIU9479419') #Load Container
+driver.find_element(By.XPATH,'//*[@id="id_CntrId_txt"]').send_keys('CSNU7945539') #Load Container
 WebDriverWait(driver, 5).until(EC.element_to_be_clickable((By.XPATH, '//*[@id="id_sub_GetTimeslot"]'))).click() #Get Time Slot
 WebDriverWait(driver, 30).until(EC.invisibility_of_element_located((By.XPATH, "//span[contains(text(),'Searching for time slots')]"))) #等待元素消失
 WebDriverWait(driver, 30).until(EC.element_to_be_clickable((By.XPATH, '//*[@id="id_DateTimeRow_CreateAppt"]/td[2]/span/span/span/span[2]'))).click() #Click Select One
@@ -72,6 +72,8 @@ print("Number of lines:", num_lines)
 # for line in slot_list.split("\n"):
 #     slots.append(line)
 # print(slots)
+
+
 # for item in load:
     
 #     iframe = driver.find_element(By.XPATH,'//*[@id="businessView"]') #Change iframe
