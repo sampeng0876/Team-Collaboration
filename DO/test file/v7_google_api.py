@@ -1,8 +1,8 @@
 import fitz
 from openpyxl import load_workbook
 from tkinter import Tk, Label, Button, filedialog, messagebox
-import gspread
-from google.oauth2.service_account import Credentials
+from googleapiclient.discovery import build
+from google.oauth2 import service_account
 
 class PDFCapture:
     def __init__(self, pdf_path, num_selections):
@@ -15,10 +15,10 @@ class PDFCapture:
     def capture_data(self):
         data = []
         x_positions = [
-            (29,66), (28,108), (29,292), (235,330), (110,148), (318,367)
+            (72,126), (271,335), (22,268), (102,321), (336,364), (460,519), (22,266)
         ]
         y_positions = [
-            (23,42), (402,420), (267,283), (24,43), (403,419), (403,416)
+            (125,135), (316,329), (277,347), (23,46), (317,329), (484,501), (219,264)
         ]
 
         for i in range(self.num_selections):
@@ -35,30 +35,53 @@ class PDFCapture:
 
 
 def process_pdf(pdf_paths):
-    # Load the credentials from the JSON key file
-    scopes = ['https://www.googleapis.com/auth/spreadsheets']
-    credentials = Credentials.from_service_account_file('service_account.json', scopes=scopes)
     
-    # Authorize the credentials and create a client for accessing Google Sheets API
-    client = gspread.authorize(credentials)
-    
-    # Open the Google Sheets file
-    spreadsheet = client.open('do_data')
-    sheet = spreadsheet.worksheet('SMART')
-    
-    # Find the next available row
-    next_row = len(sheet.get_all_values()) + 1
+    SERVICE_ACCOUNT_FILE = 'service_account.json'
+    # If modifying these scopes, delete the file token.json.
+    SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
+
+    my_creds = None
+    my_creds = service_account.Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
+
+    # The ID and range of a sample spreadsheet.
+    google_sheet_id = '12lnRmQoBsITIYTQPEGYdHGVNUkoPPFQEhx5HaC3JTJQ'
+    sheet_name = 'RECORD_DO'
+    service = build('sheets', 'v4', credentials=my_creds)
+
+    # # Call the Sheets API
+    # sheet = service.spreadsheets()
     
     for pdf_path in pdf_paths:
         # Create an instance of PDFCapture
-        pdf_capture = PDFCapture(pdf_path, num_selections=28)
+        pdf_capture = PDFCapture(pdf_path, num_selections=7)
         captured_data = pdf_capture.capture_data()
+    
+    # print(captured_data)
+    
+    # abc = [["abc",1,3],["abc",2],["abc",3],["abc",4]]
+    # request = service.spreadsheets().values().update(spreadsheetId=google_sheet_id, range='SMART!A2', valueInputOption='USER_ENTERED', body={'values': abc}).execute()
+    # print(request)
 
-        # Save the captured data to the next available row
-        row_data = [data if data else "N/A" for data in captured_data]
-        sheet.insert_row(row_data, next_row)
+    # Save the captured data to the Google Sheet
+        values = []    
+    # for data in captured_data:
+    #     values.append([str(data).replace('\n', '').strip()])
+        values = [str(data).replace('\n', '').strip() for data in captured_data]
+        print(values)
+        body = {'values': [values]}
 
-        next_row += 1
+
+        # Find the next available row
+        result = service.spreadsheets().values().get(spreadsheetId=google_sheet_id, range=sheet_name).execute()
+        next_row = len(result['values']) + 1
+        
+        # Write values to the sheet
+        service.spreadsheets().values().update(
+            spreadsheetId=google_sheet_id,
+            range=sheet_name + '!A' + str(next_row),
+            valueInputOption='USER_ENTERED',
+            body=body
+        ).execute()
 
 
 def on_file_select():
