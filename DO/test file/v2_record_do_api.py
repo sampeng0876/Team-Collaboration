@@ -60,9 +60,13 @@ def load_google_sheet_data():
 
     print(f'Total {i} rows')
     return container_list
-container_list = load_google_sheet_data()
 
+
+
+container_list = load_google_sheet_data()
+print(container_list)
 print('Appending... Data')
+
 row = 1
 for data in container_list:
     container, address, client, type, weight = data

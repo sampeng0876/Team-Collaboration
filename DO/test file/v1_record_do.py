@@ -7,8 +7,6 @@ from time import sleep
 from openpyxl import workbook, load_workbook
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.action_chains import ActionChains
-from googleapiclient.discovery import build
-from google.oauth2 import service_account
 
 chrome_options = Options()
 chrome_options.add_argument('--ignore-certificate-errors')
@@ -33,41 +31,30 @@ WebDriverWait(driver, 5).until(EC.element_to_be_clickable((By.XPATH, '//*[@id="n
 WebDriverWait(driver, 5).until(EC.element_to_be_clickable((By.XPATH, '//*[@id="nav"]/li[2]/ul/li[1]/a/cite'))).click() #点击 柜子汇总管理
 sleep(2)
 
-def load_google_sheet_data():
-    SERVICE_ACCOUNT_FILE = 'service_account.json'
-    # If modifying these scopes, delete the file token.json.
-    SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
-
-    my_creds = None
-    my_creds = service_account.Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
-
-    # The ID and range of a sample spreadsheet.
-    google_sheet_id = '12lnRmQoBsITIYTQPEGYdHGVNUkoPPFQEhx5HaC3JTJQ'
-    sheet_name = 'RECORD_DO!B:F'
-    service = build('sheets', 'v4', credentials=my_creds)
-
-    # Retrieve the values from the Google Sheet
-    result = service.spreadsheets().values().get(spreadsheetId=google_sheet_id, range=sheet_name).execute()
-    values = result.get('values', [])
-
+def load_excel_data():
+    workbook = load_workbook('do.xlsx')
+    sheet = workbook['RECORD_DO']
     container_list = []
-    i = 0
-    for row in values[1:]:
-        row_data = [str(cell).replace('\n', '').strip() if cell else '' for cell in row]
-        container_list.append(row_data)
+    i=0
+    for row in sheet.iter_rows(min_row=2, min_col=2, max_col=6):
+        row_data = []
+        for cell in row:
+            value = str(cell.value).replace('\n', '').strip() if cell.value else ''  # Remove newline characters
+            # print(value, end=' ')
+            row_data.append(value)        
         
-        i += 1
-
-    print(f'Total {i} rows')
+        print()
+        container_list.append(row_data)
+        i+=1
+    print(f'Total {i} row')    
     return container_list
-container_list = load_google_sheet_data()
 
+container_list = load_excel_data()
 print('Appending... Data')
 row = 1
 for data in container_list:
-    container, address, client, type, weight = data
-    print(f'Row {row} {container} {address} {client} {type} {weight}')
-    
+    container, address, clinent, type, weight = data
+    print(f'Row {row} {container} {address} {clinent}{type} {weight}')
     iframe = driver.find_element(By.XPATH,'//*[@class="layui-tab-item layui-show"]/iframe') #Change iframe
     driver.switch_to.frame(iframe)
 
@@ -79,12 +66,11 @@ for data in container_list:
 
     driver.find_element(By.XPATH,'//*[@class="layui-tab-item layui-show"]/div[3]/div/input').send_keys(container) # 柜号
     driver.find_element(By.XPATH,'//*[@class="layui-tab-item layui-show"]/div[4]/div/input').send_keys(address) # 地址
-    driver.find_element(By.XPATH,'//*[@class="layui-tab-item layui-show"]/div[5]/div/input').send_keys(client) # 客人
+    driver.find_element(By.XPATH,'//*[@class="layui-tab-item layui-show"]/div[5]/div/input').send_keys(clinent) # 客人
     driver.find_element(By.XPATH,'//*[@class="layui-tab-item layui-show"]/div[7]/div/input').send_keys(type) # 柜型
     driver.find_element(By.XPATH,'//*[@class="layui-tab-item layui-show"]/div[8]/div/input').send_keys(weight) # 重量
-    sleep(1)
+    sleep(3)
     WebDriverWait(driver, 5).until(EC.element_to_be_clickable((By.XPATH, '//*[@class="layui-form"]/div[2]/button'))).click() # 点击 增加
-    print(f'Submitted: {row} row') 
     sleep(3)
     row+=1
 

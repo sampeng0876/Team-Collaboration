@@ -1,7 +1,8 @@
 import fitz
 from openpyxl import load_workbook
 from tkinter import Tk, Label, Button, filedialog, messagebox
-
+from googleapiclient.discovery import build
+from google.oauth2 import service_account
 
 class PDFCapture:
     def __init__(self, pdf_path, num_selections):
@@ -35,29 +36,42 @@ class PDFCapture:
 
 
 def process_pdf(pdf_paths):
-    # Load the workbook
-    workbook = load_workbook("do.xlsx")
+    
+    SERVICE_ACCOUNT_FILE = 'service_account.json'
+    # If modifying these scopes, delete the file token.json.
+    SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
 
-    # Select the sheet named 'SMART'
-    sheet = workbook["RECORD_DO"]
+    my_creds = None
+    my_creds = service_account.Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
 
-    # Find the next available row
-    next_row = sheet.max_row + 1
-
+    # The ID and range of a sample spreadsheet.
+    google_sheet_id = '12lnRmQoBsITIYTQPEGYdHGVNUkoPPFQEhx5HaC3JTJQ'
+    sheet_name = 'RECORD_DO'
+    service = build('sheets', 'v4', credentials=my_creds)
+  
     for pdf_path in pdf_paths:
         # Create an instance of PDFCapture
         pdf_capture = PDFCapture(pdf_path, num_selections=7)
         captured_data = pdf_capture.capture_data()
 
-        # Save the captured data to the next available row
-        for i, data in enumerate(captured_data):
-            cell = sheet.cell(row=next_row, column=i + 1)
-            cell.value = str(data).replace('\n', '').strip()
+    # Save the captured data to the Google Sheet
+        values = []  
+        values = [str(data).replace('\n', '').strip() for data in captured_data]
+        print(values)
+        body = {'values': [values]}
 
-        next_row += 1
 
-    # Save the workbook
-    workbook.save("do.xlsx")
+        # Find the next available row
+        result = service.spreadsheets().values().get(spreadsheetId=google_sheet_id, range=sheet_name).execute()
+        next_row = len(result['values']) + 1
+        
+        # Write values to the sheet
+        service.spreadsheets().values().update(
+            spreadsheetId=google_sheet_id,
+            range=sheet_name + '!A' + str(next_row),
+            valueInputOption='USER_ENTERED',
+            body=body
+        ).execute()
 
 
 def on_file_select():

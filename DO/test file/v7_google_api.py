@@ -4,6 +4,10 @@ from tkinter import Tk, Label, Button, filedialog, messagebox
 from googleapiclient.discovery import build
 from google.oauth2 import service_account
 
+
+# Google Sheet Toturial
+# https://www.youtube.com/watch?v=4ssigWmExak&ab_channel=LearnGoogleSheets%26ExcelSpreadsheets
+
 class PDFCapture:
     def __init__(self, pdf_path, num_selections):
         self.pdf_path = pdf_path
@@ -47,10 +51,7 @@ def process_pdf(pdf_paths):
     google_sheet_id = '12lnRmQoBsITIYTQPEGYdHGVNUkoPPFQEhx5HaC3JTJQ'
     sheet_name = 'RECORD_DO'
     service = build('sheets', 'v4', credentials=my_creds)
-
-    # # Call the Sheets API
-    # sheet = service.spreadsheets()
-    
+  
     for pdf_path in pdf_paths:
         # Create an instance of PDFCapture
         pdf_capture = PDFCapture(pdf_path, num_selections=7)
@@ -61,11 +62,9 @@ def process_pdf(pdf_paths):
     # abc = [["abc",1,3],["abc",2],["abc",3],["abc",4]]
     # request = service.spreadsheets().values().update(spreadsheetId=google_sheet_id, range='SMART!A2', valueInputOption='USER_ENTERED', body={'values': abc}).execute()
     # print(request)
-
+    
     # Save the captured data to the Google Sheet
-        values = []    
-    # for data in captured_data:
-    #     values.append([str(data).replace('\n', '').strip()])
+        values = []  
         values = [str(data).replace('\n', '').strip() for data in captured_data]
         print(values)
         body = {'values': [values]}
