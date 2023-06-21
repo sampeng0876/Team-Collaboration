@@ -43,7 +43,7 @@ def load_google_sheet_data():
 
     # The ID and range of a sample spreadsheet.
     google_sheet_id = '12lnRmQoBsITIYTQPEGYdHGVNUkoPPFQEhx5HaC3JTJQ'
-    sheet_name = 'RECORD_DO!B:F'
+    sheet_name = 'RECORD_DO!B:G'
     service = build('sheets', 'v4', credentials=my_creds)
 
     # Retrieve the values from the Google Sheet
@@ -61,12 +61,12 @@ def load_google_sheet_data():
     print(f'Total {i} rows')
     return container_list
 container_list = load_google_sheet_data()
-
+print(container_list)
 print('Appending... Data')
 row = 1
 for data in container_list:
-    container, address, client, type, weight = data
-    print(f'Row {row} {container} {address} {client} {type} {weight}')
+    container, address, client, type, weight, note = data
+    print(f'Row {row} {container} {address} {client} {type} {weight} {note}')
     
     iframe = driver.find_element(By.XPATH,'//*[@class="layui-tab-item layui-show"]/iframe') #Change iframe
     driver.switch_to.frame(iframe)
@@ -82,6 +82,8 @@ for data in container_list:
     driver.find_element(By.XPATH,'//*[@class="layui-tab-item layui-show"]/div[5]/div/input').send_keys(client) # 客人
     driver.find_element(By.XPATH,'//*[@class="layui-tab-item layui-show"]/div[7]/div/input').send_keys(type) # 柜型
     driver.find_element(By.XPATH,'//*[@class="layui-tab-item layui-show"]/div[8]/div/input').send_keys(weight) # 重量
+    driver.find_element(By.XPATH,'//*[@class="layui-tab-item layui-show"]/div[10]/div/textarea').send_keys(note) # 备注
+
     sleep(1)
     WebDriverWait(driver, 5).until(EC.element_to_be_clickable((By.XPATH, '//*[@class="layui-form"]/div[2]/button'))).click() # 点击 增加
     print(f'Submitted: {row} row') 
