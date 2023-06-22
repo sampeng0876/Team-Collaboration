@@ -41,11 +41,11 @@ screen_width = root.winfo_screenwidth()
 screen_height = root.winfo_screenheight()
 
 # Calculate the x and y coordinates for the window to be centered
-x = (screen_width - 500) // 2
-y = (screen_height - 600) // 2
+x = (screen_width - 200) // 2
+y = (screen_height - 100) // 2
 
 # Set the position of the window
-root.geometry(f"500x600+{x}+{y}")
+root.geometry(f"200x100+{x}+{y}")
 
 
 # Create a list of a times options
@@ -61,7 +61,7 @@ appt_types = ['LOAD OUT', 'EMPTY DROPOFF']
 container_list = []
 
 # List of Username
-record_do_info = ['DO','LFD']
+record_do_info = ['DO','LFD','DELIVERY']
 
 
 # Create Username Seclection
@@ -88,7 +88,6 @@ chrome_options.add_argument('--ignore-certificate-errors')
 # #chrome_options.add_argument("--disable-extensions")
 # #chrome_options.add_argument("--disable-gpu")
 chrome_options.add_argument("--headless")
-# # driver = webdriver.Chrome(options=chrome_options)
 
 
 driver = webdriver.Chrome(options=chrome_options)
@@ -104,8 +103,8 @@ driver.find_element(By.XPATH, '//*[@id="admin_login"]/button').click() #Login
 WebDriverWait(driver, 5).until(EC.element_to_be_clickable((By.XPATH, '//*[@id="nav"]/li[2]/a/cite'))).click() # 点击展开 柜子汇总管理    
 WebDriverWait(driver, 5).until(EC.element_to_be_clickable((By.XPATH, '//*[@id="nav"]/li[2]/ul/li[1]/a/cite'))).click() #点击 柜子汇总管理
 sleep(2)
-
-if record_do_info == 'DO':
+print(record_do)
+if record_do == 'DO':
     def load_google_sheet_data():
         SERVICE_ACCOUNT_FILE = 'service_account.json'
         # If modifying these scopes, delete the file token.json.
@@ -167,7 +166,8 @@ if record_do_info == 'DO':
         print(f'Submitted: {row} row') 
         sleep(3)
         row+=1
-elif record_do_info == 'LFD':
+        
+elif record_do == 'LFD':
     def load_google_sheet_data():
         SERVICE_ACCOUNT_FILE = 'service_account.json'
         # If modifying these scopes, delete the file token.json.
@@ -199,9 +199,7 @@ elif record_do_info == 'LFD':
     container_list = load_google_sheet_data()
     # print(container_list)
 
-
     print('Appending... Data')
-
 
     row = 1
     for data in container_list:
@@ -210,20 +208,87 @@ elif record_do_info == 'LFD':
         
         iframe = driver.find_element(By.XPATH,'//*[@class="layui-tab-item layui-show"]/iframe') #Change iframe
         driver.switch_to.frame(iframe)
-
-        WebDriverWait(driver, 5).until(EC.element_to_be_clickable((By.XPATH, '//*[@class="layui-table-cell laytable-cell-1-0-19"]/a[1]'))).click() # 点击 编辑
+        input_container = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, '//*[@class="layui-form layui-col-space5"]/div[3]/input'))) # 输入柜号
+        input_container.clear() #Clear
+        input_container.send_keys(container)
+        WebDriverWait(driver, 5).until(EC.element_to_be_clickable((By.XPATH, '//*[@class="layui-inline layui-show-xs-block"]/button'))).click() # 点击搜索 
+        sleep(2)       
+        WebDriverWait(driver, 5).until(EC.element_to_be_clickable((By.XPATH, '//*[@class="layui-table-cell laytable-cell-1-0-19"]/a[1]'))).click() # 点击编辑
 
         sleep(1)
         iframe = driver.find_element(By.XPATH,'//*[@class="layui-layer-content"]/iframe') #Change iframe
         driver.switch_to.frame(iframe)
 
+        input_element = driver.find_element(By.ID, value="date_container") # 找到 提柜(LFD)日期
+        driver.execute_script("arguments[0].removeAttribute('readonly')", input_element)
+        input_element.clear()
+        input_element.send_keys(f'{lfd} 00:00:00') #lfd.strftime('%Y/%m/%d')
+        # WebDriverWait(driver, 5).until(EC.element_to_be_clickable((By.XPATH, '//*[@class="laydate-footer-btns"]/span[3]'))).click() #点击日期 确定
+        WebDriverWait(driver, 5).until(EC.element_to_be_clickable((By.XPATH, '//*[@class="layui-form"]/div[2]/button'))).click() # 点击 提交
 
-        driver.find_element(By.XPATH,'//*[@class="layui-tab-item layui-show"]/div[1]/div/input').send_keys(container) # 预约日期
+        print(f'Submitted: {row} row') 
+        sleep(3)
+        row+=1
 
+elif record_do == 'DELIVERY':
+    def load_google_sheet_data():
+        SERVICE_ACCOUNT_FILE = 'service_account.json'
+        # If modifying these scopes, delete the file token.json.
+        SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
+
+        my_creds = None
+        my_creds = service_account.Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
+
+        # The ID and range of a sample spreadsheet.
+        google_sheet_id = '12lnRmQoBsITIYTQPEGYdHGVNUkoPPFQEhx5HaC3JTJQ'
+        sheet_name = 'UPDATE_LFD!A:B'
+        service = build('sheets', 'v4', credentials=my_creds)
+
+        # Retrieve the values from the Google Sheet
+        result = service.spreadsheets().values().get(spreadsheetId=google_sheet_id, range=sheet_name).execute()
+        values = result.get('values', [])
+
+        container_list = []
+        i = 0
+        for row in values[1:]:
+            row_data = [str(cell).replace('\n', '').strip() if cell else '' for cell in row]
+            container_list.append(row_data)
+            
+            i += 1
+
+        print(f'Total {i} rows')
+        return container_list
+
+    container_list = load_google_sheet_data()
+    # print(container_list)
+
+    print('Appending... Data')
+
+    row = 1
+    for data in container_list:
+        container, lfd= data
+        print(f'Row {row} {container} {lfd}')
+        
+        iframe = driver.find_element(By.XPATH,'//*[@class="layui-tab-item layui-show"]/iframe') #Change iframe
+        driver.switch_to.frame(iframe)
+        input_container = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, '//*[@class="layui-form layui-col-space5"]/div[3]/input'))) # 输入柜号
+        input_container.clear() #Clear
+        input_container.send_keys(container)
+        WebDriverWait(driver, 5).until(EC.element_to_be_clickable((By.XPATH, '//*[@class="layui-inline layui-show-xs-block"]/button'))).click() # 点击搜索 
+        sleep(2)       
+        WebDriverWait(driver, 5).until(EC.element_to_be_clickable((By.XPATH, '//*[@class="layui-table-cell laytable-cell-1-0-19"]/a[1]'))).click() # 点击编辑
 
         sleep(1)
+        iframe = driver.find_element(By.XPATH,'//*[@class="layui-layer-content"]/iframe') #Change iframe
+        driver.switch_to.frame(iframe)
+
+        input_element = driver.find_element(By.ID, value="enter_date") # 找到 预约日期
+        driver.execute_script("arguments[0].removeAttribute('readonly')", input_element)
+        input_element.clear()
+        input_element.send_keys(f'{lfd} 00:00:00') #lfd.strftime('%Y/%m/%d')
+        # WebDriverWait(driver, 5).until(EC.element_to_be_clickable((By.XPATH, '//*[@class="laydate-footer-btns"]/span[3]'))).click() #点击日期 确定
         WebDriverWait(driver, 5).until(EC.element_to_be_clickable((By.XPATH, '//*[@class="layui-form"]/div[2]/button'))).click() # 点击 提交
-        
+
         print(f'Submitted: {row} row') 
         sleep(3)
         row+=1
