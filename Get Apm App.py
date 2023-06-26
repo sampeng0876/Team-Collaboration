@@ -5,8 +5,6 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from datetime import datetime, date, timedelta
 from time import sleep
-import tkinter as tk
-from tkcalendar import DateEntry
 from selenium.webdriver.chrome.options import Options
 from tkinter import *
 from tkcalendar import *
@@ -17,6 +15,7 @@ import sv_ttk
 import tkinter
 from tkinter import ttk
 import customtkinter
+from tkinter import Label, messagebox
 
 # Version V4
 # Create a function to get the selected value and close the window
@@ -249,7 +248,7 @@ while True:
         
 print(datetime.now().strftime("%H:%M:%S"))
 print("Finished")
-
+messagebox.showinfo(f"Successfully Booked All Appt")
 # 5/30 Updated
 # Close the browser
 driver.quit() 
