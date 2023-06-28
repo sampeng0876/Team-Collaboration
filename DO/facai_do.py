@@ -15,10 +15,10 @@ class PDFCapture:
     def capture_data(self):
         data = []
         x_positions = [
-            (488, 534), (28, 109), (29, 295), (249, 320), (109, 149), (302, 354), (298, 563), (30, 293)
+            (451, 536), (19, 88), (28, 288), (29, 75), (95, 119), (444, 503), (72, 589), (28, 491)
         ]
         y_positions = [
-            (57, 65), (387, 406), (255, 318), (27, 43), (386, 404), (387, 404), (318, 343), (164, 203)
+            (94, 112), (429, 438), (157, 203), (221, 228), (430, 437), (430, 438), (537, 569), (343, 353)
         ]
 
         for i in range(self.num_selections):
@@ -35,6 +35,7 @@ class PDFCapture:
 
 
 def process_pdf(pdf_paths):
+    
     SERVICE_ACCOUNT_FILE = 'service_account.json'
     # If modifying these scopes, delete the file token.json.
     SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
@@ -51,7 +52,7 @@ def process_pdf(pdf_paths):
         # Create an instance of PDFCapture
         pdf_capture = PDFCapture(pdf_path, num_selections=8)
         captured_data = pdf_capture.capture_data()
-    
+
     # Save the captured data to the Google Sheet
         values = []  
         values = [str(data).replace('\n', '').strip() for data in captured_data]
