@@ -89,7 +89,7 @@ class PDFCapture:
 
 
 # Usage example
-pdf_file = "nypp.pdf"
+pdf_file = "pcl.pdf"
 num_areas = 8
 pdf_capture = PDFCapture(pdf_file, num_areas)
 captured_data = pdf_capture.capture_data()
