@@ -1,8 +1,8 @@
 import fitz
 from openpyxl import load_workbook
-from tkinter import Tk, Label, Button, filedialog, messagebox
 from googleapiclient.discovery import build
 from google.oauth2 import service_account
+import os
 
 class PDFCapture:
     def __init__(self, pdf_path, num_selections):
@@ -15,12 +15,11 @@ class PDFCapture:
     def capture_data(self):
         data = []
         x_positions = [
-            (391, 432), (108, 182), (38, 345), (224, 386), (245, 292), (494, 543), (235, 615)
+            (355, 452), (13, 197), (12, 349), (24, 144), (18, 49), (490, 588), (212, 293), (199, 411)
         ]
         y_positions = [
-            (144, 153), (434, 602), (273, 349), (52, 65), (438, 600), (383, 394), (208, 218)
+            (31, 46), (233, 280), (296, 366), (24, 43), (391, 401), (393, 454), (735, 746), (140, 178)
         ]
-
 
         for i in range(self.num_selections):
             x0, x1 = x_positions[i]
@@ -36,7 +35,6 @@ class PDFCapture:
 
 
 def process_pdf(pdf_paths):
-    
     SERVICE_ACCOUNT_FILE = 'service_account.json'
     # If modifying these scopes, delete the file token.json.
     SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
@@ -48,23 +46,21 @@ def process_pdf(pdf_paths):
     google_sheet_id = '12lnRmQoBsITIYTQPEGYdHGVNUkoPPFQEhx5HaC3JTJQ'
     sheet_name = 'RECORD_DO'
     service = build('sheets', 'v4', credentials=my_creds)
-  
+
     for pdf_path in pdf_paths:
         # Create an instance of PDFCapture
-        pdf_capture = PDFCapture(pdf_path, num_selections=7)
+        pdf_capture = PDFCapture(pdf_path, num_selections=8)
         captured_data = pdf_capture.capture_data()
 
-    # Save the captured data to the Google Sheet
-        values = []  
+        # Save the captured data to the Google Sheet
         values = [str(data).replace('\n', '').strip() for data in captured_data]
         print(values)
         body = {'values': [values]}
 
-
         # Find the next available row
         result = service.spreadsheets().values().get(spreadsheetId=google_sheet_id, range=sheet_name).execute()
         next_row = len(result['values']) + 1
-        
+
         # Write values to the sheet
         service.spreadsheets().values().update(
             spreadsheetId=google_sheet_id,
@@ -74,36 +70,19 @@ def process_pdf(pdf_paths):
         ).execute()
 
 
-def on_file_select():
-    file_paths = filedialog.askopenfilenames(filetypes=[("PDF Files", "*.pdf")])
-    if file_paths:
-        process_pdf(file_paths)
-        messagebox.showinfo("Success", "Data captured and saved successfully!")
-        root.destroy()
+def scan_and_process_files():
+    pdf_paths = []
+    directory = r'K:\My Drive\Company\FaCai\DO\WLG'
+    for filename in os.listdir(directory):
+        if filename.endswith(".pdf"):
+            pdf_paths.append(os.path.join(directory, filename))
+
+    if pdf_paths:
+        process_pdf(pdf_paths)
+        print("Data captured and saved successfully!")
+    else:
+        print("No PDF files found in the directory!")
 
 
-root = Tk()
-root.title("DO Extraction")
-# Get the screen width and height
-screen_width = root.winfo_screenwidth()
-screen_height = root.winfo_screenheight()
-
-# Calculate the x and y coordinates for the window to be centered
-x = (screen_width - 300) // 2
-y = (screen_height - 200) // 2
-
-# Set the position of the window
-root.geometry(f"300x200+{x}+{y}")
-
-label = Label(root, text="Select PDF Files")
-label.pack(pady=50)
-
-# Function to handle file selection
-def select_file():
-    on_file_select()
-
-# Create a button for file selection
-select_button = Button(root, text="Select Files", command=select_file)
-select_button.pack()
-
-root.mainloop()
+if __name__ == "__main__":
+    scan_and_process_files()
