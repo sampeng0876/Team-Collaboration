@@ -4,6 +4,8 @@ import pcl_do_V2_local
 import pg_do_V2_local
 import uwe_do_V2_local
 import wlg_do_V2_local
+import unnyeo_do_V2_local
+import qz_do_V2_local
 
 from tkinter import *
 from tkcalendar import *
@@ -44,7 +46,7 @@ y = (screen_height - 100) // 2
 root.geometry(f"230x100+{x}+{y}")
 
 # List of Username
-extract_do_info = ['SMART','UWE','PCL','PG','QTZ','QTZ_ATLANTA','UNNYEO','UNNYEO_2','WLG','NYPP','KILROY','EZ']
+extract_do_info = ['SMART','UWE','PCL','PG','QZ','QZ_ATLANTA','UNNYEO','UNNYEO_2','WLG','NYPP','KILROY','EZ']
 
 
 # Create Username Seclection
@@ -64,10 +66,17 @@ submit_button.grid(column=1, row=7, padx=10, pady=5)
 # Start the mainloop to display the window
 root.mainloop()
 
-extract_do_info = ['SMART','UWE','PCL','PG','QTZ','QTZ_ATLANTA','UNNYEO','UNNYEO_2','WLG','NYPP','KILROY','EZ']
 
 if extract_do == 'SMART':
     smart_do_V2_local.scan_and_process_files()
 elif extract_do == 'UWE':
     uwe_do_V2_local.scan_and_process_files()
-
+elif extract_do == 'PCL':
+    pcl_do_V2_local.scan_and_process_files()
+elif extract_do == 'PG':
+    pg_do_V2_local.scan_and_process_files()
+elif extract_do == 'QZ':
+    qz_do_V2_local.scan_and_process_files()
+elif extract_do == 'UNNYEO':
+    unnyeo_do_V2_local.scan_and_process_files()
+else: print(f"{extract_do} Not Exist ! ! !")
