@@ -15,10 +15,10 @@ class PDFCapture:
     def capture_data(self):
         data = []
         x_positions = [
-            (68, 115), (263, 323), (22, 258), (23, 258), (324, 353), (430, 500), (264, 412), (23, 259)
+            (68, 115), (263, 323), (22, 258), (23, 258), (324, 353), (430, 500), (264, 412), (418, 486), (23, 259)
         ]
         y_positions = [
-            (124, 134), (315, 327), (277, 343), (157, 202), (315, 327), (486, 500), (385, 443),(216, 263)
+            (124, 134), (315, 327), (277, 343), (157, 202), (315, 327), (486, 500), (385, 443), (227, 237), (216, 263)
         ]
 
         for i in range(self.num_selections):
@@ -49,7 +49,7 @@ def process_pdf(pdf_paths):
 
     for pdf_path in pdf_paths:
         # Create an instance of PDFCapture
-        pdf_capture = PDFCapture(pdf_path, num_selections=8)
+        pdf_capture = PDFCapture(pdf_path, num_selections=9)
         captured_data = pdf_capture.capture_data()
 
         # Save the captured data to the Google Sheet

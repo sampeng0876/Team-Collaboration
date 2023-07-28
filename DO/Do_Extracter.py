@@ -6,6 +6,7 @@ import uwe_do_V2_local
 import wlg_do_V2_local
 import unnyeo_do_V2_local
 import qz_do_V2_local
+import nypp_do_V2_local
 
 from tkinter import *
 from tkcalendar import *
@@ -79,4 +80,6 @@ elif extract_do == 'QZ':
     qz_do_V2_local.scan_and_process_files()
 elif extract_do == 'UNNYEO':
     unnyeo_do_V2_local.scan_and_process_files()
+elif extract_do == 'NYPP':
+    nypp_do_V2_local.scan_and_process_files()
 else: print(f"{extract_do} Not Exist ! ! !")
