@@ -82,4 +82,6 @@ elif extract_do == 'UNNYEO':
     unnyeo_do_V2_local.scan_and_process_files()
 elif extract_do == 'NYPP':
     nypp_do_V2_local.scan_and_process_files()
+elif extract_do == 'WLG':
+    wlg_do_V2_local.scan_and_process_files()
 else: print(f"{extract_do} Not Exist ! ! !")
