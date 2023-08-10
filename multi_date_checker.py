@@ -87,7 +87,7 @@ def multi_date_checker(appt_dates, wait, start_time, end_time, driver, check_day
             # sleep(2)
             # time_slots.click()
             sleep(1)
-            WebDriverWait(driver, 20).until(EC.element_to_be_clickable((By.XPATH, '//*[@id="ipgrid_0_slot"]/i'))).click()
+            WebDriverWait(driver, 120).until(EC.presence_of_element_located((By.XPATH, '//*[@id="ipgrid_0_slot"]/i'))).click()
 
             # Locate the Appointment Time Slots
             time_slots_container = driver.find_elements(by="xpath", value='//*[@class="visible menu transition"]/div')
