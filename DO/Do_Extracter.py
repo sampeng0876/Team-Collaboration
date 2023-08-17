@@ -87,4 +87,6 @@ elif extract_do == 'WLG':
     wlg_do_V2_local.scan_and_process_files()
 elif extract_do == '4CSN':
     csn_do_V2_local.scan_and_process_files()
+elif extract_do == 'KILROY':
+    kilroy_do_V2_local.scan_and_process_files()
 else: print(f"{extract_do} Not Exist ! ! !")
