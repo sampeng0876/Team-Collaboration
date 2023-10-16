@@ -8,6 +8,7 @@ import unnyeo_do_V2_local
 import qz_do_V2_local
 import nypp_do_V2_local
 import csn_do_V2_local
+import ez_do_V2_local
 
 from tkinter import *
 from tkcalendar import *
@@ -89,4 +90,6 @@ elif extract_do == '4CSN':
     csn_do_V2_local.scan_and_process_files()
 elif extract_do == 'KILROY':
     kilroy_do_V2_local.scan_and_process_files()
+elif extract_do == 'EZ':
+    ez_do_V2_local.scan_and_process_files()
 else: print(f"{extract_do} Not Exist ! ! !")

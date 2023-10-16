@@ -89,7 +89,7 @@ class PDFCapture:
 
 
 # Usage example
-pdf_file = r"C:\Users\Grace\Desktop\Manual\SP\Team-Collaboration\PDF\unnyeo.pdf"
+pdf_file = r"C:\Users\Grace\Desktop\Manual\SP\Team-Collaboration\PDF\ez.pdf"
 num_areas = 9
 pdf_capture = PDFCapture(pdf_file, num_areas)
 captured_data = pdf_capture.capture_data()
