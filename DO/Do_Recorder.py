@@ -87,7 +87,7 @@ chrome_options.add_argument('--ignore-certificate-errors')
 
 # #chrome_options.add_argument("--disable-extensions")
 # #chrome_options.add_argument("--disable-gpu")
-# chrome_options.add_argument("--headless")
+chrome_options.add_argument("--headless")
 
 
 driver = webdriver.Chrome(options=chrome_options)
@@ -143,7 +143,7 @@ if record_do == 'DO':
     row = 1
     for data in container_list:
         container, address, client, type, weight, note = data
-        print(f'Row {row} {container} {address} {client} {type} {weight} {note}')
+        print(f'Row {row} {container} {address} {client} {type} {weight} {note}')     
         
         iframe = driver.find_element(By.XPATH,'//*[@class="layui-tab-item layui-show"]/iframe') #Change iframe
         driver.switch_to.frame(iframe)
@@ -161,10 +161,14 @@ if record_do == 'DO':
         driver.find_element(By.XPATH,'//*[@class="layui-tab-item layui-show"]/div[8]/div/input').send_keys(weight) # 重量
         driver.find_element(By.XPATH,'//*[@class="layui-tab-item layui-show"]/div[10]/div/textarea').send_keys(note) # 备注
 
-        sleep(1)
+        
         WebDriverWait(driver, 5).until(EC.element_to_be_clickable((By.XPATH, '//*[@class="layui-form"]/div[2]/button'))).click() # 点击 增加
-        print(f'Submitted: {row} row') 
-        sleep(3)
+        sleep(1)
+        driver.refresh()
+        WebDriverWait(driver, 5).until(EC.element_to_be_clickable((By.XPATH, '//*[@id="nav"]/li[2]/a/cite'))).click() # 点击展开 柜子汇总管理    
+        WebDriverWait(driver, 5).until(EC.element_to_be_clickable((By.XPATH, '//*[@id="nav"]/li[2]/ul/li[1]/a/cite'))).click() #点击 柜子汇总管理
+        print(f'Submitted: {row} row')
+        sleep(1)
         row+=1
         
 elif record_do == 'LFD':
@@ -226,8 +230,13 @@ elif record_do == 'LFD':
         # WebDriverWait(driver, 5).until(EC.element_to_be_clickable((By.XPATH, '//*[@class="laydate-footer-btns"]/span[3]'))).click() #点击日期 确定
         WebDriverWait(driver, 5).until(EC.element_to_be_clickable((By.XPATH, '//*[@class="layui-form"]/div[2]/button'))).click() # 点击 提交
 
+        sleep(1)
+        driver.refresh()
+        WebDriverWait(driver, 5).until(EC.element_to_be_clickable((By.XPATH, '//*[@id="nav"]/li[2]/a/cite'))).click() # 点击展开 柜子汇总管理    
+        WebDriverWait(driver, 5).until(EC.element_to_be_clickable((By.XPATH, '//*[@id="nav"]/li[2]/ul/li[1]/a/cite'))).click() #点击 柜子汇总管理
+
         print(f'Submitted: {row} row') 
-        sleep(3)
+        sleep(1)
         row+=1
 
 elif record_do == 'DELIVERY':
@@ -288,9 +297,15 @@ elif record_do == 'DELIVERY':
         input_element.send_keys(f'{lfd} 00:00:00') #lfd.strftime('%Y/%m/%d')
         # WebDriverWait(driver, 5).until(EC.element_to_be_clickable((By.XPATH, '//*[@class="laydate-footer-btns"]/span[3]'))).click() #点击日期 确定
         WebDriverWait(driver, 5).until(EC.element_to_be_clickable((By.XPATH, '//*[@class="layui-form"]/div[2]/button'))).click() # 点击 提交
+        
+        sleep(1)
+        driver.refresh()
+        WebDriverWait(driver, 5).until(EC.element_to_be_clickable((By.XPATH, '//*[@id="nav"]/li[2]/a/cite'))).click() # 点击展开 柜子汇总管理    
+        WebDriverWait(driver, 5).until(EC.element_to_be_clickable((By.XPATH, '//*[@id="nav"]/li[2]/ul/li[1]/a/cite'))).click() #点击 柜子汇总管理
 
         print(f'Submitted: {row} row') 
-        sleep(3)
+        sleep(1)
+
         row+=1
 
 
