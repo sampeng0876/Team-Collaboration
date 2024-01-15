@@ -9,7 +9,6 @@ import qz_do_V2_local
 import nypp_do_V2_local
 import csn_do_V2_local
 import ez_do_V2_local
-
 from tkinter import *
 from tkcalendar import *
 import datetime as dt
