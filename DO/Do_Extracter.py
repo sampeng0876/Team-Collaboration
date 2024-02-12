@@ -9,6 +9,7 @@ import qz_do_V2_local
 import nypp_do_V2_local
 import csn_do_V2_local
 import ez_do_V2_local
+import unnyeo_elogistek_do_V2_local
 from tkinter import *
 from tkcalendar import *
 import datetime as dt
@@ -48,7 +49,7 @@ y = (screen_height - 100) // 2
 root.geometry(f"230x100+{x}+{y}")
 
 # List of Username
-extract_do_info = ['SMART','UWE','PCL','PG','QZ','QZ_ATLANTA','UNNYEO','UNNYEO_2','WLG','4CSN','NYPP','KILROY','EZ']
+extract_do_info = ['SMART','UWE','PCL','PG','QZ','UNNYEO','Elogistek','WLG','4CSN','NYPP','KILROY','EZ']
 
 
 # Create Username Seclection
@@ -91,4 +92,6 @@ elif extract_do == 'KILROY':
     kilroy_do_V2_local.scan_and_process_files()
 elif extract_do == 'EZ':
     ez_do_V2_local.scan_and_process_files()
+elif extract_do == 'Elogistek':
+    unnyeo_elogistek_do_V2_local.scan_and_process_files()
 else: print(f"{extract_do} Not Exist ! ! !")
