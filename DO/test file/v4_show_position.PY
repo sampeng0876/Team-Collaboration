@@ -89,7 +89,7 @@ class PDFCapture:
 
 
 # Usage example
-pdf_file = r"C:\Users\Grace\Desktop\Manual\SP\Team-Collaboration\PDF\smart-do-2.pdf"
+pdf_file = r"C:\Users\bob08\Desktop\Team-Collaboration\PDF\qtz.pdf"
 # C:\Users\Grace\Desktop\Manual\SP\Team-Collaboration\PDF\smart-do-2.pdf
 # C:\Users\bob08\Desktop\Team-Collaboration\PDF\smart-do-2.pdf
 num_areas = 9
