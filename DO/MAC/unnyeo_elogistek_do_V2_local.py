@@ -15,11 +15,12 @@ class PDFCapture:
     def capture_data(self):
         data = []
         x_positions = [
-            (392, 432), (107, 180), (22, 268), (76, 172), (201, 283), (478, 544), (352, 572), (177, 233), (41, 282)
+            (346, 420), (235, 413), (45, 317), (61, 265), (651, 667), (501, 626), (651, 667), (420, 535), (651, 667)
         ]
         y_positions = [
-            (143, 153), (434, 603), (279, 348), (130, 144), (437, 605), (381, 399), (303, 347), (228, 238), (739, 767)
+            (118, 150), (233, 251), (429, 465), (87, 122), (549, 559), (537, 559), (549, 559), (337, 359), (549, 559)
         ]
+
 
         for i in range(self.num_selections):
             x0, x1 = x_positions[i]
@@ -72,7 +73,7 @@ def process_pdf(pdf_paths):
 
 def scan_and_process_files():
     pdf_paths = []
-    directory = r'/Users/champagne/Library/CloudStorage/GoogleDrive-sp.dispatchservice@gmail.com/My Drive/Company/FaCai/DO/NYPP'
+    directory = r'/Users/champagne/Library/CloudStorage/GoogleDrive-sp.dispatchservice@gmail.com/My Drive/Company/FaCai/DO/UNNYEO'
     for filename in os.listdir(directory):
         if filename.endswith(".pdf"):
             pdf_paths.append(os.path.join(directory, filename))

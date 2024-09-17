@@ -15,10 +15,10 @@ class PDFCapture:
     def capture_data(self):
         data = []
         x_positions = [
-            (336, 438), (121, 182), (66, 380), (354, 400), (202, 223), (486, 543), (530, 571), (230, 384)
+            (392, 432), (108, 186), (38, 345), (192, 201), (200, 235), (479, 544), (318, 349), (183, 231), (238, 413)
         ]
         y_positions = [
-            (183, 193), (429, 546), (345, 392), (640, 652), (428, 499), (418, 429), (820, 828), (272, 281)
+            (144, 153), (414, 511), (275, 344), (413, 413), (413, 424), (381, 409), (587, 598), (229, 238), (208, 217)
         ]
 
         for i in range(self.num_selections):
@@ -49,7 +49,7 @@ def process_pdf(pdf_paths):
 
     for pdf_path in pdf_paths:
         # Create an instance of PDFCapture
-        pdf_capture = PDFCapture(pdf_path, num_selections=8)
+        pdf_capture = PDFCapture(pdf_path, num_selections=9)
         captured_data = pdf_capture.capture_data()
 
         # Save the captured data to the Google Sheet
@@ -72,7 +72,7 @@ def process_pdf(pdf_paths):
 
 def scan_and_process_files():
     pdf_paths = []
-    directory = r'/Users/champagne/Library/CloudStorage/GoogleDrive-sp.dispatchservice@gmail.com/My Drive/Company/FaCai/DO/KILROY'
+    directory = r'/Users/champagne/Library/CloudStorage/GoogleDrive-sp.dispatchservice@gmail.com/My Drive/Company/FaCai/DO/WP'
     for filename in os.listdir(directory):
         if filename.endswith(".pdf"):
             pdf_paths.append(os.path.join(directory, filename))

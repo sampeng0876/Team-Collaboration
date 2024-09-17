@@ -2,6 +2,7 @@ import fitz
 from openpyxl import load_workbook
 from googleapiclient.discovery import build
 from google.oauth2 import service_account
+import os
 
 class PDFCapture:
     def __init__(self, pdf_path, num_selections):
@@ -14,10 +15,26 @@ class PDFCapture:
     def capture_data(self):
         data = []
         x_positions = [
-            (72,126), (271,335), (22,268), (102,321), (336,364), (460,519), (273,429), (22,266)
+            (76, 120),  # Area 1
+            (272, 335), # Area 2
+            (23, 259),  # Area 3
+            (105, 308), # Area 4
+            (338, 362), # Area 5
+            (446, 516), # Area 6
+            (273, 413), # Area 7
+            (433, 499), # Area 8
+            (23, 200)   # Area 9
         ]
         y_positions = [
-            (125,135), (316,329), (277,347), (23,46), (317,329), (484,501), (388,445), (219,264)
+            (126, 135),  # Area 1
+            (317, 361),  # Area 2
+            (280, 344),  # Area 3
+            (26, 41),    # Area 4
+            (318, 361),  # Area 5
+            (492, 553),  # Area 6
+            (393, 442),  # Area 7
+            (230, 240),  # Area 8
+            (221, 261)   # Area 9
         ]
 
         for i in range(self.num_selections):
@@ -44,11 +61,11 @@ def process_pdf(pdf_paths):
     # The ID and range of a sample spreadsheet.
     google_sheet_id = '12lnRmQoBsITIYTQPEGYdHGVNUkoPPFQEhx5HaC3JTJQ'
     sheet_name = 'RECORD_DO'
-    service = build('sheets', 'v4', credentials=my_creds)    
+    service = build('sheets', 'v4', credentials=my_creds)
 
     for pdf_path in pdf_paths:
         # Create an instance of PDFCapture
-        pdf_capture = PDFCapture(pdf_path, num_selections=8)
+        pdf_capture = PDFCapture(pdf_path, num_selections=9)
         captured_data = pdf_capture.capture_data()
 
         # Save the captured data to the Google Sheet
@@ -70,32 +87,19 @@ def process_pdf(pdf_paths):
 
 
 def scan_and_process_files():
-    drive_service = build('drive', 'v3', credentials=my_creds)
-    folder_id = '1-_7jf6xZpCi4sI2ne600iOkc0IZj-q1f'
     pdf_paths = []
-    page_token = None
-    while True:
-        response = drive_service.files().list(q=f"'{folder_id}' in parents and mimeType='application/pdf'",
-                                              spaces='drive',
-                                              fields='nextPageToken, files(id, name)',
-                                              pageToken=page_token).execute()
-        for file in response.get('files', []):
-            pdf_paths.append(file['name'])
-        page_token = response.get('nextPageToken', None)
-        if page_token is None:
-            break
+    directory = r'/Users/champagne/Library/CloudStorage/GoogleDrive-sp.dispatchservice@gmail.com/My Drive/Company/FaCai/DO/SMART'
+    
+    for filename in os.listdir(directory):
+        if filename.endswith(".pdf"):
+            pdf_paths.append(os.path.join(directory, filename))
 
     if pdf_paths:
         process_pdf(pdf_paths)
         print("Data captured and saved successfully!")
     else:
-        print("No PDF files found in the folder!")
+        print("No PDF files found in the directory!")
 
 
 if __name__ == "__main__":
-    SERVICE_ACCOUNT_FILE = 'service_account.json'
-    SCOPES = ['https://www.googleapis.com/auth/drive']
-    my_creds = service_account.Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
-    
-    
     scan_and_process_files()
