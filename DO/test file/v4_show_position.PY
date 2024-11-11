@@ -89,8 +89,8 @@ class PDFCapture:
 
 
 # Usage example
-# pdf_file = r"C:\Users\bob08\Desktop\Team-Collaboration\PDF\wp.pdf" # SAM PC
-pdf_file = r"/Users/champagne/Documents/GitHub/Team-Collaboration/PDF/hc.pdf" # SAM MAC
+pdf_file = r"C:\Users\bob08\Desktop\Team-Collaboration\PDF\cope.pdf" # SAM PC
+# pdf_file = r"/Users/champagne/Documents/GitHub/Team-Collaboration/PDF/cope.pdf" # SAM MAC
 # C:\Users\Grace\Desktop\Manual\SP\Team-Collaboration\PDF\smart-do-2.pdf
 # C:\Users\bob08\Desktop\Team-Collaboration\PDF\smart-do-2.pdf
 num_areas = 9
