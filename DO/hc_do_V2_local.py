@@ -89,7 +89,7 @@ def process_pdf(pdf_paths):
 
 def scan_and_process_files():
     pdf_paths = []
-    directory = r'K:\My Drive\Company\FaCai\DO\HC'
+    directory = r'D:\My Drive\Company\FaCai\DO\HC'
     for filename in os.listdir(directory):
         if filename.endswith(".pdf"):
             pdf_paths.append(os.path.join(directory, filename))

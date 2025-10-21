@@ -90,7 +90,7 @@ def process_excel_to_google_sheet(pdf_paths, google_sheet_id, sheet_name):
 
 def scan_and_process_files():
     excel_paths = []
-    directory = r'K:\My Drive\Company\FaCai\DO\YY'  # Directory containing Excel files
+    directory = r'D:\My Drive\Company\FaCai\DO\YY'  # Directory containing Excel files
     for filename in os.listdir(directory):
         # Skip temporary files and hidden files (those that start with ~$)
         if filename.endswith(".xlsx") and not filename.startswith("~$"):
